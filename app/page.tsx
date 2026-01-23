@@ -120,10 +120,10 @@ export default function V0MiamiEvent() {
             </div>
             <div className="flex flex-col gap-4 group cursor-default">
               <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px] transition-colors duration-300 group-hover:text-[#999]">
-                WHERE
+                LOCATION WILL DROP JAN 28TH
               </p>
               <p className="font-mono text-[16px] text-white tracking-[-0.64px] font-extralight transition-all duration-300 group-hover:translate-x-1">
-                THE DOCK, WYNWOOD
+                TBD
               </p>
             </div>
           </div>

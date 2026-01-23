@@ -161,11 +161,13 @@ export default function V0MiamiEvent() {
             </p>
           </div>
           <div className="flex flex-col w-full lg:w-auto">
-            <AgendaItem number="01" title="Opening" description="For every builder at your event" delay={0} isVisible={agendaSection.isInView} />
-            <AgendaItem number="02" title="Opening" description="For every builder at your event" delay={100} isVisible={agendaSection.isInView} />
-            <AgendaItem number="03" title="Networking" description="Connecting with industry leaders and peers" delay={200} isVisible={agendaSection.isInView} />
-            <AgendaItem number="04" title="Workshops" description="Hands-on sessions to enhance skills" delay={300} isVisible={agendaSection.isInView} />
-            <AgendaItem number="05" title="Closing" description="Summarizing insights and next steps" delay={400} isVisible={agendaSection.isInView} isLast />
+            <AgendaItem number="01" title="Doors open, networking" description="12:30 PM" delay={0} isVisible={agendaSection.isInView} />
+            <AgendaItem number="02" title="Welcome + v0 video + product intro" description="1:00 PM" delay={100} isVisible={agendaSection.isInView} />
+            <AgendaItem number="03" title="Building begins (curated prompts)" description="1:45 PM" delay={200} isVisible={agendaSection.isInView} />
+            <AgendaItem number="04" title="Final build sprint" description="6:45 PM" delay={300} isVisible={agendaSection.isInView} />
+            <AgendaItem number="05" title="Demo showcase + community voting" description="7:45 PM" delay={400} isVisible={agendaSection.isInView} />
+            <AgendaItem number="06" title="Wrap-up, photos, networking" description="8:00 PM" delay={500} isVisible={agendaSection.isInView} />
+            <AgendaItem number="07" title="Doors close" description="9:00 PM" delay={600} isVisible={agendaSection.isInView} isLast />
           </div>
         </section>
 

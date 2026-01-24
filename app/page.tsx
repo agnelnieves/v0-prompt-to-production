@@ -166,7 +166,7 @@ export default function V0MiamiEvent() {
         </div>
         
         {/* Scroll indicator */}
-        <div className={`absolute bottom-[40px] left-6 lg:left-[172px] px-0 lg:px-5 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className={`absolute bottom-[40px] left-6 lg:left-[172px] px-0 lg:px-5 z-20 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <button 
             onClick={() => {
               const mainContent = document.querySelector('main')

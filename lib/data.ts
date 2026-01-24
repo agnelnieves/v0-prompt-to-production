@@ -39,7 +39,7 @@ export const experienceItems = [
   },
   {
     title: "Community Voting",
-    description: "Builders vote for favorites, winners get prizes. PARINI will set the vibes with science-backed music to ship your best idea",
+    description: "Builders vote for favorites, winners get prizes.",
   },
   {
     title: "Live DJ",

@@ -19,9 +19,9 @@ export const eventData = {
   
   // Date & Location
   date: "FEBRUARY 7, 2026",
-  locationLabel: "LOCATION WILL DROP JAN 28TH",
-  venue: "TBD",
-  venueAddress: "", // To be updated
+  locationLabel: "LOCATION",
+  venue: "The Dock, Wynwood",
+  venueAddress: "https://maps.app.goo.gl/BaPMWqy1EPs51UyM9",
   
   // Event URL
   eventUrl: "#", // Sign up URL

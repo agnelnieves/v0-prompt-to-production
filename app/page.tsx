@@ -34,6 +34,7 @@ function useInView(threshold = 0.1) {
 export default function V0MiamiEvent() {
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isAtBottom, setIsAtBottom] = useState(false)
   const descriptionSection = useInView(0.3)
   const agendaSection = useInView(0.2)
   const experienceSection = useInView(0.2)
@@ -47,6 +48,13 @@ export default function V0MiamiEvent() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
+      
+      // Check if at bottom of page
+      const scrollTop = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      const isBottom = scrollTop + windowHeight >= documentHeight - 10
+      setIsAtBottom(isBottom)
     }
     
     window.addEventListener("scroll", handleScroll, { passive: true })
@@ -269,6 +277,13 @@ export default function V0MiamiEvent() {
           </div>
         </section>
       </main>
+      
+      {/* Fixed Bottom Gradient - hidden when at bottom */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 h-[120px] pointer-events-none z-40 transition-opacity duration-500 ${isAtBottom ? 'opacity-0' : 'opacity-100'}`}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
+      </div>
     </div>
   )
 }

@@ -237,8 +237,22 @@ export default function V0MiamiEvent() {
         </section>
       </main>
       
-      {/* Bottom padding */}
-      <div className="h-[200px] bg-black" />
+      {/* Bottom Dithering Animation */}
+      <div className="relative w-full h-[720px] overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Dithering
+            width={1280}
+            height={720}
+            colorBack="#000000"
+            colorFront="#0d0d0d"
+            shape="wave"
+            type="4x4"
+            size={6.4}
+            speed={0.12}
+            scale={2.24}
+          />
+        </div>
+      </div>
     </div>
   )
 }

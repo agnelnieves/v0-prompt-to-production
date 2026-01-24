@@ -221,7 +221,7 @@ export default function V0MiamiEvent() {
         {/* CTA Footer with Dithering Background */}
         <section 
           ref={ctaSection.ref}
-          className="relative border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden"
+          className="relative border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden mb-16"
         >
           {/* Dithering Background - Same as Hero */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

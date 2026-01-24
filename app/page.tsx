@@ -142,14 +142,32 @@ export default function V0MiamiEvent() {
                 {eventData.date}
               </p>
             </div>
-            <div className="flex flex-col gap-4 group cursor-default">
+            <a 
+              href={eventData.venueAddress}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col gap-4 group cursor-pointer"
+            >
               <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px] transition-colors duration-300 group-hover:text-[#999]">
                 {eventData.locationLabel}
               </p>
-              <p className="font-mono text-[16px] text-white tracking-[-0.64px] font-extralight transition-all duration-300 group-hover:translate-x-1">
+              <p className="font-mono text-[16px] text-white tracking-[-0.64px] font-extralight transition-all duration-300 group-hover:translate-x-1 flex items-center gap-2">
                 {eventData.venue}
+                <svg 
+                  className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
               </p>
-            </div>
+            </a>
           </div>
         </div>
         

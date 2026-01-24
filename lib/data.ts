@@ -78,7 +78,7 @@ export const sponsors: Sponsor[] = [
   {
     name: "Kurzo",
     logo: "/sponsors/kurzo.svg",
-    url: "https://kurzo.com",
+    url: "https://kurzo.io",
     assetType: "svg",
   },
   {

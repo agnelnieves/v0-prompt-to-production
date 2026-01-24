@@ -24,7 +24,7 @@ export const eventData = {
   venueAddress: "https://maps.app.goo.gl/BaPMWqy1EPs51UyM9",
   
   // Event URL
-  eventUrl: "#", // Sign up URL
+  eventUrl: "https://lu.ma/i6959wdx", // Sign up URL
   
   // Description
   description: "v0 is getting ready to launch its biggest product update yet. We're celebrating with v0 IRLs around the world. And Miami is one of them. You're invited. Real apps, real work.",

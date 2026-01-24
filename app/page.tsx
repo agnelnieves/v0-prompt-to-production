@@ -5,6 +5,7 @@ import { Dithering } from "@paper-design/shaders-react"
 import { useEffect, useRef, useState } from "react"
 import { eventData, agendaItems, experienceItems, sponsors, logos, formatIndex, type Sponsor } from "@/lib/data"
 import Image from "next/image"
+import { ExternalLink } from "lucide-react"
 
 // Custom hook for scroll-triggered animations
 function useInView(threshold = 0.1) {
@@ -95,19 +96,7 @@ export default function V0MiamiEvent() {
               >
                 Sign Up
                 <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
-                  <svg 
-                    className="w-4 h-4 ml-2" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
+                  <ExternalLink className="w-4 h-4 ml-2" />
                 </span>
               </a>
             </div>
@@ -170,19 +159,7 @@ export default function V0MiamiEvent() {
               </p>
               <p className="font-mono text-[16px] text-white tracking-[-0.64px] font-extralight transition-all duration-300 group-hover:translate-x-1 flex items-center gap-2">
                 {eventData.venue}
-                <svg 
-                  className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
-                </svg>
+                <ExternalLink className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
               </p>
             </a>
           </div>
@@ -319,19 +296,7 @@ export default function V0MiamiEvent() {
             >
               Sign Up
               <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
-                <svg 
-                  className="w-4 h-4 ml-2" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
-                </svg>
+                <ExternalLink className="w-4 h-4 ml-2" />
               </span>
             </a>
           </div>
@@ -483,19 +448,7 @@ function SponsorCard({
       }}
     >
       {/* External link icon - top right */}
-      <svg 
-        className="absolute top-4 right-4 w-4 h-4 text-white opacity-0 translate-x-2 -translate-y-2 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round"
-      >
-        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-        <polyline points="15 3 21 3 21 9" />
-        <line x1="10" y1="14" x2="21" y2="3" />
-      </svg>
+      <ExternalLink className="absolute top-4 right-4 w-4 h-4 text-white opacity-0 translate-x-2 -translate-y-2 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
       {renderAsset()}
     </div>
   )

@@ -166,19 +166,21 @@ export default function V0MiamiEvent() {
         </div>
         
         {/* Scroll indicator */}
-        <div className={`absolute bottom-[40px] left-6 lg:left-[172px] px-0 lg:px-5 z-20 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <button 
-            onClick={() => {
-              const mainContent = document.querySelector('main')
-              if (mainContent) {
-                mainContent.scrollIntoView({ behavior: 'smooth' })
-              }
-            }}
-            className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300"
-          >
-            <span>SCROLL TO LEARN MORE</span>
-            <span className="inline-block animate-bounce">↓</span>
-          </button>
+        <div className={`absolute bottom-[40px] left-0 right-0 z-20 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="w-full max-w-[1383px] mx-auto px-6 lg:px-5">
+            <button 
+              onClick={() => {
+                const mainContent = document.querySelector('main')
+                if (mainContent) {
+                  mainContent.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
+              className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300"
+            >
+              <span>SCROLL TO LEARN MORE</span>
+              <span className="inline-block animate-bounce">↓</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -199,7 +201,7 @@ export default function V0MiamiEvent() {
           ref={agendaSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
-          <div className={`w-full lg:w-[232px] flex items-start lg:sticky lg:top-[140px] z-50 transition-all duration-700 ${agendaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+          <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${agendaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
               AGENDA
             </p>
@@ -224,7 +226,7 @@ export default function V0MiamiEvent() {
           ref={experienceSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
-          <div className={`w-full lg:w-[232px] flex items-start lg:sticky lg:top-[140px] z-50 transition-all duration-700 ${experienceSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+          <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${experienceSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
               THE EXPERIENCE
             </p>
@@ -248,7 +250,7 @@ export default function V0MiamiEvent() {
           ref={sponsorSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
-          <div className={`w-full lg:w-[232px] flex items-start lg:sticky lg:top-[140px] z-50 transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+          <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
               SUPPORTED BY
             </p>

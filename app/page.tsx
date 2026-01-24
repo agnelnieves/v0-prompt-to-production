@@ -218,15 +218,30 @@ export default function V0MiamiEvent() {
           </div>
         </section>
 
-        {/* CTA Footer */}
+        {/* CTA Footer with Dithering Background */}
         <section 
           ref={ctaSection.ref}
-          className="border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px]"
+          className="relative border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden"
         >
-          <h2 className={`flex-1 text-[36px] lg:text-[68px] font-semibold leading-[1.1] lg:leading-[72px] tracking-[-0.04em] lg:tracking-[-2.72px] text-white text-center lg:text-left transition-all duration-1000 ${ctaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
+          {/* Dithering Background */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Dithering
+              colorBack="#000000"
+              colorFront="#0d0d0d"
+              shape="wave"
+              type="4x4"
+              size={6.4}
+              speed={0.12}
+              scale={1.48}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </div>
+          
+          {/* Content */}
+          <h2 className={`relative z-10 flex-1 text-[36px] lg:text-[68px] font-semibold leading-[1.1] lg:leading-[72px] tracking-[-0.04em] lg:tracking-[-2.72px] text-white text-center lg:text-left transition-all duration-1000 ${ctaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
             {eventData.ctaText}
           </h2>
-          <div className={`transition-all duration-1000 delay-200 ${ctaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
+          <div className={`relative z-10 transition-all duration-1000 delay-200 ${ctaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
             <a 
               href={eventData.eventUrl}
               className="bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
@@ -237,19 +252,18 @@ export default function V0MiamiEvent() {
         </section>
       </main>
       
-      {/* Bottom Dithering Animation */}
+      {/* Bottom Dithering Animation - Full Width */}
       <div className="relative w-full h-[720px] overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Dithering
-            width={1280}
-            height={720}
             colorBack="#000000"
             colorFront="#0d0d0d"
             shape="wave"
             type="4x4"
             size={6.4}
             speed={0.12}
-            scale={2.24}
+            scale={1.48}
+            style={{ width: "100%", height: "100%" }}
           />
         </div>
       </div>

@@ -107,7 +107,7 @@ export default function V0MiamiEvent() {
       {/* Hero Section */}
       <section className="relative h-dvh lg:h-[948px] flex flex-col items-center justify-center overflow-hidden">
         {/* Dithering Shader Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none">
           <Dithering
             colorBack="#000000"
             colorFront="#99999921"
@@ -115,7 +115,7 @@ export default function V0MiamiEvent() {
             type="4x4"
             size={2.5}
             speed={0.45}
-            style={{ width: "2138px", height: "948px" }}
+            style={{ width: "100%", height: "100%" }}
           />
         </div>
         

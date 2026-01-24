@@ -223,16 +223,15 @@ export default function V0MiamiEvent() {
           ref={ctaSection.ref}
           className="relative border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden"
         >
-          {/* Dithering Background */}
+          {/* Dithering Background - Same as Hero */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Dithering
               colorBack="#000000"
-              colorFront="#0d0d0d"
-              shape="wave"
+              colorFront="#99999921"
+              shape="warp"
               type="4x4"
-              size={6.4}
-              speed={0.12}
-              scale={1.48}
+              size={2.5}
+              speed={0.45}
               style={{ width: "100%", height: "100%" }}
             />
           </div>
@@ -251,22 +250,6 @@ export default function V0MiamiEvent() {
           </div>
         </section>
       </main>
-      
-      {/* Bottom Dithering Animation - Full Width */}
-      <div className="relative w-full h-[720px] overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Dithering
-            colorBack="#000000"
-            colorFront="#0d0d0d"
-            shape="wave"
-            type="4x4"
-            size={6.4}
-            speed={0.12}
-            scale={1.48}
-            style={{ width: "100%", height: "100%" }}
-          />
-        </div>
-      </div>
     </div>
   )
 }

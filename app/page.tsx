@@ -33,6 +33,7 @@ function useInView(threshold = 0.1) {
 
 export default function V0MiamiEvent() {
   const [mounted, setMounted] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const descriptionSection = useInView(0.3)
   const agendaSection = useInView(0.2)
   const experienceSection = useInView(0.2)
@@ -43,11 +44,31 @@ export default function V0MiamiEvent() {
     setMounted(true)
   }, [])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10)
+    }
+    
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll() // Check initial state
+    
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden scroll-smooth">
       {/* Fixed Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-        <div className="mx-auto max-w-[1400px] px-6 lg:px-0 py-8 lg:py-[49px]">
+        {/* Blur and gradient background - only visible when scrolled */}
+        <div 
+          className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${isScrolled ? 'opacity-100' : 'opacity-0'}`}
+        >
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent" />
+          {/* Blur layer */}
+          <div className="absolute inset-0 backdrop-blur-md [mask-image:linear-gradient(to_bottom,black_50%,transparent_100%)]" />
+        </div>
+        <div className="relative mx-auto max-w-[1400px] px-6 lg:px-0 py-8 lg:py-[49px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[18px] group cursor-pointer">
               <img 

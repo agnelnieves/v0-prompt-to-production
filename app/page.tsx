@@ -155,10 +155,18 @@ export default function V0MiamiEvent() {
         
         {/* Scroll indicator */}
         <div className={`absolute bottom-[40px] left-6 lg:left-[172px] px-0 lg:px-5 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300">
+          <button 
+            onClick={() => {
+              const mainContent = document.querySelector('main')
+              if (mainContent) {
+                mainContent.scrollIntoView({ behavior: 'smooth' })
+              }
+            }}
+            className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300"
+          >
             <span>SCROLL TO LEARN MORE</span>
             <span className="inline-block animate-bounce">↓</span>
-          </p>
+          </button>
         </div>
       </section>
 

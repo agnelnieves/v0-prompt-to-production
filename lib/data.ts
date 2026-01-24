@@ -1,5 +1,16 @@
 // Event Data for v0 IRL Miami
 
+// Asset types
+export type AssetType = "svg" | "png" | "jpg" | "jpeg" | "remote"
+
+export interface Sponsor {
+  name: string
+  logo: string
+  url: string
+  assetType: AssetType
+  height?: number
+}
+
 export const eventData = {
   // Basic Event Info
   name: "v0 IRL Miami",
@@ -56,40 +67,55 @@ export function formatIndex(index: number): string {
   return String(index + 1).padStart(2, "0")
 }
 
-export const sponsors = [
+export const sponsors: Sponsor[] = [
   {
     name: "Vercel",
-    logo: "https://www.figma.com/api/mcp/asset/03fcb194-e137-475f-b753-8767813e6f36",
+    logo: "/sponsors/vercel.svg",
     url: "https://vercel.com",
-    type: "image" as const,
+    assetType: "svg",
     height: 37,
   },
   {
     name: "Kurzo",
-    logo: null, // SVG inline
+    logo: "/sponsors/kurzo.svg",
     url: "https://kurzo.com",
-    type: "svg" as const,
+    assetType: "svg",
+  },
+  {
+    name: "Gail",
+    logo: "/sponsors/gail.svg",
+    url: "https://gail.com",
+    assetType: "svg",
   },
   {
     name: "UKG",
-    logo: "https://www.figma.com/api/mcp/asset/ecfdbe1a-2b10-403d-ae99-b1ba6c527d58",
+    logo: "/sponsors/ukg.svg",
     url: "https://www.ukg.com",
-    type: "image" as const,
+    assetType: "svg",
     height: 47,
   },
   {
     name: "The Lab Miami",
-    logo: "https://www.figma.com/api/mcp/asset/083eed93-2034-4277-be17-99ce10e5b91a",
+    logo: "/sponsors/the-lab.svg",
     url: "https://thelabmiami.com",
-    type: "image" as const,
+    assetType: "svg",
     height: 93,
   },
 ]
 
 // Logo assets
 export const logos = {
-  v0: "https://www.figma.com/api/mcp/asset/75f0e408-445a-483e-9c04-012ff5cb1937",
+  v0: "/v0-logo.svg",
 }
 
-// Kurzo SVG path data (stored separately due to complexity)
-export const kurzoSvgPath = `M19.2773 39.3291L14.3113 39.3291L14.3113 39.3285L0.0327623 39.3285L0.0327619 34.3625L11.794 34.3625L7.77825e-07 22.5684L3.5115 19.0569L14.3113 29.8568L14.3113 13.6712L19.2773 13.6711L19.2773 39.3291Z`
+// Helper to determine asset type from file extension or URL
+export function getAssetType(src: string): AssetType {
+  if (src.startsWith("http://") || src.startsWith("https://")) {
+    return "remote"
+  }
+  const ext = src.split(".").pop()?.toLowerCase()
+  if (ext === "svg" || ext === "png" || ext === "jpg" || ext === "jpeg") {
+    return ext as AssetType
+  }
+  return "remote"
+}

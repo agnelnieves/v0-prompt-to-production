@@ -11,7 +11,7 @@ Mark frequent, non-urgent state updates as transitions to maintain UI responsive
 
 **Incorrect (blocks UI on every scroll):**
 
-```tsx
+\`\`\`tsx
 function ScrollTracker() {
   const [scrollY, setScrollY] = useState(0)
   useEffect(() => {
@@ -20,11 +20,11 @@ function ScrollTracker() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 }
-```
+\`\`\`
 
 **Correct (non-blocking updates):**
 
-```tsx
+\`\`\`tsx
 import { startTransition } from 'react'
 
 function ScrollTracker() {
@@ -37,4 +37,4 @@ function ScrollTracker() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 }
-```
+\`\`\`

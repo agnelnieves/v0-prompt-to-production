@@ -11,7 +11,7 @@ Analytics, logging, and error tracking don't block user interaction. Load them a
 
 **Incorrect (blocks initial bundle):**
 
-```tsx
+\`\`\`tsx
 import { Analytics } from '@vercel/analytics/react'
 
 export default function RootLayout({ children }) {
@@ -24,11 +24,11 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`
 
 **Correct (loads after hydration):**
 
-```tsx
+\`\`\`tsx
 import dynamic from 'next/dynamic'
 
 const Analytics = dynamic(
@@ -46,4 +46,4 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`

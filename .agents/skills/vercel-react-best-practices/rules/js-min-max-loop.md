@@ -11,7 +11,7 @@ Finding the smallest or largest element only requires a single pass through the 
 
 **Incorrect (O(n log n) - sort to find latest):**
 
-```typescript
+\`\`\`typescript
 interface Project {
   id: string
   name: string
@@ -22,24 +22,24 @@ function getLatestProject(projects: Project[]) {
   const sorted = [...projects].sort((a, b) => b.updatedAt - a.updatedAt)
   return sorted[0]
 }
-```
+\`\`\`
 
 Sorts the entire array just to find the maximum value.
 
 **Incorrect (O(n log n) - sort for oldest and newest):**
 
-```typescript
+\`\`\`typescript
 function getOldestAndNewest(projects: Project[]) {
   const sorted = [...projects].sort((a, b) => a.updatedAt - b.updatedAt)
   return { oldest: sorted[0], newest: sorted[sorted.length - 1] }
 }
-```
+\`\`\`
 
 Still sorts unnecessarily when only min/max are needed.
 
 **Correct (O(n) - single loop):**
 
-```typescript
+\`\`\`typescript
 function getLatestProject(projects: Project[]) {
   if (projects.length === 0) return null
   
@@ -67,16 +67,16 @@ function getOldestAndNewest(projects: Project[]) {
   
   return { oldest, newest }
 }
-```
+\`\`\`
 
 Single pass through the array, no copying, no sorting.
 
 **Alternative (Math.min/Math.max for small arrays):**
 
-```typescript
+\`\`\`typescript
 const numbers = [5, 2, 8, 1, 9]
 const min = Math.min(...numbers)
 const max = Math.max(...numbers)
-```
+\`\`\`
 
 This works for small arrays, but can be slower or just throw an error for very large arrays due to spread operator limitations. Maximal array length is approximately 124000 in Chrome 143 and 638000 in Safari 18; exact numbers may vary - see [the fiddle](https://jsfiddle.net/qw1jabsx/4/). Use the loop approach for reliability.

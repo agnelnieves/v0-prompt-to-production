@@ -11,7 +11,7 @@ Do not put app-wide initialization that must run once per app load inside `useEf
 
 **Incorrect (runs twice in dev, re-runs on remount):**
 
-```tsx
+\`\`\`tsx
 function Comp() {
   useEffect(() => {
     loadFromStorage()
@@ -20,11 +20,11 @@ function Comp() {
 
   // ...
 }
-```
+\`\`\`
 
 **Correct (once per app load):**
 
-```tsx
+\`\`\`tsx
 let didInit = false
 
 function Comp() {
@@ -37,6 +37,6 @@ function Comp() {
 
   // ...
 }
-```
+\`\`\`
 
 Reference: [Initializing the application](https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application)

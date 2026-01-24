@@ -11,7 +11,7 @@ Use `useSWRSubscription()` to share global event listeners across component inst
 
 **Incorrect (N instances = N listeners):**
 
-```tsx
+\`\`\`tsx
 function useKeyboardShortcut(key: string, callback: () => void) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -23,13 +23,13 @@ function useKeyboardShortcut(key: string, callback: () => void) {
     return () => window.removeEventListener('keydown', handler)
   }, [key, callback])
 }
-```
+\`\`\`
 
 When using the `useKeyboardShortcut` hook multiple times, each instance will register a new listener.
 
 **Correct (N instances = 1 listener):**
 
-```tsx
+\`\`\`tsx
 import useSWRSubscription from 'swr/subscription'
 
 // Module-level Map to track callbacks per key
@@ -71,4 +71,4 @@ function Profile() {
   useKeyboardShortcut('k', () => { /* ... */ })
   // ...
 }
-```
+\`\`\`

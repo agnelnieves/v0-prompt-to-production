@@ -11,7 +11,7 @@ Use a module-level Map to cache function results when the same function is calle
 
 **Incorrect (redundant computation):**
 
-```typescript
+\`\`\`typescript
 function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div>
@@ -24,11 +24,11 @@ function ProjectList({ projects }: { projects: Project[] }) {
     </div>
   )
 }
-```
+\`\`\`
 
 **Correct (cached results):**
 
-```typescript
+\`\`\`typescript
 // Module-level cache
 const slugifyCache = new Map<string, string>()
 
@@ -53,11 +53,11 @@ function ProjectList({ projects }: { projects: Project[] }) {
     </div>
   )
 }
-```
+\`\`\`
 
 **Simpler pattern for single-value functions:**
 
-```typescript
+\`\`\`typescript
 let isLoggedInCache: boolean | null = null
 
 function isLoggedIn(): boolean {
@@ -73,7 +73,7 @@ function isLoggedIn(): boolean {
 function onAuthChange() {
   isLoggedInCache = null
 }
-```
+\`\`\`
 
 Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
 

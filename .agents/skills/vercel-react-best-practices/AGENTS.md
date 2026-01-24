@@ -102,7 +102,7 @@ Move `await` operations into the branches where they're actually used to avoid b
 
 **Incorrect: blocks both branches**
 
-```typescript
+\`\`\`typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
   const userData = await fetchUserData(userId)
   
@@ -114,11 +114,11 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
   // Only this branch uses userData
   return processUserData(userData)
 }
-```
+\`\`\`
 
 **Correct: only blocks when needed**
 
-```typescript
+\`\`\`typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
   if (skipProcessing) {
     // Returns immediately without waiting
@@ -129,11 +129,11 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
   const userData = await fetchUserData(userId)
   return processUserData(userData)
 }
-```
+\`\`\`
 
 **Another example: early return optimization**
 
-```typescript
+\`\`\`typescript
 // Incorrect: always fetches permissions
 async function updateResource(resourceId: string, userId: string) {
   const permissions = await fetchPermissions(userId)
@@ -166,7 +166,7 @@ async function updateResource(resourceId: string, userId: string) {
   
   return await updateResourceData(resource, permissions)
 }
-```
+\`\`\`
 
 This optimization is especially valuable when the skipped branch is frequently taken, or when the deferred operation is expensive.
 
@@ -178,17 +178,17 @@ For operations with partial dependencies, use `better-all` to maximize paralleli
 
 **Incorrect: profile waits for config unnecessarily**
 
-```typescript
+\`\`\`typescript
 const [user, config] = await Promise.all([
   fetchUser(),
   fetchConfig()
 ])
 const profile = await fetchProfile(user.id)
-```
+\`\`\`
 
 **Correct: config and profile run in parallel**
 
-```typescript
+\`\`\`typescript
 import { all } from 'better-all'
 
 const { user, config, profile } = await all({
@@ -198,11 +198,11 @@ const { user, config, profile } = await all({
     return fetchProfile((await this.$.user).id)
   }
 })
-```
+\`\`\`
 
 **Alternative without extra dependencies:**
 
-```typescript
+\`\`\`typescript
 const userPromise = fetchUser()
 const profilePromise = userPromise.then(user => fetchProfile(user.id))
 
@@ -211,7 +211,7 @@ const [user, config, profile] = await Promise.all([
   fetchConfig(),
   profilePromise
 ])
-```
+\`\`\`
 
 We can also create all the promises first, and do `Promise.all()` at the end.
 
@@ -225,18 +225,18 @@ In API routes and Server Actions, start independent operations immediately, even
 
 **Incorrect: config waits for auth, data waits for both**
 
-```typescript
+\`\`\`typescript
 export async function GET(request: Request) {
   const session = await auth()
   const config = await fetchConfig()
   const data = await fetchData(session.user.id)
   return Response.json({ data, config })
 }
-```
+\`\`\`
 
 **Correct: auth and config start immediately**
 
-```typescript
+\`\`\`typescript
 export async function GET(request: Request) {
   const sessionPromise = auth()
   const configPromise = fetchConfig()
@@ -247,7 +247,7 @@ export async function GET(request: Request) {
   ])
   return Response.json({ data, config })
 }
-```
+\`\`\`
 
 For operations with more complex dependency chains, use `better-all` to automatically maximize parallelism (see Dependency-Based Parallelization).
 
@@ -259,21 +259,21 @@ When async operations have no interdependencies, execute them concurrently using
 
 **Incorrect: sequential execution, 3 round trips**
 
-```typescript
+\`\`\`typescript
 const user = await fetchUser()
 const posts = await fetchPosts()
 const comments = await fetchComments()
-```
+\`\`\`
 
 **Correct: parallel execution, 1 round trip**
 
-```typescript
+\`\`\`typescript
 const [user, posts, comments] = await Promise.all([
   fetchUser(),
   fetchPosts(),
   fetchComments()
 ])
-```
+\`\`\`
 
 ### 1.5 Strategic Suspense Boundaries
 
@@ -283,7 +283,7 @@ Instead of awaiting data in async components before returning JSX, use Suspense 
 
 **Incorrect: wrapper blocked by data fetching**
 
-```tsx
+\`\`\`tsx
 async function Page() {
   const data = await fetchData() // Blocks entire page
   
@@ -298,13 +298,13 @@ async function Page() {
     </div>
   )
 }
-```
+\`\`\`
 
 The entire layout waits for data even though only the middle section needs it.
 
 **Correct: wrapper shows immediately, data streams in**
 
-```tsx
+\`\`\`tsx
 function Page() {
   return (
     <div>
@@ -324,13 +324,13 @@ async function DataDisplay() {
   const data = await fetchData() // Only blocks this component
   return <div>{data.content}</div>
 }
-```
+\`\`\`
 
 Sidebar, Header, and Footer render immediately. Only DataDisplay waits for data.
 
 **Alternative: share promise across components**
 
-```tsx
+\`\`\`tsx
 function Page() {
   // Start fetch immediately, but don't await
   const dataPromise = fetchData()
@@ -357,7 +357,7 @@ function DataSummary({ dataPromise }: { dataPromise: Promise<Data> }) {
   const data = use(dataPromise) // Reuses the same promise
   return <div>{data.summary}</div>
 }
-```
+\`\`\`
 
 Both components share the same promise, so only one fetch occurs. Layout renders immediately while both components wait together.
 
@@ -393,18 +393,18 @@ Popular icon and component libraries can have **up to 10,000 re-exports** in the
 
 **Incorrect: imports entire library**
 
-```tsx
+\`\`\`tsx
 import { Check, X, Menu } from 'lucide-react'
 // Loads 1,583 modules, takes ~2.8s extra in dev
 // Runtime cost: 200-800ms on every cold start
 
 import { Button, TextField } from '@mui/material'
 // Loads 2,225 modules, takes ~4.2s extra in dev
-```
+\`\`\`
 
 **Correct: imports only what you need**
 
-```tsx
+\`\`\`tsx
 import Check from 'lucide-react/dist/esm/icons/check'
 import X from 'lucide-react/dist/esm/icons/x'
 import Menu from 'lucide-react/dist/esm/icons/menu'
@@ -413,11 +413,11 @@ import Menu from 'lucide-react/dist/esm/icons/menu'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 // Loads only what you use
-```
+\`\`\`
 
 **Alternative: Next.js 13.5+**
 
-```js
+\`\`\`js
 // next.config.js - use optimizePackageImports
 module.exports = {
   experimental: {
@@ -428,7 +428,7 @@ module.exports = {
 // Then you can keep the ergonomic barrel imports:
 import { Check, X, Menu } from 'lucide-react'
 // Automatically transformed to direct imports at build time
-```
+\`\`\`
 
 Direct imports provide 15-70% faster dev boot, 28% faster builds, 40% faster cold starts, and significantly faster HMR.
 
@@ -444,7 +444,7 @@ Load large data or modules only when a feature is activated.
 
 **Example: lazy-load animation frames**
 
-```tsx
+\`\`\`tsx
 function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [frames, setFrames] = useState<Frame[] | null>(null)
 
@@ -459,7 +459,7 @@ function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled
   if (!frames) return <Skeleton />
   return <Canvas frames={frames} />
 }
-```
+\`\`\`
 
 The `typeof window !== 'undefined'` check prevents bundling this module for SSR, optimizing server bundle size and build speed.
 
@@ -471,7 +471,7 @@ Analytics, logging, and error tracking don't block user interaction. Load them a
 
 **Incorrect: blocks initial bundle**
 
-```tsx
+\`\`\`tsx
 import { Analytics } from '@vercel/analytics/react'
 
 export default function RootLayout({ children }) {
@@ -484,11 +484,11 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`
 
 **Correct: loads after hydration**
 
-```tsx
+\`\`\`tsx
 import dynamic from 'next/dynamic'
 
 const Analytics = dynamic(
@@ -506,7 +506,7 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`
 
 ### 2.4 Dynamic Imports for Heavy Components
 
@@ -516,17 +516,17 @@ Use `next/dynamic` to lazy-load large components not needed on initial render.
 
 **Incorrect: Monaco bundles with main chunk ~300KB**
 
-```tsx
+\`\`\`tsx
 import { MonacoEditor } from './monaco-editor'
 
 function CodePanel({ code }: { code: string }) {
   return <MonacoEditor value={code} />
 }
-```
+\`\`\`
 
 **Correct: Monaco loads on demand**
 
-```tsx
+\`\`\`tsx
 import dynamic from 'next/dynamic'
 
 const MonacoEditor = dynamic(
@@ -537,7 +537,7 @@ const MonacoEditor = dynamic(
 function CodePanel({ code }: { code: string }) {
   return <MonacoEditor value={code} />
 }
-```
+\`\`\`
 
 ### 2.5 Preload Based on User Intent
 
@@ -547,7 +547,7 @@ Preload heavy bundles before they're needed to reduce perceived latency.
 
 **Example: preload on hover/focus**
 
-```tsx
+\`\`\`tsx
 function EditorButton({ onClick }: { onClick: () => void }) {
   const preload = () => {
     if (typeof window !== 'undefined') {
@@ -565,11 +565,11 @@ function EditorButton({ onClick }: { onClick: () => void }) {
     </button>
   )
 }
-```
+\`\`\`
 
 **Example: preload when feature flag is enabled**
 
-```tsx
+\`\`\`tsx
 function FlagsProvider({ children, flags }: Props) {
   useEffect(() => {
     if (flags.editorEnabled && typeof window !== 'undefined') {
@@ -581,7 +581,7 @@ function FlagsProvider({ children, flags }: Props) {
     {children}
   </FlagsContext.Provider>
 }
-```
+\`\`\`
 
 The `typeof window !== 'undefined'` check prevents bundling preloaded modules for SSR, optimizing server bundle size and build speed.
 
@@ -603,7 +603,7 @@ Next.js documentation explicitly states: "Treat Server Actions with the same sec
 
 **Incorrect: no authentication check**
 
-```typescript
+\`\`\`typescript
 'use server'
 
 export async function deleteUser(userId: string) {
@@ -611,11 +611,11 @@ export async function deleteUser(userId: string) {
   await db.user.delete({ where: { id: userId } })
   return { success: true }
 }
-```
+\`\`\`
 
 **Correct: authentication inside the action**
 
-```typescript
+\`\`\`typescript
 'use server'
 
 import { verifySession } from '@/lib/auth'
@@ -637,11 +637,11 @@ export async function deleteUser(userId: string) {
   await db.user.delete({ where: { id: userId } })
   return { success: true }
 }
-```
+\`\`\`
 
 **With input validation:**
 
-```typescript
+\`\`\`typescript
 'use server'
 
 import { verifySession } from '@/lib/auth'
@@ -679,7 +679,7 @@ export async function updateProfile(data: unknown) {
   
   return { success: true }
 }
-```
+\`\`\`
 
 Reference: [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication)
 
@@ -691,31 +691,31 @@ RSC→client serialization deduplicates by object reference, not value. Same ref
 
 **Incorrect: duplicates array**
 
-```tsx
+\`\`\`tsx
 // RSC: sends 6 strings (2 arrays × 3 items)
 <ClientList usernames={usernames} usernamesOrdered={usernames.toSorted()} />
-```
+\`\`\`
 
 **Correct: sends 3 strings**
 
-```tsx
+\`\`\`tsx
 // RSC: send once
 <ClientList usernames={usernames} />
 
 // Client: transform there
 'use client'
 const sorted = useMemo(() => [...usernames].sort(), [usernames])
-```
+\`\`\`
 
 **Nested deduplication behavior:**
 
-```tsx
+\`\`\`tsx
 // string[] - duplicates everything
 usernames={['a','b']} sorted={usernames.toSorted()} // sends 4 strings
 
 // object[] - duplicates array structure only
 users={[{id:1},{id:2}]} sorted={users.toSorted()} // sends 2 arrays + 2 unique objects (not 4)
-```
+\`\`\`
 
 Deduplication works recursively. Impact varies by data type:
 
@@ -731,7 +731,7 @@ Deduplication works recursively. Impact varies by data type:
 
 **More examples:**
 
-```tsx
+\`\`\`tsx
 // ❌ Bad
 <C users={users} active={users.filter(u => u.active)} />
 <C product={product} productName={product.name} />
@@ -740,7 +740,7 @@ Deduplication works recursively. Impact varies by data type:
 <C users={users} />
 <C product={product} />
 // Do filtering/destructuring in client
-```
+\`\`\`
 
 **Exception:** Pass derived data when transformation is expensive or client doesn't need original.
 
@@ -752,7 +752,7 @@ Deduplication works recursively. Impact varies by data type:
 
 **Implementation:**
 
-```typescript
+\`\`\`typescript
 import { LRUCache } from 'lru-cache'
 
 const cache = new LRUCache<string, any>({
@@ -771,7 +771,7 @@ export async function getUser(id: string) {
 
 // Request 1: DB query, result cached
 // Request 2: cache hit, no DB query
-```
+\`\`\`
 
 Use when sequential user actions hit multiple endpoints needing the same data within seconds.
 
@@ -789,7 +789,7 @@ The React Server/Client boundary serializes all object properties into strings a
 
 **Incorrect: serializes all 50 fields**
 
-```tsx
+\`\`\`tsx
 async function Page() {
   const user = await fetchUser()  // 50 fields
   return <Profile user={user} />
@@ -799,11 +799,11 @@ async function Page() {
 function Profile({ user }: { user: User }) {
   return <div>{user.name}</div>  // uses 1 field
 }
-```
+\`\`\`
 
 **Correct: serializes only 1 field**
 
-```tsx
+\`\`\`tsx
 async function Page() {
   const user = await fetchUser()
   return <Profile name={user.name} />
@@ -813,7 +813,7 @@ async function Page() {
 function Profile({ name }: { name: string }) {
   return <div>{name}</div>
 }
-```
+\`\`\`
 
 ### 3.5 Parallel Data Fetching with Component Composition
 
@@ -823,7 +823,7 @@ React Server Components execute sequentially within a tree. Restructure with com
 
 **Incorrect: Sidebar waits for Page's fetch to complete**
 
-```tsx
+\`\`\`tsx
 export default async function Page() {
   const header = await fetchHeader()
   return (
@@ -838,11 +838,11 @@ async function Sidebar() {
   const items = await fetchSidebarItems()
   return <nav>{items.map(renderItem)}</nav>
 }
-```
+\`\`\`
 
 **Correct: both fetch simultaneously**
 
-```tsx
+\`\`\`tsx
 async function Header() {
   const data = await fetchHeader()
   return <div>{data}</div>
@@ -861,11 +861,11 @@ export default function Page() {
     </div>
   )
 }
-```
+\`\`\`
 
 **Alternative with children prop:**
 
-```tsx
+\`\`\`tsx
 async function Header() {
   const data = await fetchHeader()
   return <div>{data}</div>
@@ -892,7 +892,7 @@ export default function Page() {
     </Layout>
   )
 }
-```
+\`\`\`
 
 ### 3.6 Per-Request Deduplication with React.cache()
 
@@ -902,7 +902,7 @@ Use `React.cache()` for server-side request deduplication. Authentication and da
 
 **Usage:**
 
-```typescript
+\`\`\`typescript
 import { cache } from 'react'
 
 export const getCurrentUser = cache(async () => {
@@ -912,7 +912,7 @@ export const getCurrentUser = cache(async () => {
     where: { id: session.user.id }
   })
 })
-```
+\`\`\`
 
 Within a single request, multiple calls to `getCurrentUser()` execute the query only once.
 
@@ -922,7 +922,7 @@ Within a single request, multiple calls to `getCurrentUser()` execute the query 
 
 **Incorrect: always cache miss**
 
-```typescript
+\`\`\`typescript
 const getUser = cache(async (params: { uid: number }) => {
   return await db.user.findUnique({ where: { id: params.uid } })
 })
@@ -930,15 +930,15 @@ const getUser = cache(async (params: { uid: number }) => {
 // Each call creates new object, never hits cache
 getUser({ uid: 1 })
 getUser({ uid: 1 })  // Cache miss, runs query again
-```
+\`\`\`
 
 **Correct: cache hit**
 
-```typescript
+\`\`\`typescript
 const params = { uid: 1 }
 getUser(params)  // Query runs
 getUser(params)  // Cache hit (same reference)
-```
+\`\`\`
 
 If you must pass objects, pass the same reference:
 
@@ -968,7 +968,7 @@ Use Next.js's `after()` to schedule work that should execute after a response is
 
 **Incorrect: blocks response**
 
-```tsx
+\`\`\`tsx
 import { logUserAction } from '@/app/utils'
 
 export async function POST(request: Request) {
@@ -984,11 +984,11 @@ export async function POST(request: Request) {
     headers: { 'Content-Type': 'application/json' }
   })
 }
-```
+\`\`\`
 
 **Correct: non-blocking**
 
-```tsx
+\`\`\`tsx
 import { after } from 'next/server'
 import { headers, cookies } from 'next/headers'
 import { logUserAction } from '@/app/utils'
@@ -1010,7 +1010,7 @@ export async function POST(request: Request) {
     headers: { 'Content-Type': 'application/json' }
   })
 }
-```
+\`\`\`
 
 The response is sent immediately while logging happens in the background.
 
@@ -1050,7 +1050,7 @@ Use `useSWRSubscription()` to share global event listeners across component inst
 
 **Incorrect: N instances = N listeners**
 
-```tsx
+\`\`\`tsx
 function useKeyboardShortcut(key: string, callback: () => void) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -1062,13 +1062,13 @@ function useKeyboardShortcut(key: string, callback: () => void) {
     return () => window.removeEventListener('keydown', handler)
   }, [key, callback])
 }
-```
+\`\`\`
 
 When using the `useKeyboardShortcut` hook multiple times, each instance will register a new listener.
 
 **Correct: N instances = 1 listener**
 
-```tsx
+\`\`\`tsx
 import useSWRSubscription from 'swr/subscription'
 
 // Module-level Map to track callbacks per key
@@ -1110,7 +1110,7 @@ function Profile() {
   useKeyboardShortcut('k', () => { /* ... */ })
   // ...
 }
-```
+\`\`\`
 
 ### 4.2 Use Passive Event Listeners for Scrolling Performance
 
@@ -1120,7 +1120,7 @@ Add `{ passive: true }` to touch and wheel event listeners to enable immediate s
 
 **Incorrect:**
 
-```typescript
+\`\`\`typescript
 useEffect(() => {
   const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
   const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
@@ -1133,11 +1133,11 @@ useEffect(() => {
     document.removeEventListener('wheel', handleWheel)
   }
 }, [])
-```
+\`\`\`
 
 **Correct:**
 
-```typescript
+\`\`\`typescript
 useEffect(() => {
   const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
   const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
@@ -1150,7 +1150,7 @@ useEffect(() => {
     document.removeEventListener('wheel', handleWheel)
   }
 }, [])
-```
+\`\`\`
 
 **Use passive when:** tracking/analytics, logging, any listener that doesn't call `preventDefault()`.
 
@@ -1164,7 +1164,7 @@ SWR enables request deduplication, caching, and revalidation across component in
 
 **Incorrect: no deduplication, each instance fetches**
 
-```tsx
+\`\`\`tsx
 function UserList() {
   const [users, setUsers] = useState([])
   useEffect(() => {
@@ -1173,38 +1173,38 @@ function UserList() {
       .then(setUsers)
   }, [])
 }
-```
+\`\`\`
 
 **Correct: multiple instances share one request**
 
-```tsx
+\`\`\`tsx
 import useSWR from 'swr'
 
 function UserList() {
   const { data: users } = useSWR('/api/users', fetcher)
 }
-```
+\`\`\`
 
 **For immutable data:**
 
-```tsx
+\`\`\`tsx
 import { useImmutableSWR } from '@/lib/swr'
 
 function StaticContent() {
   const { data } = useImmutableSWR('/api/config', fetcher)
 }
-```
+\`\`\`
 
 **For mutations:**
 
-```tsx
+\`\`\`tsx
 import { useSWRMutation } from 'swr/mutation'
 
 function UpdateButton() {
   const { trigger } = useSWRMutation('/api/user', updateUser)
   return <button onClick={() => trigger()}>Update</button>
 }
-```
+\`\`\`
 
 Reference: [https://swr.vercel.app](https://swr.vercel.app)
 
@@ -1216,15 +1216,15 @@ Add version prefix to keys and store only needed fields. Prevents schema conflic
 
 **Incorrect:**
 
-```typescript
+\`\`\`typescript
 // No version, stores everything, no error handling
 localStorage.setItem('userConfig', JSON.stringify(fullUserObject))
 const data = localStorage.getItem('userConfig')
-```
+\`\`\`
 
 **Correct:**
 
-```typescript
+\`\`\`typescript
 const VERSION = 'v2'
 
 function saveConfig(config: { theme: string; language: string }) {
@@ -1255,11 +1255,11 @@ function migrate() {
     }
   } catch {}
 }
-```
+\`\`\`
 
 **Store minimal fields from server responses:**
 
-```typescript
+\`\`\`typescript
 // User object has 20+ fields, only store what UI needs
 function cachePrefs(user: FullUser) {
   try {
@@ -1269,7 +1269,7 @@ function cachePrefs(user: FullUser) {
     }))
   } catch {}
 }
-```
+\`\`\`
 
 **Always wrap in try-catch:** `getItem()` and `setItem()` throw in incognito/private browsing (Safari, Firefox), when quota exceeded, or when disabled.
 
@@ -1291,7 +1291,7 @@ If a value can be computed from current props/state, do not store it in state or
 
 **Incorrect: redundant state and effect**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const [firstName, setFirstName] = useState('First')
   const [lastName, setLastName] = useState('Last')
@@ -1303,11 +1303,11 @@ function Form() {
 
   return <p>{fullName}</p>
 }
-```
+\`\`\`
 
 **Correct: derive during render**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const [firstName, setFirstName] = useState('First')
   const [lastName, setLastName] = useState('Last')
@@ -1315,7 +1315,7 @@ function Form() {
 
   return <p>{fullName}</p>
 }
-```
+\`\`\`
 
 Reference: [https://react.dev/learn/you-might-not-need-an-effect](https://react.dev/learn/you-might-not-need-an-effect)
 
@@ -1327,7 +1327,7 @@ Don't subscribe to dynamic state (searchParams, localStorage) if you only read i
 
 **Incorrect: subscribes to all searchParams changes**
 
-```tsx
+\`\`\`tsx
 function ShareButton({ chatId }: { chatId: string }) {
   const searchParams = useSearchParams()
 
@@ -1338,11 +1338,11 @@ function ShareButton({ chatId }: { chatId: string }) {
 
   return <button onClick={handleShare}>Share</button>
 }
-```
+\`\`\`
 
 **Correct: reads on demand, no subscription**
 
-```tsx
+\`\`\`tsx
 function ShareButton({ chatId }: { chatId: string }) {
   const handleShare = () => {
     const params = new URLSearchParams(window.location.search)
@@ -1352,7 +1352,7 @@ function ShareButton({ chatId }: { chatId: string }) {
 
   return <button onClick={handleShare}>Share</button>
 }
-```
+\`\`\`
 
 ### 5.3 Do not wrap a simple expression with a primitive result type in useMemo
 
@@ -1364,7 +1364,7 @@ Calling `useMemo` and comparing hook dependencies may consume more resources tha
 
 **Incorrect:**
 
-```tsx
+\`\`\`tsx
 function Header({ user, notifications }: Props) {
   const isLoading = useMemo(() => {
     return user.isLoading || notifications.isLoading
@@ -1373,18 +1373,18 @@ function Header({ user, notifications }: Props) {
   if (isLoading) return <Skeleton />
   // return some markup
 }
-```
+\`\`\`
 
 **Correct:**
 
-```tsx
+\`\`\`tsx
 function Header({ user, notifications }: Props) {
   const isLoading = user.isLoading || notifications.isLoading
 
   if (isLoading) return <Skeleton />
   // return some markup
 }
-```
+\`\`\`
 
 ### 5.4 Extract Default Non-primitive Parameter Value from Memoized Component to Constant
 
@@ -1396,18 +1396,18 @@ To address this issue, extract the default value into a constant.
 
 **Incorrect: `onClick` has different values on every rerender**
 
-```tsx
+\`\`\`tsx
 const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: () => void }) {
   // ...
 })
 
 // Used without optional onClick
 <UserAvatar />
-```
+\`\`\`
 
 **Correct: stable default value**
 
-```tsx
+\`\`\`tsx
 const NOOP = () => {};
 
 const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () => void }) {
@@ -1416,7 +1416,7 @@ const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () =
 
 // Used without optional onClick
 <UserAvatar />
-```
+\`\`\`
 
 ### 5.5 Extract to Memoized Components
 
@@ -1426,7 +1426,7 @@ Extract expensive work into memoized components to enable early returns before c
 
 **Incorrect: computes avatar even when loading**
 
-```tsx
+\`\`\`tsx
 function Profile({ user, loading }: Props) {
   const avatar = useMemo(() => {
     const id = computeAvatarId(user)
@@ -1436,11 +1436,11 @@ function Profile({ user, loading }: Props) {
   if (loading) return <Skeleton />
   return <div>{avatar}</div>
 }
-```
+\`\`\`
 
 **Correct: skips computation when loading**
 
-```tsx
+\`\`\`tsx
 const UserAvatar = memo(function UserAvatar({ user }: { user: User }) {
   const id = useMemo(() => computeAvatarId(user), [user])
   return <Avatar id={id} />
@@ -1454,7 +1454,7 @@ function Profile({ user, loading }: Props) {
     </div>
   )
 }
-```
+\`\`\`
 
 **Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, manual memoization with `memo()` and `useMemo()` is not necessary. The compiler automatically optimizes re-renders.
 
@@ -1466,23 +1466,23 @@ Specify primitive dependencies instead of objects to minimize effect re-runs.
 
 **Incorrect: re-runs on any user field change**
 
-```tsx
+\`\`\`tsx
 useEffect(() => {
   console.log(user.id)
 }, [user])
-```
+\`\`\`
 
 **Correct: re-runs only when id changes**
 
-```tsx
+\`\`\`tsx
 useEffect(() => {
   console.log(user.id)
 }, [user.id])
-```
+\`\`\`
 
 **For derived state, compute outside effect:**
 
-```tsx
+\`\`\`tsx
 // Incorrect: runs on width=767, 766, 765...
 useEffect(() => {
   if (width < 768) {
@@ -1497,7 +1497,7 @@ useEffect(() => {
     enableMobileMode()
   }
 }, [isMobile])
-```
+\`\`\`
 
 ### 5.7 Put Interaction Logic in Event Handlers
 
@@ -1507,7 +1507,7 @@ If a side effect is triggered by a specific user action (submit, click, drag), r
 
 **Incorrect: event modeled as state + effect**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const [submitted, setSubmitted] = useState(false)
   const theme = useContext(ThemeContext)
@@ -1521,11 +1521,11 @@ function Form() {
 
   return <button onClick={() => setSubmitted(true)}>Submit</button>
 }
-```
+\`\`\`
 
 **Correct: do it in the handler**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const theme = useContext(ThemeContext)
 
@@ -1536,7 +1536,7 @@ function Form() {
 
   return <button onClick={handleSubmit}>Submit</button>
 }
-```
+\`\`\`
 
 Reference: [https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)
 
@@ -1548,22 +1548,22 @@ Subscribe to derived boolean state instead of continuous values to reduce re-ren
 
 **Incorrect: re-renders on every pixel change**
 
-```tsx
+\`\`\`tsx
 function Sidebar() {
   const width = useWindowWidth()  // updates continuously
   const isMobile = width < 768
   return <nav className={isMobile ? 'mobile' : 'desktop'} />
 }
-```
+\`\`\`
 
 **Correct: re-renders only when boolean changes**
 
-```tsx
+\`\`\`tsx
 function Sidebar() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return <nav className={isMobile ? 'mobile' : 'desktop'} />
 }
-```
+\`\`\`
 
 ### 5.9 Use Functional setState Updates
 
@@ -1573,7 +1573,7 @@ When updating state based on the current state value, use the functional update 
 
 **Incorrect: requires state as dependency**
 
-```tsx
+\`\`\`tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
@@ -1589,13 +1589,13 @@ function TodoList() {
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
-```
+\`\`\`
 
 The first callback is recreated every time `items` changes, which can cause child components to re-render unnecessarily. The second callback has a stale closure bug—it will always reference the initial `items` value.
 
 **Correct: stable callbacks, no stale closures**
 
-```tsx
+\`\`\`tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
@@ -1611,7 +1611,7 @@ function TodoList() {
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
-```
+\`\`\`
 
 **Benefits:**
 
@@ -1651,7 +1651,7 @@ Pass a function to `useState` for expensive initial values. Without the function
 
 **Incorrect: runs on every render**
 
-```tsx
+\`\`\`tsx
 function FilteredList({ items }: { items: Item[] }) {
   // buildSearchIndex() runs on EVERY render, even after initialization
   const [searchIndex, setSearchIndex] = useState(buildSearchIndex(items))
@@ -1669,11 +1669,11 @@ function UserProfile() {
   
   return <SettingsForm settings={settings} onChange={setSettings} />
 }
-```
+\`\`\`
 
 **Correct: runs only once**
 
-```tsx
+\`\`\`tsx
 function FilteredList({ items }: { items: Item[] }) {
   // buildSearchIndex() runs ONLY on initial render
   const [searchIndex, setSearchIndex] = useState(() => buildSearchIndex(items))
@@ -1691,7 +1691,7 @@ function UserProfile() {
   
   return <SettingsForm settings={settings} onChange={setSettings} />
 }
-```
+\`\`\`
 
 Use lazy initialization when computing initial values from localStorage/sessionStorage, building data structures (indexes, maps), reading from the DOM, or performing heavy transformations.
 
@@ -1705,7 +1705,7 @@ Mark frequent, non-urgent state updates as transitions to maintain UI responsive
 
 **Incorrect: blocks UI on every scroll**
 
-```tsx
+\`\`\`tsx
 function ScrollTracker() {
   const [scrollY, setScrollY] = useState(0)
   useEffect(() => {
@@ -1714,11 +1714,11 @@ function ScrollTracker() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 }
-```
+\`\`\`
 
 **Correct: non-blocking updates**
 
-```tsx
+\`\`\`tsx
 import { startTransition } from 'react'
 
 function ScrollTracker() {
@@ -1731,7 +1731,7 @@ function ScrollTracker() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 }
-```
+\`\`\`
 
 ### 5.12 Use useRef for Transient Values
 
@@ -1741,7 +1741,7 @@ When a value changes frequently and you don't want a re-render on every update (
 
 **Incorrect: renders every update**
 
-```tsx
+\`\`\`tsx
 function Tracker() {
   const [lastX, setLastX] = useState(0)
 
@@ -1764,11 +1764,11 @@ function Tracker() {
     />
   )
 }
-```
+\`\`\`
 
 **Correct: no re-render for tracking**
 
-```tsx
+\`\`\`tsx
 function Tracker() {
   const lastXRef = useRef(0)
   const dotRef = useRef<HTMLDivElement>(null)
@@ -1800,7 +1800,7 @@ function Tracker() {
     />
   )
 }
-```
+\`\`\`
 
 ---
 
@@ -1818,7 +1818,7 @@ Many browsers don't have hardware acceleration for CSS3 animations on SVG elemen
 
 **Incorrect: animating SVG directly - no hardware acceleration**
 
-```tsx
+\`\`\`tsx
 function LoadingSpinner() {
   return (
     <svg 
@@ -1831,11 +1831,11 @@ function LoadingSpinner() {
     </svg>
   )
 }
-```
+\`\`\`
 
 **Correct: animating wrapper div - hardware accelerated**
 
-```tsx
+\`\`\`tsx
 function LoadingSpinner() {
   return (
     <div className="animate-spin">
@@ -1849,7 +1849,7 @@ function LoadingSpinner() {
     </div>
   )
 }
-```
+\`\`\`
 
 This applies to all CSS transforms and transitions (`transform`, `opacity`, `translate`, `scale`, `rotate`). The wrapper div allows browsers to use GPU acceleration for smoother animations.
 
@@ -1861,16 +1861,16 @@ Apply `content-visibility: auto` to defer off-screen rendering.
 
 **CSS:**
 
-```css
+\`\`\`css
 .message-item {
   content-visibility: auto;
   contain-intrinsic-size: 0 80px;
 }
-```
+\`\`\`
 
 **Example:**
 
-```tsx
+\`\`\`tsx
 function MessageList({ messages }: { messages: Message[] }) {
   return (
     <div className="overflow-y-auto h-screen">
@@ -1883,7 +1883,7 @@ function MessageList({ messages }: { messages: Message[] }) {
     </div>
   )
 }
-```
+\`\`\`
 
 For 1000 messages, browser skips layout/paint for ~990 off-screen items (10× faster initial render).
 
@@ -1895,7 +1895,7 @@ Extract static JSX outside components to avoid re-creation.
 
 **Incorrect: recreates element every render**
 
-```tsx
+\`\`\`tsx
 function LoadingSkeleton() {
   return <div className="animate-pulse h-20 bg-gray-200" />
 }
@@ -1907,11 +1907,11 @@ function Container() {
     </div>
   )
 }
-```
+\`\`\`
 
 **Correct: reuses same element**
 
-```tsx
+\`\`\`tsx
 const loadingSkeleton = (
   <div className="animate-pulse h-20 bg-gray-200" />
 )
@@ -1923,7 +1923,7 @@ function Container() {
     </div>
   )
 }
-```
+\`\`\`
 
 This is especially helpful for large and static SVG nodes, which can be expensive to recreate on every render.
 
@@ -1937,21 +1937,21 @@ Reduce SVG coordinate precision to decrease file size. The optimal precision dep
 
 **Incorrect: excessive precision**
 
-```svg
+\`\`\`svg
 <path d="M 10.293847 20.847362 L 30.938472 40.192837" />
-```
+\`\`\`
 
 **Correct: 1 decimal place**
 
-```svg
+\`\`\`svg
 <path d="M 10.3 20.8 L 30.9 40.2" />
-```
+\`\`\`
 
 **Automate with SVGO:**
 
-```bash
+\`\`\`bash
 npx svgo --precision=1 --multipass icon.svg
-```
+\`\`\`
 
 ### 6.5 Prevent Hydration Mismatch Without Flickering
 
@@ -1961,7 +1961,7 @@ When rendering content that depends on client-side storage (localStorage, cookie
 
 **Incorrect: breaks SSR**
 
-```tsx
+\`\`\`tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   // localStorage is not available on server - throws error
   const theme = localStorage.getItem('theme') || 'light'
@@ -1972,13 +1972,13 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
     </div>
   )
 }
-```
+\`\`\`
 
 Server-side rendering will fail because `localStorage` is undefined.
 
 **Incorrect: visual flickering**
 
-```tsx
+\`\`\`tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState('light')
   
@@ -1996,13 +1996,13 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
     </div>
   )
 }
-```
+\`\`\`
 
 Component first renders with default value (`light`), then updates after hydration, causing a visible flash of incorrect content.
 
 **Correct: no flicker, no hydration mismatch**
 
-```tsx
+\`\`\`tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   return (
     <>
@@ -2025,7 +2025,7 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
     </>
   )
 }
-```
+\`\`\`
 
 The inline script executes synchronously before showing the element, ensuring the DOM already has the correct value. No flickering, no hydration mismatch.
 
@@ -2039,15 +2039,15 @@ In SSR frameworks (e.g., Next.js), some values are intentionally different on se
 
 **Incorrect: known mismatch warnings**
 
-```tsx
+\`\`\`tsx
 function Timestamp() {
   return <span>{new Date().toLocaleString()}</span>
 }
-```
+\`\`\`
 
 **Correct: suppress expected mismatch only**
 
-```tsx
+\`\`\`tsx
 function Timestamp() {
   return (
     <span suppressHydrationWarning>
@@ -2055,7 +2055,7 @@ function Timestamp() {
     </span>
   )
 }
-```
+\`\`\`
 
 ### 6.7 Use Activity Component for Show/Hide
 
@@ -2065,7 +2065,7 @@ Use React's `<Activity>` to preserve state/DOM for expensive components that fre
 
 **Usage:**
 
-```tsx
+\`\`\`tsx
 import { Activity } from 'react'
 
 function Dropdown({ isOpen }: Props) {
@@ -2075,7 +2075,7 @@ function Dropdown({ isOpen }: Props) {
     </Activity>
   )
 }
-```
+\`\`\`
 
 Avoids expensive re-renders and state loss.
 
@@ -2087,7 +2087,7 @@ Use explicit ternary operators (`? :`) instead of `&&` for conditional rendering
 
 **Incorrect: renders "0" when count is 0**
 
-```tsx
+\`\`\`tsx
 function Badge({ count }: { count: number }) {
   return (
     <div>
@@ -2098,11 +2098,11 @@ function Badge({ count }: { count: number }) {
 
 // When count = 0, renders: <div>0</div>
 // When count = 5, renders: <div><span class="badge">5</span></div>
-```
+\`\`\`
 
 **Correct: renders nothing when count is 0**
 
-```tsx
+\`\`\`tsx
 function Badge({ count }: { count: number }) {
   return (
     <div>
@@ -2113,7 +2113,7 @@ function Badge({ count }: { count: number }) {
 
 // When count = 0, renders: <div></div>
 // When count = 5, renders: <div><span class="badge">5</span></div>
-```
+\`\`\`
 
 ### 6.9 Use useTransition Over Manual Loading States
 
@@ -2123,7 +2123,7 @@ Use `useTransition` instead of manual `useState` for loading states. This provid
 
 **Incorrect: manual loading state**
 
-```tsx
+\`\`\`tsx
 function SearchResults() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
@@ -2145,11 +2145,11 @@ function SearchResults() {
     </>
   )
 }
-```
+\`\`\`
 
 **Correct: useTransition with built-in pending state**
 
-```tsx
+\`\`\`tsx
 import { useTransition, useState } from 'react'
 
 function SearchResults() {
@@ -2175,7 +2175,7 @@ function SearchResults() {
     </>
   )
 }
-```
+\`\`\`
 
 **Benefits:**
 
@@ -2205,7 +2205,7 @@ Avoid interleaving style writes with layout reads. When you read a layout proper
 
 **This is OK: browser batches style changes**
 
-```typescript
+\`\`\`typescript
 function updateElementStyles(element: HTMLElement) {
   // Each line invalidates style, but browser batches the recalculation
   element.style.width = '100px'
@@ -2213,22 +2213,22 @@ function updateElementStyles(element: HTMLElement) {
   element.style.backgroundColor = 'blue'
   element.style.border = '1px solid black'
 }
-```
+\`\`\`
 
 **Incorrect: interleaved reads and writes force reflows**
 
-```typescript
+\`\`\`typescript
 function layoutThrashing(element: HTMLElement) {
   element.style.width = '100px'
   const width = element.offsetWidth  // Forces reflow
   element.style.height = '200px'
   const height = element.offsetHeight  // Forces another reflow
 }
-```
+\`\`\`
 
 **Correct: batch writes, then read once**
 
-```typescript
+\`\`\`typescript
 function updateElementStyles(element: HTMLElement) {
   // Batch all writes together
   element.style.width = '100px'
@@ -2239,23 +2239,23 @@ function updateElementStyles(element: HTMLElement) {
   // Read after all writes are done (single reflow)
   const { width, height } = element.getBoundingClientRect()
 }
-```
+\`\`\`
 
 **Correct: batch reads, then writes**
 
-```typescript
+\`\`\`typescript
 function updateElementStyles(element: HTMLElement) {
   element.classList.add('highlighted-box')
   
   const { width, height } = element.getBoundingClientRect()
 }
-```
+\`\`\`
 
 **Better: use CSS classes**
 
 **React example:**
 
-```tsx
+\`\`\`tsx
 // Incorrect: interleaving style changes with layout queries
 function Box({ isHighlighted }: { isHighlighted: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -2279,7 +2279,7 @@ function Box({ isHighlighted }: { isHighlighted: boolean }) {
     </div>
   )
 }
-```
+\`\`\`
 
 Prefer CSS classes over inline styles when possible. CSS files are cached by the browser, and classes provide better separation of concerns and are easier to maintain.
 
@@ -2293,18 +2293,18 @@ Multiple `.find()` calls by the same key should use a Map.
 
 **Incorrect (O(n) per lookup):**
 
-```typescript
+\`\`\`typescript
 function processOrders(orders: Order[], users: User[]) {
   return orders.map(order => ({
     ...order,
     user: users.find(u => u.id === order.userId)
   }))
 }
-```
+\`\`\`
 
 **Correct (O(1) per lookup):**
 
-```typescript
+\`\`\`typescript
 function processOrders(orders: Order[], users: User[]) {
   const userById = new Map(users.map(u => [u.id, u]))
 
@@ -2313,7 +2313,7 @@ function processOrders(orders: Order[], users: User[]) {
     user: userById.get(order.userId)
   }))
 }
-```
+\`\`\`
 
 Build map once (O(n)), then all lookups are O(1).
 
@@ -2327,21 +2327,21 @@ Cache object property lookups in hot paths.
 
 **Incorrect: 3 lookups × N iterations**
 
-```typescript
+\`\`\`typescript
 for (let i = 0; i < arr.length; i++) {
   process(obj.config.settings.value)
 }
-```
+\`\`\`
 
 **Correct: 1 lookup total**
 
-```typescript
+\`\`\`typescript
 const value = obj.config.settings.value
 const len = arr.length
 for (let i = 0; i < len; i++) {
   process(value)
 }
-```
+\`\`\`
 
 ### 7.4 Cache Repeated Function Calls
 
@@ -2351,7 +2351,7 @@ Use a module-level Map to cache function results when the same function is calle
 
 **Incorrect: redundant computation**
 
-```typescript
+\`\`\`typescript
 function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div>
@@ -2364,11 +2364,11 @@ function ProjectList({ projects }: { projects: Project[] }) {
     </div>
   )
 }
-```
+\`\`\`
 
 **Correct: cached results**
 
-```typescript
+\`\`\`typescript
 // Module-level cache
 const slugifyCache = new Map<string, string>()
 
@@ -2393,11 +2393,11 @@ function ProjectList({ projects }: { projects: Project[] }) {
     </div>
   )
 }
-```
+\`\`\`
 
 **Simpler pattern for single-value functions:**
 
-```typescript
+\`\`\`typescript
 let isLoggedInCache: boolean | null = null
 
 function isLoggedIn(): boolean {
@@ -2413,7 +2413,7 @@ function isLoggedIn(): boolean {
 function onAuthChange() {
   isLoggedInCache = null
 }
-```
+\`\`\`
 
 Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
 
@@ -2427,16 +2427,16 @@ Reference: [https://vercel.com/blog/how-we-made-the-vercel-dashboard-twice-as-fa
 
 **Incorrect: reads storage on every call**
 
-```typescript
+\`\`\`typescript
 function getTheme() {
   return localStorage.getItem('theme') ?? 'light'
 }
 // Called 10 times = 10 storage reads
-```
+\`\`\`
 
 **Correct: Map cache**
 
-```typescript
+\`\`\`typescript
 const storageCache = new Map<string, string | null>()
 
 function getLocalStorage(key: string) {
@@ -2450,13 +2450,13 @@ function setLocalStorage(key: string, value: string) {
   localStorage.setItem(key, value)
   storageCache.set(key, value)  // keep cache in sync
 }
-```
+\`\`\`
 
 Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
 
 **Cookie caching:**
 
-```typescript
+\`\`\`typescript
 let cookieCache: Record<string, string> | null = null
 
 function getCookie(name: string) {
@@ -2467,11 +2467,11 @@ function getCookie(name: string) {
   }
   return cookieCache[name]
 }
-```
+\`\`\`
 
 **Important: invalidate on external changes**
 
-```typescript
+\`\`\`typescript
 window.addEventListener('storage', (e) => {
   if (e.key) storageCache.delete(e.key)
 })
@@ -2481,7 +2481,7 @@ document.addEventListener('visibilitychange', () => {
     storageCache.clear()
   }
 })
-```
+\`\`\`
 
 If storage can change externally (another tab, server-set cookies), invalidate cache:
 
@@ -2493,15 +2493,15 @@ Multiple `.filter()` or `.map()` calls iterate the array multiple times. Combine
 
 **Incorrect: 3 iterations**
 
-```typescript
+\`\`\`typescript
 const admins = users.filter(u => u.isAdmin)
 const testers = users.filter(u => u.isTester)
 const inactive = users.filter(u => !u.isActive)
-```
+\`\`\`
 
 **Correct: 1 iteration**
 
-```typescript
+\`\`\`typescript
 const admins: User[] = []
 const testers: User[] = []
 const inactive: User[] = []
@@ -2511,7 +2511,7 @@ for (const user of users) {
   if (user.isTester) testers.push(user)
   if (!user.isActive) inactive.push(user)
 }
-```
+\`\`\`
 
 ### 7.7 Early Length Check for Array Comparisons
 
@@ -2523,18 +2523,18 @@ In real-world applications, this optimization is especially valuable when the co
 
 **Incorrect: always runs expensive comparison**
 
-```typescript
+\`\`\`typescript
 function hasChanges(current: string[], original: string[]) {
   // Always sorts and joins, even when lengths differ
   return current.sort().join() !== original.sort().join()
 }
-```
+\`\`\`
 
 Two O(n log n) sorts run even when `current.length` is 5 and `original.length` is 100. There is also overhead of joining the arrays and comparing the strings.
 
 **Correct (O(1) length check first):**
 
-```typescript
+\`\`\`typescript
 function hasChanges(current: string[], original: string[]) {
   // Early return if lengths differ
   if (current.length !== original.length) {
@@ -2550,7 +2550,7 @@ function hasChanges(current: string[], original: string[]) {
   }
   return false
 }
-```
+\`\`\`
 
 This new approach is more efficient because:
 
@@ -2570,7 +2570,7 @@ Return early when result is determined to skip unnecessary processing.
 
 **Incorrect: processes all items even after finding answer**
 
-```typescript
+\`\`\`typescript
 function validateUsers(users: User[]) {
   let hasError = false
   let errorMessage = ''
@@ -2589,11 +2589,11 @@ function validateUsers(users: User[]) {
   
   return hasError ? { valid: false, error: errorMessage } : { valid: true }
 }
-```
+\`\`\`
 
 **Correct: returns immediately on first error**
 
-```typescript
+\`\`\`typescript
 function validateUsers(users: User[]) {
   for (const user of users) {
     if (!user.email) {
@@ -2606,7 +2606,7 @@ function validateUsers(users: User[]) {
 
   return { valid: true }
 }
-```
+\`\`\`
 
 ### 7.9 Hoist RegExp Creation
 
@@ -2616,17 +2616,17 @@ Don't create RegExp inside render. Hoist to module scope or memoize with `useMem
 
 **Incorrect: new RegExp every render**
 
-```tsx
+\`\`\`tsx
 function Highlighter({ text, query }: Props) {
   const regex = new RegExp(`(${query})`, 'gi')
   const parts = text.split(regex)
   return <>{parts.map((part, i) => ...)}</>
 }
-```
+\`\`\`
 
 **Correct: memoize or hoist**
 
-```tsx
+\`\`\`tsx
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function Highlighter({ text, query }: Props) {
@@ -2637,15 +2637,15 @@ function Highlighter({ text, query }: Props) {
   const parts = text.split(regex)
   return <>{parts.map((part, i) => ...)}</>
 }
-```
+\`\`\`
 
 **Warning: global regex has mutable state**
 
-```typescript
+\`\`\`typescript
 const regex = /foo/g
 regex.test('foo')  // true, lastIndex = 3
 regex.test('foo')  // false, lastIndex = 0
-```
+\`\`\`
 
 Global regex (`/g`) has mutable `lastIndex` state:
 
@@ -2657,7 +2657,7 @@ Finding the smallest or largest element only requires a single pass through the 
 
 **Incorrect (O(n log n) - sort to find latest):**
 
-```typescript
+\`\`\`typescript
 interface Project {
   id: string
   name: string
@@ -2668,24 +2668,24 @@ function getLatestProject(projects: Project[]) {
   const sorted = [...projects].sort((a, b) => b.updatedAt - a.updatedAt)
   return sorted[0]
 }
-```
+\`\`\`
 
 Sorts the entire array just to find the maximum value.
 
 **Incorrect (O(n log n) - sort for oldest and newest):**
 
-```typescript
+\`\`\`typescript
 function getOldestAndNewest(projects: Project[]) {
   const sorted = [...projects].sort((a, b) => a.updatedAt - b.updatedAt)
   return { oldest: sorted[0], newest: sorted[sorted.length - 1] }
 }
-```
+\`\`\`
 
 Still sorts unnecessarily when only min/max are needed.
 
 **Correct (O(n) - single loop):**
 
-```typescript
+\`\`\`typescript
 function getLatestProject(projects: Project[]) {
   if (projects.length === 0) return null
   
@@ -2713,17 +2713,17 @@ function getOldestAndNewest(projects: Project[]) {
   
   return { oldest, newest }
 }
-```
+\`\`\`
 
 Single pass through the array, no copying, no sorting.
 
 **Alternative: Math.min/Math.max for small arrays**
 
-```typescript
+\`\`\`typescript
 const numbers = [5, 2, 8, 1, 9]
 const min = Math.min(...numbers)
 const max = Math.max(...numbers)
-```
+\`\`\`
 
 This works for small arrays, but can be slower or just throw an error for very large arrays due to spread operator limitations. Maximal array length is approximately 124000 in Chrome 143 and 638000 in Safari 18; exact numbers may vary - see [the fiddle](https://jsfiddle.net/qw1jabsx/4/). Use the loop approach for reliability.
 
@@ -2735,17 +2735,17 @@ Convert arrays to Set/Map for repeated membership checks.
 
 **Incorrect (O(n) per check):**
 
-```typescript
+\`\`\`typescript
 const allowedIds = ['a', 'b', 'c', ...]
 items.filter(item => allowedIds.includes(item.id))
-```
+\`\`\`
 
 **Correct (O(1) per check):**
 
-```typescript
+\`\`\`typescript
 const allowedIds = new Set(['a', 'b', 'c', ...])
 items.filter(item => allowedIds.has(item.id))
-```
+\`\`\`
 
 ### 7.12 Use toSorted() Instead of sort() for Immutability
 
@@ -2755,7 +2755,7 @@ items.filter(item => allowedIds.has(item.id))
 
 **Incorrect: mutates original array**
 
-```typescript
+\`\`\`typescript
 function UserList({ users }: { users: User[] }) {
   // Mutates the users prop array!
   const sorted = useMemo(
@@ -2764,11 +2764,11 @@ function UserList({ users }: { users: User[] }) {
   )
   return <div>{sorted.map(renderUser)}</div>
 }
-```
+\`\`\`
 
 **Correct: creates new array**
 
-```typescript
+\`\`\`typescript
 function UserList({ users }: { users: User[] }) {
   // Creates new sorted array, original unchanged
   const sorted = useMemo(
@@ -2777,7 +2777,7 @@ function UserList({ users }: { users: User[] }) {
   )
   return <div>{sorted.map(renderUser)}</div>
 }
-```
+\`\`\`
 
 **Why this matters in React:**
 
@@ -2787,10 +2787,10 @@ function UserList({ users }: { users: User[] }) {
 
 **Browser support: fallback for older browsers**
 
-```typescript
+\`\`\`typescript
 // Fallback for older browsers
 const sorted = [...items].sort((a, b) => a.value - b.value)
-```
+\`\`\`
 
 `.toSorted()` is available in all modern browsers (Chrome 110+, Safari 16+, Firefox 115+, Node.js 20+). For older environments, use spread operator:
 
@@ -2820,7 +2820,7 @@ Do not put app-wide initialization that must run once per app load inside `useEf
 
 **Incorrect: runs twice in dev, re-runs on remount**
 
-```tsx
+\`\`\`tsx
 function Comp() {
   useEffect(() => {
     loadFromStorage()
@@ -2829,11 +2829,11 @@ function Comp() {
 
   // ...
 }
-```
+\`\`\`
 
 **Correct: once per app load**
 
-```tsx
+\`\`\`tsx
 let didInit = false
 
 function Comp() {
@@ -2846,7 +2846,7 @@ function Comp() {
 
   // ...
 }
-```
+\`\`\`
 
 Reference: [https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application](https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application)
 
@@ -2858,18 +2858,18 @@ Store callbacks in refs when used in effects that shouldn't re-subscribe on call
 
 **Incorrect: re-subscribes on every render**
 
-```tsx
+\`\`\`tsx
 function useWindowEvent(event: string, handler: (e) => void) {
   useEffect(() => {
     window.addEventListener(event, handler)
     return () => window.removeEventListener(event, handler)
   }, [event, handler])
 }
-```
+\`\`\`
 
 **Correct: stable subscription**
 
-```tsx
+\`\`\`tsx
 import { useEffectEvent } from 'react'
 
 function useWindowEvent(event: string, handler: (e) => void) {
@@ -2880,7 +2880,7 @@ function useWindowEvent(event: string, handler: (e) => void) {
     return () => window.removeEventListener(event, onEvent)
   }, [event])
 }
-```
+\`\`\`
 
 **Alternative: use `useEffectEvent` if you're on latest React:**
 
@@ -2894,7 +2894,7 @@ Access latest values in callbacks without adding them to dependency arrays. Prev
 
 **Incorrect: effect re-runs on every callback change**
 
-```tsx
+\`\`\`tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
   const [query, setQuery] = useState('')
 
@@ -2903,11 +2903,11 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
     return () => clearTimeout(timeout)
   }, [query, onSearch])
 }
-```
+\`\`\`
 
 **Correct: using React's useEffectEvent**
 
-```tsx
+\`\`\`tsx
 import { useEffectEvent } from 'react';
 
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
@@ -2919,7 +2919,7 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
     return () => clearTimeout(timeout)
   }, [query])
 }
-```
+\`\`\`
 
 ---
 

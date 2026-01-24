@@ -15,18 +15,18 @@ To address this issue, extract the default value into a constant.
 
 **Incorrect (`onClick` has different values on every rerender):**
 
-```tsx
+\`\`\`tsx
 const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: () => void }) {
   // ...
 })
 
 // Used without optional onClick
 <UserAvatar />
-```
+\`\`\`
 
 **Correct (stable default value):**
 
-```tsx
+\`\`\`tsx
 const NOOP = () => {};
 
 const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () => void }) {
@@ -35,4 +35,4 @@ const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () =
 
 // Used without optional onClick
 <UserAvatar />
-```
+\`\`\`

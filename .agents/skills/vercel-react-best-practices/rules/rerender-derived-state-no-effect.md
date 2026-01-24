@@ -11,7 +11,7 @@ If a value can be computed from current props/state, do not store it in state or
 
 **Incorrect (redundant state and effect):**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const [firstName, setFirstName] = useState('First')
   const [lastName, setLastName] = useState('Last')
@@ -23,11 +23,11 @@ function Form() {
 
   return <p>{fullName}</p>
 }
-```
+\`\`\`
 
 **Correct (derive during render):**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const [firstName, setFirstName] = useState('First')
   const [lastName, setLastName] = useState('Last')
@@ -35,6 +35,6 @@ function Form() {
 
   return <p>{fullName}</p>
 }
-```
+\`\`\`
 
 References: [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)

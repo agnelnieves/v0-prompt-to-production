@@ -11,7 +11,7 @@ When updating state based on the current state value, use the functional update 
 
 **Incorrect (requires state as dependency):**
 
-```tsx
+\`\`\`tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
@@ -27,13 +27,13 @@ function TodoList() {
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
-```
+\`\`\`
 
 The first callback is recreated every time `items` changes, which can cause child components to re-render unnecessarily. The second callback has a stale closure bug—it will always reference the initial `items` value.
 
 **Correct (stable callbacks, no stale closures):**
 
-```tsx
+\`\`\`tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
@@ -49,7 +49,7 @@ function TodoList() {
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
-```
+\`\`\`
 
 **Benefits:**
 

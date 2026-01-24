@@ -11,7 +11,7 @@ React Server Components execute sequentially within a tree. Restructure with com
 
 **Incorrect (Sidebar waits for Page's fetch to complete):**
 
-```tsx
+\`\`\`tsx
 export default async function Page() {
   const header = await fetchHeader()
   return (
@@ -26,11 +26,11 @@ async function Sidebar() {
   const items = await fetchSidebarItems()
   return <nav>{items.map(renderItem)}</nav>
 }
-```
+\`\`\`
 
 **Correct (both fetch simultaneously):**
 
-```tsx
+\`\`\`tsx
 async function Header() {
   const data = await fetchHeader()
   return <div>{data}</div>
@@ -49,11 +49,11 @@ export default function Page() {
     </div>
   )
 }
-```
+\`\`\`
 
 **Alternative with children prop:**
 
-```tsx
+\`\`\`tsx
 async function Header() {
   const data = await fetchHeader()
   return <div>{data}</div>
@@ -80,4 +80,4 @@ export default function Page() {
     </Layout>
   )
 }
-```
+\`\`\`

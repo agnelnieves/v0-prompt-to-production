@@ -11,7 +11,7 @@ Use `useTransition` instead of manual `useState` for loading states. This provid
 
 **Incorrect (manual loading state):**
 
-```tsx
+\`\`\`tsx
 function SearchResults() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
@@ -33,11 +33,11 @@ function SearchResults() {
     </>
   )
 }
-```
+\`\`\`
 
 **Correct (useTransition with built-in pending state):**
 
-```tsx
+\`\`\`tsx
 import { useTransition, useState } from 'react'
 
 function SearchResults() {
@@ -63,7 +63,7 @@ function SearchResults() {
     </>
   )
 }
-```
+\`\`\`
 
 **Benefits:**
 

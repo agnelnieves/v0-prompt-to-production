@@ -11,7 +11,7 @@ Extract static JSX outside components to avoid re-creation.
 
 **Incorrect (recreates element every render):**
 
-```tsx
+\`\`\`tsx
 function LoadingSkeleton() {
   return <div className="animate-pulse h-20 bg-gray-200" />
 }
@@ -23,11 +23,11 @@ function Container() {
     </div>
   )
 }
-```
+\`\`\`
 
 **Correct (reuses same element):**
 
-```tsx
+\`\`\`tsx
 const loadingSkeleton = (
   <div className="animate-pulse h-20 bg-gray-200" />
 )
@@ -39,7 +39,7 @@ function Container() {
     </div>
   )
 }
-```
+\`\`\`
 
 This is especially helpful for large and static SVG nodes, which can be expensive to recreate on every render.
 

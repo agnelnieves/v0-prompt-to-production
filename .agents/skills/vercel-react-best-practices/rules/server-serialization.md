@@ -11,7 +11,7 @@ The React Server/Client boundary serializes all object properties into strings a
 
 **Incorrect (serializes all 50 fields):**
 
-```tsx
+\`\`\`tsx
 async function Page() {
   const user = await fetchUser()  // 50 fields
   return <Profile user={user} />
@@ -21,11 +21,11 @@ async function Page() {
 function Profile({ user }: { user: User }) {
   return <div>{user.name}</div>  // uses 1 field
 }
-```
+\`\`\`
 
 **Correct (serializes only 1 field):**
 
-```tsx
+\`\`\`tsx
 async function Page() {
   const user = await fetchUser()
   return <Profile name={user.name} />
@@ -35,4 +35,4 @@ async function Page() {
 function Profile({ name }: { name: string }) {
   return <div>{name}</div>
 }
-```
+\`\`\`

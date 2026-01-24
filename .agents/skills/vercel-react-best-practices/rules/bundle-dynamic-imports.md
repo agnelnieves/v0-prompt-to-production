@@ -11,17 +11,17 @@ Use `next/dynamic` to lazy-load large components not needed on initial render.
 
 **Incorrect (Monaco bundles with main chunk ~300KB):**
 
-```tsx
+\`\`\`tsx
 import { MonacoEditor } from './monaco-editor'
 
 function CodePanel({ code }: { code: string }) {
   return <MonacoEditor value={code} />
 }
-```
+\`\`\`
 
 **Correct (Monaco loads on demand):**
 
-```tsx
+\`\`\`tsx
 import dynamic from 'next/dynamic'
 
 const MonacoEditor = dynamic(
@@ -32,4 +32,4 @@ const MonacoEditor = dynamic(
 function CodePanel({ code }: { code: string }) {
   return <MonacoEditor value={code} />
 }
-```
+\`\`\`

@@ -11,15 +11,15 @@ In SSR frameworks (e.g., Next.js), some values are intentionally different on se
 
 **Incorrect (known mismatch warnings):**
 
-```tsx
+\`\`\`tsx
 function Timestamp() {
   return <span>{new Date().toLocaleString()}</span>
 }
-```
+\`\`\`
 
 **Correct (suppress expected mismatch only):**
 
-```tsx
+\`\`\`tsx
 function Timestamp() {
   return (
     <span suppressHydrationWarning>
@@ -27,4 +27,4 @@ function Timestamp() {
     </span>
   )
 }
-```
+\`\`\`

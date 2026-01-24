@@ -11,7 +11,7 @@ Add `{ passive: true }` to touch and wheel event listeners to enable immediate s
 
 **Incorrect:**
 
-```typescript
+\`\`\`typescript
 useEffect(() => {
   const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
   const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
@@ -24,11 +24,11 @@ useEffect(() => {
     document.removeEventListener('wheel', handleWheel)
   }
 }, [])
-```
+\`\`\`
 
 **Correct:**
 
-```typescript
+\`\`\`typescript
 useEffect(() => {
   const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
   const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
@@ -41,7 +41,7 @@ useEffect(() => {
     document.removeEventListener('wheel', handleWheel)
   }
 }, [])
-```
+\`\`\`
 
 **Use passive when:** tracking/analytics, logging, any listener that doesn't call `preventDefault()`.
 

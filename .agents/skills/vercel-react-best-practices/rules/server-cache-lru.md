@@ -11,7 +11,7 @@ tags: server, cache, lru, cross-request
 
 **Implementation:**
 
-```typescript
+\`\`\`typescript
 import { LRUCache } from 'lru-cache'
 
 const cache = new LRUCache<string, any>({
@@ -30,7 +30,7 @@ export async function getUser(id: string) {
 
 // Request 1: DB query, result cached
 // Request 2: cache hit, no DB query
-```
+\`\`\`
 
 Use when sequential user actions hit multiple endpoints needing the same data within seconds.
 

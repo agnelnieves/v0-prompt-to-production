@@ -11,7 +11,7 @@ Preload heavy bundles before they're needed to reduce perceived latency.
 
 **Example (preload on hover/focus):**
 
-```tsx
+\`\`\`tsx
 function EditorButton({ onClick }: { onClick: () => void }) {
   const preload = () => {
     if (typeof window !== 'undefined') {
@@ -29,11 +29,11 @@ function EditorButton({ onClick }: { onClick: () => void }) {
     </button>
   )
 }
-```
+\`\`\`
 
 **Example (preload when feature flag is enabled):**
 
-```tsx
+\`\`\`tsx
 function FlagsProvider({ children, flags }: Props) {
   useEffect(() => {
     if (flags.editorEnabled && typeof window !== 'undefined') {
@@ -45,6 +45,6 @@ function FlagsProvider({ children, flags }: Props) {
     {children}
   </FlagsContext.Provider>
 }
-```
+\`\`\`
 
 The `typeof window !== 'undefined'` check prevents bundling preloaded modules for SSR, optimizing server bundle size and build speed.

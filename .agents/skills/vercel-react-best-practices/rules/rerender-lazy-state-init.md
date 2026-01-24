@@ -11,7 +11,7 @@ Pass a function to `useState` for expensive initial values. Without the function
 
 **Incorrect (runs on every render):**
 
-```tsx
+\`\`\`tsx
 function FilteredList({ items }: { items: Item[] }) {
   // buildSearchIndex() runs on EVERY render, even after initialization
   const [searchIndex, setSearchIndex] = useState(buildSearchIndex(items))
@@ -29,11 +29,11 @@ function UserProfile() {
   
   return <SettingsForm settings={settings} onChange={setSettings} />
 }
-```
+\`\`\`
 
 **Correct (runs only once):**
 
-```tsx
+\`\`\`tsx
 function FilteredList({ items }: { items: Item[] }) {
   // buildSearchIndex() runs ONLY on initial render
   const [searchIndex, setSearchIndex] = useState(() => buildSearchIndex(items))
@@ -51,7 +51,7 @@ function UserProfile() {
   
   return <SettingsForm settings={settings} onChange={setSettings} />
 }
-```
+\`\`\`
 
 Use lazy initialization when computing initial values from localStorage/sessionStorage, building data structures (indexes, maps), reading from the DOM, or performing heavy transformations.
 

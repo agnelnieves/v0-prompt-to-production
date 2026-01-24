@@ -13,18 +13,18 @@ In real-world applications, this optimization is especially valuable when the co
 
 **Incorrect (always runs expensive comparison):**
 
-```typescript
+\`\`\`typescript
 function hasChanges(current: string[], original: string[]) {
   // Always sorts and joins, even when lengths differ
   return current.sort().join() !== original.sort().join()
 }
-```
+\`\`\`
 
 Two O(n log n) sorts run even when `current.length` is 5 and `original.length` is 100. There is also overhead of joining the arrays and comparing the strings.
 
 **Correct (O(1) length check first):**
 
-```typescript
+\`\`\`typescript
 function hasChanges(current: string[], original: string[]) {
   // Early return if lengths differ
   if (current.length !== original.length) {
@@ -40,7 +40,7 @@ function hasChanges(current: string[], original: string[]) {
   }
   return false
 }
-```
+\`\`\`
 
 This new approach is more efficient because:
 - It avoids the overhead of sorting and joining the arrays when lengths differ

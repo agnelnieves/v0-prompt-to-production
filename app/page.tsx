@@ -5,6 +5,7 @@ import { Dithering } from "@paper-design/shaders-react"
 import { useEffect, useRef, useState } from "react"
 import { eventData, agendaItems, experienceItems, sponsors, logos, formatIndex, type Sponsor } from "@/lib/data"
 import Image from "next/image"
+import { ExternalLink } from "lucide-react"
 
 // Custom hook for scroll-triggered animations
 function useInView(threshold = 0.1) {
@@ -95,19 +96,7 @@ export default function V0MiamiEvent() {
               >
                 Sign Up
                 <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
-                  <svg 
-                    className="w-4 h-4 ml-2" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
+                  <ExternalLink className="w-4 h-4 ml-2" />
                 </span>
               </a>
             </div>
@@ -116,9 +105,9 @@ export default function V0MiamiEvent() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-[948px] flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative h-dvh lg:h-[948px] flex flex-col items-center justify-center overflow-hidden">
         {/* Dithering Shader Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
           <Dithering
             colorBack="#000000"
             colorFront="#99999921"
@@ -126,7 +115,7 @@ export default function V0MiamiEvent() {
             type="4x4"
             size={2.5}
             speed={0.45}
-            style={{ width: "2138px", height: "948px" }}
+            style={{ width: "100%", height: "100%" }}
           />
         </div>
         
@@ -170,38 +159,28 @@ export default function V0MiamiEvent() {
               </p>
               <p className="font-mono text-[16px] text-white tracking-[-0.64px] font-extralight transition-all duration-300 group-hover:translate-x-1 flex items-center gap-2">
                 {eventData.venue}
-                <svg 
-                  className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
-                </svg>
+                <ExternalLink className="w-4 h-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
               </p>
             </a>
           </div>
         </div>
         
         {/* Scroll indicator */}
-        <div className={`absolute bottom-[40px] left-6 lg:left-[172px] px-0 lg:px-5 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <button 
-            onClick={() => {
-              const mainContent = document.querySelector('main')
-              if (mainContent) {
-                mainContent.scrollIntoView({ behavior: 'smooth' })
-              }
-            }}
-            className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300"
-          >
-            <span>SCROLL TO LEARN MORE</span>
-            <span className="inline-block animate-bounce">↓</span>
-          </button>
+        <div className={`absolute bottom-[40px] left-0 right-0 z-20 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="w-full max-w-[1383px] mx-auto px-6 lg:px-5">
+            <button 
+              onClick={() => {
+                const mainContent = document.querySelector('main')
+                if (mainContent) {
+                  mainContent.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
+              className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300"
+            >
+              <span>SCROLL TO LEARN MORE</span>
+              <span className="inline-block animate-bounce">↓</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -210,7 +189,7 @@ export default function V0MiamiEvent() {
         {/* Description Section */}
         <section 
           ref={descriptionSection.ref}
-          className="border border-[#262626] min-h-[300px] lg:h-[402px] flex items-center justify-center px-6 lg:px-12 py-12 lg:py-0"
+          className="border-t lg:border lg:border-b-0 border-[#262626] min-h-[300px] lg:h-[402px] flex items-center justify-center px-6 lg:px-12 py-12 lg:py-0"
         >
           <p className={`text-[22px] lg:text-[30px] font-light leading-[1.5] lg:leading-[46px] tracking-[-0.225px] text-white max-w-[774px] transition-all duration-1000 ${descriptionSection.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             {eventData.description}
@@ -220,7 +199,7 @@ export default function V0MiamiEvent() {
         {/* Agenda Section */}
         <section 
           ref={agendaSection.ref}
-          className="border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
+          className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${agendaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
@@ -245,7 +224,7 @@ export default function V0MiamiEvent() {
         {/* The Experience Section */}
         <section 
           ref={experienceSection.ref}
-          className="border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
+          className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${experienceSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
@@ -269,7 +248,7 @@ export default function V0MiamiEvent() {
         {/* Sponsors Section */}
         <section 
           ref={sponsorSection.ref}
-          className="border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
+          className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
@@ -291,7 +270,7 @@ export default function V0MiamiEvent() {
         {/* CTA Footer with Dithering Background */}
         <section 
           ref={ctaSection.ref}
-          className="relative border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden mb-16"
+          className="relative border-t lg:border border-[#262626] min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden lg:mb-16"
         >
           {/* Dithering Background - Same as Hero */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -319,19 +298,7 @@ export default function V0MiamiEvent() {
             >
               Sign Up
               <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
-                <svg 
-                  className="w-4 h-4 ml-2" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
-                </svg>
+                <ExternalLink className="w-4 h-4 ml-2" />
               </span>
             </a>
           </div>
@@ -483,19 +450,7 @@ function SponsorCard({
       }}
     >
       {/* External link icon - top right */}
-      <svg 
-        className="absolute top-4 right-4 w-4 h-4 text-white opacity-0 translate-x-2 -translate-y-2 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round"
-      >
-        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-        <polyline points="15 3 21 3 21 9" />
-        <line x1="10" y1="14" x2="21" y2="3" />
-      </svg>
+      <ExternalLink className="absolute top-4 right-4 w-4 h-4 text-white opacity-0 translate-x-2 -translate-y-2 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
       {renderAsset()}
     </div>
   )

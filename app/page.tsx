@@ -199,7 +199,7 @@ export default function V0MiamiEvent() {
           ref={agendaSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
-          <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${agendaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+          <div className={`w-full lg:w-[232px] flex items-start lg:sticky lg:top-[140px] z-50 transition-all duration-700 ${agendaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
               AGENDA
             </p>
@@ -224,7 +224,7 @@ export default function V0MiamiEvent() {
           ref={experienceSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
-          <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${experienceSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+          <div className={`w-full lg:w-[232px] flex items-start lg:sticky lg:top-[140px] z-50 transition-all duration-700 ${experienceSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
               THE EXPERIENCE
             </p>
@@ -248,7 +248,7 @@ export default function V0MiamiEvent() {
           ref={sponsorSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
-          <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+          <div className={`w-full lg:w-[232px] flex items-start lg:sticky lg:top-[140px] z-50 transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
               SUPPORTED BY
             </p>

@@ -15,7 +15,7 @@ Next.js documentation explicitly states: "Treat Server Actions with the same sec
 
 **Incorrect (no authentication check):**
 
-```typescript
+\`\`\`typescript
 'use server'
 
 export async function deleteUser(userId: string) {
@@ -23,11 +23,11 @@ export async function deleteUser(userId: string) {
   await db.user.delete({ where: { id: userId } })
   return { success: true }
 }
-```
+\`\`\`
 
 **Correct (authentication inside the action):**
 
-```typescript
+\`\`\`typescript
 'use server'
 
 import { verifySession } from '@/lib/auth'
@@ -49,11 +49,11 @@ export async function deleteUser(userId: string) {
   await db.user.delete({ where: { id: userId } })
   return { success: true }
 }
-```
+\`\`\`
 
 **With input validation:**
 
-```typescript
+\`\`\`typescript
 'use server'
 
 import { verifySession } from '@/lib/auth'
@@ -91,6 +91,6 @@ export async function updateProfile(data: unknown) {
   
   return { success: true }
 }
-```
+\`\`\`
 
 Reference: [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication)

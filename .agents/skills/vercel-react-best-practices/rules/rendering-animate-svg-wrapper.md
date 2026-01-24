@@ -11,7 +11,7 @@ Many browsers don't have hardware acceleration for CSS3 animations on SVG elemen
 
 **Incorrect (animating SVG directly - no hardware acceleration):**
 
-```tsx
+\`\`\`tsx
 function LoadingSpinner() {
   return (
     <svg 
@@ -24,11 +24,11 @@ function LoadingSpinner() {
     </svg>
   )
 }
-```
+\`\`\`
 
 **Correct (animating wrapper div - hardware accelerated):**
 
-```tsx
+\`\`\`tsx
 function LoadingSpinner() {
   return (
     <div className="animate-spin">
@@ -42,6 +42,6 @@ function LoadingSpinner() {
     </div>
   )
 }
-```
+\`\`\`
 
 This applies to all CSS transforms and transitions (`transform`, `opacity`, `translate`, `scale`, `rotate`). The wrapper div allows browsers to use GPU acceleration for smoother animations.

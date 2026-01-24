@@ -11,7 +11,7 @@ tags: javascript, arrays, immutability, react, state, mutation
 
 **Incorrect (mutates original array):**
 
-```typescript
+\`\`\`typescript
 function UserList({ users }: { users: User[] }) {
   // Mutates the users prop array!
   const sorted = useMemo(
@@ -20,11 +20,11 @@ function UserList({ users }: { users: User[] }) {
   )
   return <div>{sorted.map(renderUser)}</div>
 }
-```
+\`\`\`
 
 **Correct (creates new array):**
 
-```typescript
+\`\`\`typescript
 function UserList({ users }: { users: User[] }) {
   // Creates new sorted array, original unchanged
   const sorted = useMemo(
@@ -33,7 +33,7 @@ function UserList({ users }: { users: User[] }) {
   )
   return <div>{sorted.map(renderUser)}</div>
 }
-```
+\`\`\`
 
 **Why this matters in React:**
 
@@ -44,10 +44,10 @@ function UserList({ users }: { users: User[] }) {
 
 `.toSorted()` is available in all modern browsers (Chrome 110+, Safari 16+, Firefox 115+, Node.js 20+). For older environments, use spread operator:
 
-```typescript
+\`\`\`typescript
 // Fallback for older browsers
 const sorted = [...items].sort((a, b) => a.value - b.value)
-```
+\`\`\`
 
 **Other immutable array methods:**
 

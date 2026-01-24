@@ -11,7 +11,7 @@ Use explicit ternary operators (`? :`) instead of `&&` for conditional rendering
 
 **Incorrect (renders "0" when count is 0):**
 
-```tsx
+\`\`\`tsx
 function Badge({ count }: { count: number }) {
   return (
     <div>
@@ -22,11 +22,11 @@ function Badge({ count }: { count: number }) {
 
 // When count = 0, renders: <div>0</div>
 // When count = 5, renders: <div><span class="badge">5</span></div>
-```
+\`\`\`
 
 **Correct (renders nothing when count is 0):**
 
-```tsx
+\`\`\`tsx
 function Badge({ count }: { count: number }) {
   return (
     <div>
@@ -37,4 +37,4 @@ function Badge({ count }: { count: number }) {
 
 // When count = 0, renders: <div></div>
 // When count = 5, renders: <div><span class="badge">5</span></div>
-```
+\`\`\`

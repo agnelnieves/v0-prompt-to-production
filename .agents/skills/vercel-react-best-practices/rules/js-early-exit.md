@@ -11,7 +11,7 @@ Return early when result is determined to skip unnecessary processing.
 
 **Incorrect (processes all items even after finding answer):**
 
-```typescript
+\`\`\`typescript
 function validateUsers(users: User[]) {
   let hasError = false
   let errorMessage = ''
@@ -30,11 +30,11 @@ function validateUsers(users: User[]) {
   
   return hasError ? { valid: false, error: errorMessage } : { valid: true }
 }
-```
+\`\`\`
 
 **Correct (returns immediately on first error):**
 
-```typescript
+\`\`\`typescript
 function validateUsers(users: User[]) {
   for (const user of users) {
     if (!user.email) {
@@ -47,4 +47,4 @@ function validateUsers(users: User[]) {
 
   return { valid: true }
 }
-```
+\`\`\`

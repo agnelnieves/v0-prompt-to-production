@@ -11,7 +11,7 @@ When rendering content that depends on client-side storage (localStorage, cookie
 
 **Incorrect (breaks SSR):**
 
-```tsx
+\`\`\`tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   // localStorage is not available on server - throws error
   const theme = localStorage.getItem('theme') || 'light'
@@ -22,13 +22,13 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
     </div>
   )
 }
-```
+\`\`\`
 
 Server-side rendering will fail because `localStorage` is undefined.
 
 **Incorrect (visual flickering):**
 
-```tsx
+\`\`\`tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState('light')
   
@@ -46,13 +46,13 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
     </div>
   )
 }
-```
+\`\`\`
 
 Component first renders with default value (`light`), then updates after hydration, causing a visible flash of incorrect content.
 
 **Correct (no flicker, no hydration mismatch):**
 
-```tsx
+\`\`\`tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   return (
     <>
@@ -75,7 +75,7 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
     </>
   )
 }
-```
+\`\`\`
 
 The inline script executes synchronously before showing the element, ensuring the DOM already has the correct value. No flickering, no hydration mismatch.
 

@@ -11,7 +11,7 @@ When a value changes frequently and you don't want a re-render on every update (
 
 **Incorrect (renders every update):**
 
-```tsx
+\`\`\`tsx
 function Tracker() {
   const [lastX, setLastX] = useState(0)
 
@@ -34,11 +34,11 @@ function Tracker() {
     />
   )
 }
-```
+\`\`\`
 
 **Correct (no re-render for tracking):**
 
-```tsx
+\`\`\`tsx
 function Tracker() {
   const lastXRef = useRef(0)
   const dotRef = useRef<HTMLDivElement>(null)
@@ -70,4 +70,4 @@ function Tracker() {
     />
   )
 }
-```
+\`\`\`

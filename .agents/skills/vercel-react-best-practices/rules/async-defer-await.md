@@ -11,7 +11,7 @@ Move `await` operations into the branches where they're actually used to avoid b
 
 **Incorrect (blocks both branches):**
 
-```typescript
+\`\`\`typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
   const userData = await fetchUserData(userId)
   
@@ -23,11 +23,11 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
   // Only this branch uses userData
   return processUserData(userData)
 }
-```
+\`\`\`
 
 **Correct (only blocks when needed):**
 
-```typescript
+\`\`\`typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
   if (skipProcessing) {
     // Returns immediately without waiting
@@ -38,11 +38,11 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
   const userData = await fetchUserData(userId)
   return processUserData(userData)
 }
-```
+\`\`\`
 
 **Another example (early return optimization):**
 
-```typescript
+\`\`\`typescript
 // Incorrect: always fetches permissions
 async function updateResource(resourceId: string, userId: string) {
   const permissions = await fetchPermissions(userId)
@@ -75,6 +75,6 @@ async function updateResource(resourceId: string, userId: string) {
   
   return await updateResourceData(resource, permissions)
 }
-```
+\`\`\`
 
 This optimization is especially valuable when the skipped branch is frequently taken, or when the deferred operation is expensive.

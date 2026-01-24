@@ -11,15 +11,15 @@ Add version prefix to keys and store only needed fields. Prevents schema conflic
 
 **Incorrect:**
 
-```typescript
+\`\`\`typescript
 // No version, stores everything, no error handling
 localStorage.setItem('userConfig', JSON.stringify(fullUserObject))
 const data = localStorage.getItem('userConfig')
-```
+\`\`\`
 
 **Correct:**
 
-```typescript
+\`\`\`typescript
 const VERSION = 'v2'
 
 function saveConfig(config: { theme: string; language: string }) {
@@ -50,11 +50,11 @@ function migrate() {
     }
   } catch {}
 }
-```
+\`\`\`
 
 **Store minimal fields from server responses:**
 
-```typescript
+\`\`\`typescript
 // User object has 20+ fields, only store what UI needs
 function cachePrefs(user: FullUser) {
   try {
@@ -64,7 +64,7 @@ function cachePrefs(user: FullUser) {
     }))
   } catch {}
 }
-```
+\`\`\`
 
 **Always wrap in try-catch:** `getItem()` and `setItem()` throw in incognito/private browsing (Safari, Firefox), when quota exceeded, or when disabled.
 

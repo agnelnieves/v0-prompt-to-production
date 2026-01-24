@@ -11,18 +11,18 @@ When async operations have no interdependencies, execute them concurrently using
 
 **Incorrect (sequential execution, 3 round trips):**
 
-```typescript
+\`\`\`typescript
 const user = await fetchUser()
 const posts = await fetchPosts()
 const comments = await fetchComments()
-```
+\`\`\`
 
 **Correct (parallel execution, 1 round trip):**
 
-```typescript
+\`\`\`typescript
 const [user, posts, comments] = await Promise.all([
   fetchUser(),
   fetchPosts(),
   fetchComments()
 ])
-```
+\`\`\`

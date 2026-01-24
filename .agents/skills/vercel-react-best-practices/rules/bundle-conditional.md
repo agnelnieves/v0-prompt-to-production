@@ -11,7 +11,7 @@ Load large data or modules only when a feature is activated.
 
 **Example (lazy-load animation frames):**
 
-```tsx
+\`\`\`tsx
 function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [frames, setFrames] = useState<Frame[] | null>(null)
 
@@ -26,6 +26,6 @@ function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled
   if (!frames) return <Skeleton />
   return <Canvas frames={frames} />
 }
-```
+\`\`\`
 
 The `typeof window !== 'undefined'` check prevents bundling this module for SSR, optimizing server bundle size and build speed.

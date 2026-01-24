@@ -11,18 +11,18 @@ In API routes and Server Actions, start independent operations immediately, even
 
 **Incorrect (config waits for auth, data waits for both):**
 
-```typescript
+\`\`\`typescript
 export async function GET(request: Request) {
   const session = await auth()
   const config = await fetchConfig()
   const data = await fetchData(session.user.id)
   return Response.json({ data, config })
 }
-```
+\`\`\`
 
 **Correct (auth and config start immediately):**
 
-```typescript
+\`\`\`typescript
 export async function GET(request: Request) {
   const sessionPromise = auth()
   const configPromise = fetchConfig()
@@ -33,6 +33,6 @@ export async function GET(request: Request) {
   ])
   return Response.json({ data, config })
 }
-```
+\`\`\`
 
 For operations with more complex dependency chains, use `better-all` to automatically maximize parallelism (see Dependency-Based Parallelization).

@@ -11,7 +11,7 @@ If a side effect is triggered by a specific user action (submit, click, drag), r
 
 **Incorrect (event modeled as state + effect):**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const [submitted, setSubmitted] = useState(false)
   const theme = useContext(ThemeContext)
@@ -25,11 +25,11 @@ function Form() {
 
   return <button onClick={() => setSubmitted(true)}>Submit</button>
 }
-```
+\`\`\`
 
 **Correct (do it in the handler):**
 
-```tsx
+\`\`\`tsx
 function Form() {
   const theme = useContext(ThemeContext)
 
@@ -40,6 +40,6 @@ function Form() {
 
   return <button onClick={handleSubmit}>Submit</button>
 }
-```
+\`\`\`
 
 Reference: [Should this code move to an event handler?](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)

@@ -11,7 +11,7 @@ Use Next.js's `after()` to schedule work that should execute after a response is
 
 **Incorrect (blocks response):**
 
-```tsx
+\`\`\`tsx
 import { logUserAction } from '@/app/utils'
 
 export async function POST(request: Request) {
@@ -27,11 +27,11 @@ export async function POST(request: Request) {
     headers: { 'Content-Type': 'application/json' }
   })
 }
-```
+\`\`\`
 
 **Correct (non-blocking):**
 
-```tsx
+\`\`\`tsx
 import { after } from 'next/server'
 import { headers, cookies } from 'next/headers'
 import { logUserAction } from '@/app/utils'
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     headers: { 'Content-Type': 'application/json' }
   })
 }
-```
+\`\`\`
 
 The response is sent immediately while logging happens in the background.
 

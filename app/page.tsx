@@ -65,8 +65,6 @@ export default function V0MiamiEvent() {
         >
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent" />
-          {/* Blur layer */}
-          {/* <div className="absolute inset-0 backdrop-blur-sm [mask-image:linear-gradient(to_bottom,black_50%,transparent_100%)]" /> */}
         </div>
         <div className="relative mx-auto max-w-[1400px] px-6 lg:px-0 py-8 lg:py-[49px]">
           <div className="flex items-center justify-between">

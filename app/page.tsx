@@ -187,7 +187,7 @@ export default function V0MiamiEvent() {
         {/* Description Section */}
         <section 
           ref={descriptionSection.ref}
-          className="border border-[#262626] min-h-[300px] lg:h-[402px] flex items-center justify-center px-6 lg:px-12 py-12 lg:py-0"
+          className="border-y lg:border border-[#262626] min-h-[300px] lg:h-[402px] flex items-center justify-center px-6 lg:px-12 py-12 lg:py-0"
         >
           <p className={`text-[22px] lg:text-[30px] font-light leading-[1.5] lg:leading-[46px] tracking-[-0.225px] text-white max-w-[774px] transition-all duration-1000 ${descriptionSection.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             {eventData.description}
@@ -197,7 +197,7 @@ export default function V0MiamiEvent() {
         {/* Agenda Section */}
         <section 
           ref={agendaSection.ref}
-          className="border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
+          className="border-y lg:border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${agendaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
@@ -222,7 +222,7 @@ export default function V0MiamiEvent() {
         {/* The Experience Section */}
         <section 
           ref={experienceSection.ref}
-          className="border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
+          className="border-y lg:border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${experienceSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
@@ -246,7 +246,7 @@ export default function V0MiamiEvent() {
         {/* Sponsors Section */}
         <section 
           ref={sponsorSection.ref}
-          className="border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
+          className="border-y lg:border border-[#262626] border-t-0 px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
@@ -268,7 +268,7 @@ export default function V0MiamiEvent() {
         {/* CTA Footer with Dithering Background */}
         <section 
           ref={ctaSection.ref}
-          className="relative border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden mb-16"
+          className="relative border-y lg:border border-[#262626] border-t-0 min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden mb-16"
         >
           {/* Dithering Background - Same as Hero */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

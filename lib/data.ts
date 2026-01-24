@@ -84,7 +84,7 @@ export const sponsors: Sponsor[] = [
   {
     name: "Gail",
     logo: "/sponsors/gail.svg",
-    url: "https://gail.com",
+    url: "https://www.meetgail.com/",
     assetType: "svg",
   },
   {

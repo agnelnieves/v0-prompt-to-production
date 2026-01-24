@@ -23,37 +23,38 @@ export const eventData = {
 }
 
 export const agendaItems = [
-  { number: "01", title: "Doors open, networking", time: "12:30 PM" },
-  { number: "02", title: "Welcome + v0 video + product intro", time: "1:00 PM" },
-  { number: "03", title: "Building begins (curated prompts)", time: "1:45 PM" },
-  { number: "04", title: "Final build sprint", time: "6:45 PM" },
-  { number: "05", title: "Demo showcase + community voting", time: "7:45 PM" },
-  { number: "06", title: "Wrap-up, photos, networking", time: "8:00 PM" },
-  { number: "07", title: "Doors close", time: "9:00 PM" },
+  { title: "Doors open, networking", time: "12:30 PM" },
+  { title: "Welcome + v0 video + product intro", time: "1:00 PM" },
+  { title: "Building begins (curated prompts)", time: "1:45 PM" },
+  { title: "Final build sprint", time: "6:45 PM" },
+  { title: "Demo showcase + community voting", time: "7:45 PM" },
+  { title: "Wrap-up, photos, networking", time: "8:00 PM" },
+  { title: "Doors close", time: "9:00 PM" },
 ]
 
 export const experienceItems = [
   {
-    number: "01",
     title: "Global Gallery",
     description: "Every project showcased in a worldwide exhibition",
   },
   {
-    number: "02",
     title: "Community Voting",
     description: "Builders vote for favorites, winners get prizes.",
   },
   {
-    number: "03",
     title: "Live DJ",
     description: "PARINI will set the vibes with science-backed music to ship your best idea.",
   },
   {
-    number: "04",
     title: "Local Prizes",
     description: "Thanks to the sponsors for this local event, we're able to provide prizes.",
   },
 ]
+
+// Helper function to format index as padded number (01, 02, etc.)
+export function formatIndex(index: number): string {
+  return String(index + 1).padStart(2, "0")
+}
 
 export const sponsors = [
   {

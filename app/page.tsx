@@ -203,7 +203,7 @@ export default function V0MiamiEvent() {
         >
           <div className={`w-full lg:w-[232px] flex items-center lg:sticky lg:top-[140px] lg:self-start transition-all duration-700 ${sponsorSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px]">
-              BROUGHT TO YOU BY
+              SUPPORTED BY
             </p>
           </div>
           <div className="w-full lg:w-[685px] flex flex-wrap">

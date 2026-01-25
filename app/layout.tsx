@@ -40,6 +40,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased dark`}>
         {children}
         <Analytics />
+        <script id="luma-checkout" src="https://embed.lu.ma/checkout-button.js" async />
       </body>
     </html>
   )

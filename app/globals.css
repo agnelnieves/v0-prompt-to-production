@@ -123,3 +123,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Override Luma checkout button styles */
+.luma-checkout--button {
+  background-color: white !important;
+  color: #0f172a !important;
+  border: none !important;
+}
+
+.luma-checkout--button:hover {
+  background-color: #f3f4f6 !important;
+}

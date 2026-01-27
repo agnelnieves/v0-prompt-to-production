@@ -34,13 +34,15 @@ export const eventData = {
 }
 
 export const agendaItems = [
-  { title: "Doors open, networking", time: "12:30 PM" },
-  { title: "Welcome + v0 video + product intro", time: "1:00 PM" },
-  { title: "Building begins (curated prompts)", time: "1:45 PM" },
-  { title: "Final build sprint", time: "6:45 PM" },
-  { title: "Demo showcase + community voting", time: "7:45 PM" },
-  { title: "Wrap-up, photos, networking", time: "8:00 PM" },
-  { title: "Doors close", time: "9:00 PM" },
+  { title: "Doors open, coffee & breakfast bites", time: "9:00 AM" },
+  { title: "Welcome + v0 video + product intro", time: "9:30 AM" },
+  { title: "Building begins (curated prompts)", time: "10:15 AM" },
+  { title: "Lunch break & networking", time: "12:30 PM" },
+  { title: "Afternoon build sprint", time: "1:30 PM" },
+  { title: "Final build sprint", time: "4:00 PM" },
+  { title: "Demo showcase + community voting", time: "5:30 PM" },
+  { title: "Wrap-up, photos, networking", time: "6:30 PM" },
+  { title: "Doors close", time: "7:00 PM" },
 ]
 
 export const experienceItems = [

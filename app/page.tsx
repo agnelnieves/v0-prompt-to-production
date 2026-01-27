@@ -32,10 +32,66 @@ function useInView(threshold = 0.1) {
   return { ref, isInView }
 }
 
+// Typewriter component for smooth typing animation
+function TypeWriter({ 
+  text, 
+  delay = 0, 
+  speed = 80, 
+  onComplete,
+  shouldStart = true 
+}: { 
+  text: string
+  delay?: number
+  speed?: number
+  onComplete?: () => void
+  shouldStart?: boolean
+}) {
+  const [displayedText, setDisplayedText] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
+
+  useEffect(() => {
+    if (!shouldStart || hasStarted) return
+
+    const startTimeout = setTimeout(() => {
+      setHasStarted(true)
+      setIsTyping(true)
+    }, delay)
+
+    return () => clearTimeout(startTimeout)
+  }, [delay, shouldStart, hasStarted])
+
+  useEffect(() => {
+    if (!isTyping) return
+
+    if (displayedText.length < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(text.slice(0, displayedText.length + 1))
+      }, speed)
+      return () => clearTimeout(timeout)
+    } else {
+      setIsTyping(false)
+      onComplete?.()
+    }
+  }, [displayedText, text, speed, isTyping, onComplete])
+
+  return (
+    <span className="relative">
+      {displayedText}
+      <span 
+        className={`inline-block w-[3px] h-[0.85em] bg-white ml-1 align-middle transition-opacity duration-100 ${
+          isTyping ? 'animate-pulse' : 'opacity-0'
+        }`}
+      />
+    </span>
+  )
+}
+
 export default function V0MiamiEvent() {
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isAtBottom, setIsAtBottom] = useState(false)
+  const [firstLineComplete, setFirstLineComplete] = useState(false)
   const descriptionSection = useInView(0.3)
   const agendaSection = useInView(0.2)
   const experienceSection = useInView(0.2)
@@ -131,11 +187,22 @@ export default function V0MiamiEvent() {
           </div>
           
           <h1 className="text-[60px] md:text-[100px] lg:text-[137px] font-normal leading-[1] lg:leading-[110px] tracking-[-0.04em] lg:tracking-[-5.48px] text-white overflow-hidden">
-            <span className={`block transition-all duration-1000 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              Prompt{' '}
+            <span className={`block transition-all duration-700 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+              <TypeWriter 
+                text="Prompt" 
+                delay={800} 
+                speed={100} 
+                shouldStart={mounted}
+                onComplete={() => setFirstLineComplete(true)}
+              />
             </span>
-            <span className={`block transition-all duration-1000 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              to Production
+            <span className={`block transition-all duration-700 ${firstLineComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <TypeWriter 
+                text="to Production" 
+                delay={200} 
+                speed={80} 
+                shouldStart={firstLineComplete}
+              />
             </span>
           </h1>
           

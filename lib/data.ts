@@ -101,6 +101,13 @@ export const sponsors: Sponsor[] = [
     assetType: "svg",
     height: 93,
   },
+  {
+    name: "DeepStation",
+    logo: "/sponsors/deepstation.svg",
+    url: "https://deepstation.ai",
+    assetType: "svg",
+    height: 47,
+  },
 ]
 
 // Logo assets

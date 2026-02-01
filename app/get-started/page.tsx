@@ -142,21 +142,25 @@ export default function GetStartedPage() {
     const url = projectUrl.trim()
     
     if (platform === "x") {
-      return `Just shipped ${name} for #v0PromptToProduction Week!
+      return `Just shipped ${name} at #v0PromptToProduction Miami!
 
-Built with @v0 and deployed on @vercel.
+Built with @v0 and deployed on @vercel at The LAB Miami.
 
 ${url ? `Check it out: ${url}` : ""}
 
-#BuildInPublic #v0`.trim()
-    } else {
-      return `Excited to share ${name} - my submission for v0 Prompt to Production Week!
+Hosted by @AgnelNieves
 
-This project was built using v0 by Vercel, showcasing how AI-powered development can help ship production-ready apps faster.
+#BuildInPublic #MiamiTech #v0`.trim()
+    } else {
+      return `Excited to share ${name} - my submission from v0 Prompt to Production Week in Miami!
+
+This project was built using v0 by Vercel at The LAB Miami, showcasing how AI-powered development can help ship production-ready apps faster.
 
 ${url ? `Live demo: ${url}` : ""}
 
-#v0PromptToProduction #BuildInPublic #Vercel #v0 #WebDevelopment`.trim()
+Huge thanks to Agnel Nieves for hosting this incredible event!
+
+#v0PromptToProduction #BuildInPublic #MiamiTech #Vercel #v0 #WebDevelopment`.trim()
     }
   }
 
@@ -602,16 +606,22 @@ ${url ? `Live demo: ${url}` : ""}
                 <p className="font-mono text-[11px] text-[#737373] tracking-[1.5px] mb-3">
                   ACCOUNTS MENTIONED IN YOUR POST
                 </p>
-                <div className="flex flex-wrap gap-4 text-[14px]">
+                <div className="flex flex-col gap-2 text-[14px]">
                   <div>
                     <span className="text-[#737373]">X:</span>{" "}
                     <a href={socialLinks.x.vercel} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">@vercel</a>,{" "}
-                    <a href={socialLinks.x.v0} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">@v0</a>
+                    <a href={socialLinks.x.v0} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">@v0</a>,{" "}
+                    <a href="https://x.com/AgnelNieves" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">@AgnelNieves</a>
                   </div>
                   <div>
                     <span className="text-[#737373]">LinkedIn:</span>{" "}
                     <a href={socialLinks.linkedin.vercel} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Vercel</a>,{" "}
-                    <a href={socialLinks.linkedin.v0} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">v0</a>
+                    <a href={socialLinks.linkedin.v0} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">v0</a>,{" "}
+                    <a href="https://www.linkedin.com/in/AgnelNieves" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Agnel Nieves</a>
+                  </div>
+                  <div>
+                    <span className="text-[#737373]">Venue:</span>{" "}
+                    <span className="text-white">The LAB Miami</span>
                   </div>
                 </div>
               </div>

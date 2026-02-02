@@ -25,8 +25,8 @@ export default function PromoPage() {
 
   return (
     <div className="relative w-screen h-screen bg-black overflow-hidden flex items-center justify-center">
-      {/* 1:1 Container */}
-      <div className="relative w-full h-full max-w-[100vh] max-h-[100vw] aspect-square bg-black overflow-hidden">
+      {/* 9:16 Instagram Story Container */}
+      <div className="relative h-full max-h-screen aspect-[9/16] bg-black overflow-hidden">
         {/* Dithering Shader Background */}
         <div 
           className={`absolute inset-0 transition-opacity duration-[2000ms] ${
@@ -45,13 +45,13 @@ export default function PromoPage() {
         </div>
 
         {/* Content Layer */}
-        <div className="absolute inset-0 flex flex-col justify-between p-[6%]">
+        <div className="absolute inset-0 flex flex-col justify-between p-[8%]">
           {/* Top Section - Location & Date */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             {/* MIAMI */}
             <div className="overflow-hidden">
               <p 
-                className={`font-mono text-[clamp(14px,3.5vw,18px)] text-white tracking-[0.2em] transition-all duration-700 ease-out ${
+                className={`font-mono text-[clamp(12px,4vw,16px)] text-white tracking-[0.25em] transition-all duration-700 ease-out ${
                   step >= 1 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-full'
@@ -64,7 +64,7 @@ export default function PromoPage() {
             {/* Date */}
             <div className="overflow-hidden">
               <p 
-                className={`font-mono text-[clamp(14px,3.5vw,18px)] text-white tracking-[0.15em] transition-all duration-700 ease-out ${
+                className={`font-mono text-[clamp(12px,4vw,16px)] text-white tracking-[0.2em] transition-all duration-700 ease-out ${
                   step >= 2 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-full'
@@ -76,11 +76,11 @@ export default function PromoPage() {
           </div>
 
           {/* Center Section - Main Title */}
-          <div className="flex flex-col gap-0 -mt-[5%]">
+          <div className="flex flex-col gap-0">
             {/* Prompt to */}
             <div className="overflow-hidden">
               <h1 
-                className={`text-[clamp(48px,14vw,140px)] font-normal leading-[0.95] tracking-[-0.04em] text-white transition-all duration-1000 ease-out ${
+                className={`text-[clamp(36px,18vw,100px)] font-normal leading-[0.95] tracking-[-0.04em] text-white transition-all duration-1000 ease-out ${
                   step >= 3 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-full'
@@ -93,7 +93,7 @@ export default function PromoPage() {
             {/* Production */}
             <div className="overflow-hidden">
               <h1 
-                className={`text-[clamp(48px,14vw,140px)] font-normal leading-[0.95] tracking-[-0.04em] text-white transition-all duration-1000 ease-out ${
+                className={`text-[clamp(36px,18vw,100px)] font-normal leading-[0.95] tracking-[-0.04em] text-white transition-all duration-1000 ease-out ${
                   step >= 4 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-full'
@@ -115,7 +115,7 @@ export default function PromoPage() {
             <img 
               src={logos.v0} 
               alt="v0" 
-              className="h-[clamp(32px,8vw,64px)] w-auto"
+              className="h-[clamp(28px,10vw,56px)] w-auto"
             />
           </div>
         </div>

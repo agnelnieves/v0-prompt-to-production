@@ -17,7 +17,9 @@ export default function PromoPage() {
       setTimeout(() => setStep(2), 400),   // Date
       setTimeout(() => setStep(3), 800),   // "Prompt to"
       setTimeout(() => setStep(4), 1100),  // "Production"
-      setTimeout(() => setStep(5), 1600),  // Logo
+      setTimeout(() => setStep(5), 1500),  // Value prop
+      setTimeout(() => setStep(6), 1900),  // CTA
+      setTimeout(() => setStep(7), 2300),  // Logo
     ]
     
     return () => timers.forEach(clearTimeout)
@@ -76,11 +78,11 @@ export default function PromoPage() {
           </div>
 
           {/* Center Section - Main Title */}
-          <div className="flex flex-col gap-0">
+          <div className="flex flex-col gap-1">
             {/* Prompt to */}
             <div className="overflow-hidden">
               <h1 
-                className={`text-[clamp(36px,18vw,100px)] font-normal leading-[0.95] tracking-[-0.04em] text-white transition-all duration-1000 ease-out ${
+                className={`text-[clamp(28px,12vw,72px)] font-normal leading-[0.95] tracking-[-0.03em] text-white transition-all duration-1000 ease-out ${
                   step >= 3 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-full'
@@ -93,7 +95,7 @@ export default function PromoPage() {
             {/* Production */}
             <div className="overflow-hidden">
               <h1 
-                className={`text-[clamp(36px,18vw,100px)] font-normal leading-[0.95] tracking-[-0.04em] text-white transition-all duration-1000 ease-out ${
+                className={`text-[clamp(28px,12vw,72px)] font-normal leading-[0.95] tracking-[-0.03em] text-white transition-all duration-1000 ease-out ${
                   step >= 4 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-full'
@@ -104,10 +106,38 @@ export default function PromoPage() {
             </div>
           </div>
 
+          {/* Value Proposition */}
+          <div className="flex flex-col gap-4">
+            <div className="overflow-hidden">
+              <p 
+                className={`text-[clamp(14px,4.5vw,20px)] text-white/90 leading-[1.4] max-w-[90%] transition-all duration-700 ease-out ${
+                  step >= 5 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-full'
+                }`}
+              >
+                From idea to deployed app in one day. Build, ship, and compete for prizes.
+              </p>
+            </div>
+            
+            {/* CTA */}
+            <div className="overflow-hidden">
+              <p 
+                className={`font-mono text-[clamp(11px,3vw,14px)] text-white/60 tracking-[0.15em] uppercase transition-all duration-700 ease-out ${
+                  step >= 6 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-full'
+                }`}
+              >
+                Free Entry — Bring Your Laptop
+              </p>
+            </div>
+          </div>
+
           {/* Bottom Section - Logo */}
           <div 
             className={`transition-all duration-1000 ease-out ${
-              step >= 5 
+              step >= 7 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-8'
             }`}
@@ -115,7 +145,7 @@ export default function PromoPage() {
             <img 
               src={logos.v0} 
               alt="v0" 
-              className="h-[clamp(28px,10vw,56px)] w-auto"
+              className="h-[clamp(24px,8vw,48px)] w-auto"
             />
           </div>
         </div>

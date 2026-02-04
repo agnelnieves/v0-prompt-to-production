@@ -5,7 +5,7 @@ import { Dithering } from "@paper-design/shaders-react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { sponsors, logos } from "@/lib/data"
 
-const TOTAL_SLIDES = 7
+const TOTAL_SLIDES = 9
 
 // Deck agenda items (different from homepage agenda)
 const deckAgendaItems = [
@@ -43,6 +43,14 @@ const kurzoChallenge = {
     { place: "Single winner", amount: "$300" },
   ],
 }
+
+// Categorize sponsors
+const madePossibleBy = sponsors.filter(s => 
+  ["UKG", "The Lab Miami", "Glue Studios", "DeepStation"].includes(s.name)
+)
+const sponsoredPrizes = sponsors.filter(s => 
+  ["Vercel", "Kurzo", "Gail"].includes(s.name)
+)
 
 // Get individual sponsor logos
 const gailSponsor = sponsors.find(s => s.name === "Gail")
@@ -150,11 +158,13 @@ export default function DeckPage() {
       <main className="flex-1 overflow-hidden">
         {currentSlide === 1 && <TitleSlide key={`slide-1-${slideKey}`} />}
         {currentSlide === 2 && <WelcomeSlide key={`slide-2-${slideKey}`} />}
-        {currentSlide === 3 && <TheChallengeSlide key={`slide-3-${slideKey}`} />}
-        {currentSlide === 4 && <AgendaSlide key={`slide-4-${slideKey}`} items={deckAgendaItems} />}
-        {currentSlide === 5 && <GlobalTracksSlide key={`slide-5-${slideKey}`} tracks={globalTracks} />}
-        {currentSlide === 6 && <SponsoredChallengeSlide key={`slide-6-${slideKey}`} sponsor={gailSponsor!} challenge={gailChallenge} slideNumber="06" />}
-        {currentSlide === 7 && <SponsoredChallengeSlide key={`slide-7-${slideKey}`} sponsor={kurzoSponsor!} challenge={kurzoChallenge} slideNumber="07" />}
+        {currentSlide === 3 && <MadePossibleBySlide key={`slide-3-${slideKey}`} sponsors={madePossibleBy} />}
+        {currentSlide === 4 && <SponsoredPrizesSlide key={`slide-4-${slideKey}`} sponsors={sponsoredPrizes} />}
+        {currentSlide === 5 && <TheChallengeSlide key={`slide-5-${slideKey}`} />}
+        {currentSlide === 6 && <AgendaSlide key={`slide-6-${slideKey}`} items={deckAgendaItems} />}
+        {currentSlide === 7 && <GlobalTracksSlide key={`slide-7-${slideKey}`} tracks={globalTracks} />}
+        {currentSlide === 8 && <SponsoredChallengeSlide key={`slide-8-${slideKey}`} sponsor={gailSponsor!} challenge={gailChallenge} slideNumber="08" />}
+        {currentSlide === 9 && <SponsoredChallengeSlide key={`slide-9-${slideKey}`} sponsor={kurzoSponsor!} challenge={kurzoChallenge} slideNumber="09" />}
       </main>
     </div>
   )
@@ -234,7 +244,85 @@ function WelcomeSlide() {
   )
 }
 
-// Slide 3: The Challenge
+// Slide 3: Made Possible By
+function MadePossibleBySlide({ sponsors }: { sponsors: typeof madePossibleBy }) {
+  const [visible, setVisible] = useState(false)
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 50)
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <div className="h-full flex flex-col lg:flex-row">
+      {/* Left side - Title */}
+      <div className="flex-shrink-0 lg:w-[40%] flex items-center px-6 lg:px-16 py-8 lg:py-0">
+        <h2 className={`font-mono text-[12px] lg:text-[14px] text-[#737373] tracking-[2.8px] transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[5px]'}`}>
+          01 MADE POSSIBLE BY
+        </h2>
+      </div>
+      
+      {/* Right side - Sponsor Grid */}
+      <div className="flex-1 grid grid-cols-2 border-l border-[#262626]">
+        {sponsors.map((sponsor, index) => (
+          <div
+            key={sponsor.name}
+            className={`flex items-center justify-center border-b border-r border-[#262626] p-6 lg:p-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
+            style={{ transitionDelay: `${150 + index * 100}ms` }}
+          >
+            <img
+              src={sponsor.logo || "/placeholder.svg"}
+              alt={sponsor.name}
+              className="w-auto max-w-[120px] lg:max-w-[180px]"
+              style={{ height: sponsor.height || "auto", maxHeight: "60px" }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Slide 4: Sponsored Prizes
+function SponsoredPrizesSlide({ sponsors }: { sponsors: typeof sponsoredPrizes }) {
+  const [visible, setVisible] = useState(false)
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 50)
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <div className="h-full flex flex-col lg:flex-row">
+      {/* Left side - Title */}
+      <div className="flex-shrink-0 lg:w-[40%] flex items-center px-6 lg:px-16 py-8 lg:py-0">
+        <h2 className={`font-mono text-[12px] lg:text-[14px] text-[#737373] tracking-[2.8px] transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[5px]'}`}>
+          02 SPONSORED PRIZES
+        </h2>
+      </div>
+      
+      {/* Right side - Sponsor List */}
+      <div className="flex-1 flex flex-col border-l border-[#262626]">
+        {sponsors.map((sponsor, index) => (
+          <div
+            key={sponsor.name}
+            className={`flex-1 flex items-center justify-center border-b border-[#262626] last:border-b-0 p-6 lg:p-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
+            style={{ transitionDelay: `${150 + index * 100}ms` }}
+          >
+            <img
+              src={sponsor.logo || "/placeholder.svg"}
+              alt={sponsor.name}
+              className="w-auto max-w-[140px] lg:max-w-[200px]"
+              style={{ height: sponsor.height || "auto", maxHeight: "50px" }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Slide 5: The Challenge
 function TheChallengeSlide() {
   const [visible, setVisible] = useState(false)
   
@@ -258,7 +346,7 @@ function TheChallengeSlide() {
   )
 }
 
-// Slide 4: Agenda
+// Slide 6: Agenda
 function AgendaSlide({ items }: { items: typeof deckAgendaItems }) {
   const [visible, setVisible] = useState(false)
   
@@ -300,7 +388,7 @@ function AgendaSlide({ items }: { items: typeof deckAgendaItems }) {
   )
 }
 
-// Slide 5: Global Tracks
+// Slide 7: Global Tracks
 function GlobalTracksSlide({ tracks }: { tracks: typeof globalTracks }) {
   const [visible, setVisible] = useState(false)
   
@@ -348,7 +436,7 @@ function GlobalTracksSlide({ tracks }: { tracks: typeof globalTracks }) {
   )
 }
 
-// Slide 6 & 7: Sponsored Challenge
+// Slide 8 & 9: Sponsored Challenge
 function SponsoredChallengeSlide({ 
   sponsor, 
   challenge, 

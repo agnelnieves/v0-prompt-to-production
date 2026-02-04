@@ -28,26 +28,32 @@ const sponsoredPrizes = sponsors.filter(s =>
 export default function DeckPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [mounted, setMounted] = useState(false)
-  const [animationKey, setAnimationKey] = useState(0)
+  const [headerMounted, setHeaderMounted] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(1)
+  const [slideKey, setSlideKey] = useState(0)
   
-  // Get current slide from URL, default to 1
-  const slideParam = searchParams.get("s")
-  const currentSlide = slideParam ? Math.max(1, Math.min(TOTAL_SLIDES, parseInt(slideParam) || 1)) : 1
-
+  // Sync slide from URL on mount and when URL changes
   useEffect(() => {
-    setMounted(true)
+    const slideParam = searchParams.get("s")
+    const urlSlide = slideParam ? Math.max(1, Math.min(TOTAL_SLIDES, parseInt(slideParam) || 1)) : 1
+    if (urlSlide !== currentSlide) {
+      setCurrentSlide(urlSlide)
+      setSlideKey(prev => prev + 1)
+    }
+  }, [searchParams])
+
+  // Header fade-in only once on initial mount
+  useEffect(() => {
+    setHeaderMounted(true)
   }, [])
-
-  // Trigger re-animation when slide changes
-  useEffect(() => {
-    setAnimationKey(prev => prev + 1)
-  }, [currentSlide])
 
   const navigateToSlide = useCallback((slide: number) => {
     const clampedSlide = Math.max(1, Math.min(TOTAL_SLIDES, slide))
-    router.push(`/deck?s=${clampedSlide}`, { scroll: false })
-  }, [router])
+    setCurrentSlide(clampedSlide)
+    setSlideKey(prev => prev + 1)
+    // Update URL without causing navigation/re-render
+    window.history.replaceState(null, '', `/deck?s=${clampedSlide}`)
+  }, [])
 
   const goNext = useCallback(() => {
     if (currentSlide < TOTAL_SLIDES) {
@@ -80,7 +86,7 @@ export default function DeckPage() {
   return (
     <div className="h-dvh bg-black text-white overflow-hidden flex flex-col">
       {/* Header */}
-      <header className={`flex-shrink-0 px-6 lg:px-10 py-6 lg:py-8 flex items-center justify-between transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+      <header className={`flex-shrink-0 px-6 lg:px-10 py-6 lg:py-8 flex items-center justify-between transition-all duration-700 ${headerMounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
         <div className="flex items-center gap-3 lg:gap-4">
           <svg viewBox="0 0 76 65" fill="white" className="h-5 lg:h-6 w-auto">
             <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
@@ -119,18 +125,18 @@ export default function DeckPage() {
 
       {/* Slide Content */}
       <main className="flex-1 overflow-hidden">
-        {currentSlide === 1 && <TitleSlide key={`slide-1-${animationKey}`} mounted={mounted} />}
-        {currentSlide === 2 && <WelcomeSlide key={`slide-2-${animationKey}`} mounted={mounted} />}
-        {currentSlide === 3 && <MadePossibleBySlide key={`slide-3-${animationKey}`} mounted={mounted} sponsors={madePossibleBy} />}
-        {currentSlide === 4 && <SponsoredPrizesSlide key={`slide-4-${animationKey}`} mounted={mounted} sponsors={sponsoredPrizes} />}
-        {currentSlide === 5 && <AgendaSlide key={`slide-5-${animationKey}`} mounted={mounted} items={deckAgendaItems} />}
+        {currentSlide === 1 && <TitleSlide key={`slide-1-${slideKey}`} />}
+        {currentSlide === 2 && <WelcomeSlide key={`slide-2-${slideKey}`} />}
+        {currentSlide === 3 && <MadePossibleBySlide key={`slide-3-${slideKey}`} sponsors={madePossibleBy} />}
+        {currentSlide === 4 && <SponsoredPrizesSlide key={`slide-4-${slideKey}`} sponsors={sponsoredPrizes} />}
+        {currentSlide === 5 && <AgendaSlide key={`slide-5-${slideKey}`} items={deckAgendaItems} />}
       </main>
     </div>
   )
 }
 
 // Slide 1: Title Slide
-function TitleSlide({ mounted }: { mounted: boolean }) {
+function TitleSlide() {
   const [visible, setVisible] = useState(false)
   
   useEffect(() => {
@@ -186,7 +192,7 @@ function TitleSlide({ mounted }: { mounted: boolean }) {
 }
 
 // Slide 2: Welcome Slide
-function WelcomeSlide({ mounted }: { mounted: boolean }) {
+function WelcomeSlide() {
   const [visible, setVisible] = useState(false)
   
   useEffect(() => {
@@ -204,7 +210,7 @@ function WelcomeSlide({ mounted }: { mounted: boolean }) {
 }
 
 // Slide 3: Made Possible By
-function MadePossibleBySlide({ mounted, sponsors }: { mounted: boolean; sponsors: typeof madePossibleBy }) {
+function MadePossibleBySlide({ sponsors }: { sponsors: typeof madePossibleBy }) {
   const [visible, setVisible] = useState(false)
   
   useEffect(() => {
@@ -243,7 +249,7 @@ function MadePossibleBySlide({ mounted, sponsors }: { mounted: boolean; sponsors
 }
 
 // Slide 4: Sponsored Prizes
-function SponsoredPrizesSlide({ mounted, sponsors }: { mounted: boolean; sponsors: typeof sponsoredPrizes }) {
+function SponsoredPrizesSlide({ sponsors }: { sponsors: typeof sponsoredPrizes }) {
   const [visible, setVisible] = useState(false)
   
   useEffect(() => {
@@ -282,7 +288,7 @@ function SponsoredPrizesSlide({ mounted, sponsors }: { mounted: boolean; sponsor
 }
 
 // Slide 5: Agenda
-function AgendaSlide({ mounted, items }: { mounted: boolean; items: typeof deckAgendaItems }) {
+function AgendaSlide({ items }: { items: typeof deckAgendaItems }) {
   const [visible, setVisible] = useState(false)
   
   useEffect(() => {

@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from "react"
 import { Dithering } from "@paper-design/shaders-react"
-import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw } from "lucide-react"
+import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, ExternalLink } from "lucide-react"
+import NumberFlow from "@number-flow/react"
 import { sponsors, logos } from "@/lib/data"
 
 const TOTAL_SLIDES = 10
@@ -519,41 +520,10 @@ function SponsoredChallengeSlide({
 // Slide 10: Time to Build
 const INITIAL_TIME = 6 * 60 * 60 + 15 * 60 // 6 hours 15 minutes in seconds
 
-// Animated digit component with vertical scroll
-function AnimatedDigit({ value, prevValue }: { value: string; prevValue: string }) {
-  const [isAnimating, setIsAnimating] = useState(false)
-  
-  useEffect(() => {
-    if (value !== prevValue) {
-      setIsAnimating(true)
-      const timer = setTimeout(() => setIsAnimating(false), 300)
-      return () => clearTimeout(timer)
-    }
-  }, [value, prevValue])
-
-  // Generate the digits to show (previous, current, next for smooth cycling)
-  const currentNum = parseInt(value)
-  const prevNum = (currentNum + 1) % 10
-  const nextNum = (currentNum - 1 + 10) % 10
-
-  return (
-    <div className="relative h-[1em] w-[0.65em] overflow-hidden">
-      <div 
-        className={`flex flex-col transition-transform duration-300 ease-out ${isAnimating ? '-translate-y-[1em]' : 'translate-y-0'}`}
-      >
-        <span className="h-[1em] flex items-center justify-center text-[#404040]">{prevNum}</span>
-        <span className="h-[1em] flex items-center justify-center">{value}</span>
-        <span className="h-[1em] flex items-center justify-center text-[#404040]">{nextNum}</span>
-      </div>
-    </div>
-  )
-}
-
 function TimeToBuildSlide() {
   const [visible, setVisible] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME)
-  const [prevTimeLeft, setPrevTimeLeft] = useState(INITIAL_TIME)
   const [isHovering, setIsHovering] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -566,7 +536,6 @@ function TimeToBuildSlide() {
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
       intervalRef.current = setInterval(() => {
-        setPrevTimeLeft(timeLeft)
         setTimeLeft(prev => Math.max(0, prev - 1))
       }, 1000)
     } else {
@@ -585,28 +554,12 @@ function TimeToBuildSlide() {
   const minutes = Math.floor((timeLeft % 3600) / 60)
   const seconds = timeLeft % 60
 
-  const prevHours = Math.floor(prevTimeLeft / 3600)
-  const prevMinutes = Math.floor((prevTimeLeft % 3600) / 60)
-  const prevSeconds = prevTimeLeft % 60
-
-  const formatDigits = (num: number) => String(num).padStart(2, '0').split('')
-  const formatPrevDigits = (num: number) => String(num).padStart(2, '0').split('')
-
-  const hourDigits = formatDigits(hours)
-  const minuteDigits = formatDigits(minutes)
-  const secondDigits = formatDigits(seconds)
-
-  const prevHourDigits = formatPrevDigits(prevHours)
-  const prevMinuteDigits = formatPrevDigits(prevMinutes)
-  const prevSecondDigits = formatPrevDigits(prevSeconds)
-
   const handlePlayPause = () => {
     setIsRunning(prev => !prev)
   }
 
   const handleReset = () => {
     setIsRunning(false)
-    setPrevTimeLeft(INITIAL_TIME)
     setTimeLeft(INITIAL_TIME)
   }
 
@@ -633,25 +586,45 @@ function TimeToBuildSlide() {
               <div className="absolute top-0 bottom-0 right-0 w-20 lg:w-32 bg-gradient-to-l from-black to-transparent z-10" />
             </div>
 
-            {/* Timer Display */}
-            <div className="relative z-0 flex items-center text-[64px] sm:text-[96px] md:text-[120px] lg:text-[160px] font-light leading-none tracking-tight text-white">
-              {/* Hours */}
-              <div className="flex">
-                <AnimatedDigit value={hourDigits[0]} prevValue={prevHourDigits[0]} />
-                <AnimatedDigit value={hourDigits[1]} prevValue={prevHourDigits[1]} />
-              </div>
+            {/* Timer Display using NumberFlow */}
+            <div 
+              className="relative z-0 flex items-center text-[64px] sm:text-[96px] md:text-[120px] lg:text-[160px] font-light leading-none tracking-tight text-white"
+              style={{ 
+                fontVariantNumeric: 'tabular-nums',
+                // @ts-expect-error CSS custom property
+                '--number-flow-char-height': '0.85em',
+                '--number-flow-mask-height': '0.25em',
+              }}
+            >
+              <NumberFlow 
+                value={hours} 
+                format={{ minimumIntegerDigits: 2 }}
+                animated={isRunning}
+                trend={-1}
+                transformTiming={{ duration: 500, easing: 'ease-out' }}
+                spinTiming={{ duration: 500, easing: 'ease-out' }}
+                opacityTiming={{ duration: 300, easing: 'ease-out' }}
+              />
               <span className="mx-1 sm:mx-2 lg:mx-4 text-[#555]">:</span>
-              {/* Minutes */}
-              <div className="flex">
-                <AnimatedDigit value={minuteDigits[0]} prevValue={prevMinuteDigits[0]} />
-                <AnimatedDigit value={minuteDigits[1]} prevValue={prevMinuteDigits[1]} />
-              </div>
+              <NumberFlow 
+                value={minutes} 
+                format={{ minimumIntegerDigits: 2 }}
+                animated={isRunning}
+                trend={-1}
+                transformTiming={{ duration: 500, easing: 'ease-out' }}
+                spinTiming={{ duration: 500, easing: 'ease-out' }}
+                opacityTiming={{ duration: 300, easing: 'ease-out' }}
+              />
               <span className="mx-1 sm:mx-2 lg:mx-4 text-[#555]">:</span>
-              {/* Seconds */}
-              <div className="flex">
-                <AnimatedDigit value={secondDigits[0]} prevValue={prevSecondDigits[0]} />
-                <AnimatedDigit value={secondDigits[1]} prevValue={prevSecondDigits[1]} />
-              </div>
+              <NumberFlow 
+                value={seconds} 
+                format={{ minimumIntegerDigits: 2 }}
+                animated={isRunning}
+                trend={-1}
+                transformTiming={{ duration: 500, easing: 'ease-out' }}
+                spinTiming={{ duration: 500, easing: 'ease-out' }}
+                opacityTiming={{ duration: 300, easing: 'ease-out' }}
+              />
             </div>
           </div>
 
@@ -690,18 +663,34 @@ function TimeToBuildSlide() {
         </span>
         <div className="flex items-center gap-8 lg:gap-12">
           {gailSponsor && (
-            <img
-              src={gailSponsor.logo || "/placeholder.svg"}
-              alt={gailSponsor.name}
-              className="h-8 lg:h-10 w-auto"
-            />
+            <a 
+              href={gailSponsor.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative group"
+            >
+              <ExternalLink className="absolute -top-2 -right-2 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
+              <img
+                src={gailSponsor.logo || "/placeholder.svg"}
+                alt={gailSponsor.name}
+                className="h-8 lg:h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
+              />
+            </a>
           )}
           {kurzoSponsor && (
-            <img
-              src={kurzoSponsor.logo || "/placeholder.svg"}
-              alt={kurzoSponsor.name}
-              className="h-8 lg:h-10 w-auto"
-            />
+            <a 
+              href={kurzoSponsor.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative group"
+            >
+              <ExternalLink className="absolute -top-2 -right-2 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
+              <img
+                src={kurzoSponsor.logo || "/placeholder.svg"}
+                alt={kurzoSponsor.name}
+                className="h-8 lg:h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
+              />
+            </a>
           )}
         </div>
       </div>

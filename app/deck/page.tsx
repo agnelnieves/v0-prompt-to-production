@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useCallback, useRef } from "react"
 import { Dithering } from "@paper-design/shaders-react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw } from "lucide-react"
 import { sponsors, logos } from "@/lib/data"
 
-const TOTAL_SLIDES = 9
+const TOTAL_SLIDES = 10
 
 // Deck agenda items (different from homepage agenda)
 const deckAgendaItems = [
@@ -165,6 +165,7 @@ export default function DeckPage() {
         {currentSlide === 7 && <GlobalTracksSlide key={`slide-7-${slideKey}`} tracks={globalTracks} />}
         {currentSlide === 8 && <SponsoredChallengeSlide key={`slide-8-${slideKey}`} sponsor={gailSponsor!} challenge={gailChallenge} slideNumber="08" />}
         {currentSlide === 9 && <SponsoredChallengeSlide key={`slide-9-${slideKey}`} sponsor={kurzoSponsor!} challenge={kurzoChallenge} slideNumber="09" />}
+        {currentSlide === 10 && <TimeToBuildSlide key={`slide-10-${slideKey}`} />}
       </main>
     </div>
   )
@@ -510,6 +511,204 @@ function SponsoredChallengeSlide({
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Slide 10: Time to Build
+const INITIAL_TIME = 6 * 60 * 60 + 15 * 60 // 6 hours 15 minutes in seconds
+
+// Animated digit component with vertical scroll
+function AnimatedDigit({ value, prevValue }: { value: string; prevValue: string }) {
+  const [isAnimating, setIsAnimating] = useState(false)
+  
+  useEffect(() => {
+    if (value !== prevValue) {
+      setIsAnimating(true)
+      const timer = setTimeout(() => setIsAnimating(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [value, prevValue])
+
+  // Generate the digits to show (previous, current, next for smooth cycling)
+  const currentNum = parseInt(value)
+  const prevNum = (currentNum + 1) % 10
+  const nextNum = (currentNum - 1 + 10) % 10
+
+  return (
+    <div className="relative h-[1em] w-[0.65em] overflow-hidden">
+      <div 
+        className={`flex flex-col transition-transform duration-300 ease-out ${isAnimating ? '-translate-y-[1em]' : 'translate-y-0'}`}
+      >
+        <span className="h-[1em] flex items-center justify-center text-[#404040]">{prevNum}</span>
+        <span className="h-[1em] flex items-center justify-center">{value}</span>
+        <span className="h-[1em] flex items-center justify-center text-[#404040]">{nextNum}</span>
+      </div>
+    </div>
+  )
+}
+
+function TimeToBuildSlide() {
+  const [visible, setVisible] = useState(false)
+  const [isRunning, setIsRunning] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(INITIAL_TIME)
+  const [prevTimeLeft, setPrevTimeLeft] = useState(INITIAL_TIME)
+  const [isHovering, setIsHovering] = useState(false)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 50)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Timer logic
+  useEffect(() => {
+    if (isRunning && timeLeft > 0) {
+      intervalRef.current = setInterval(() => {
+        setPrevTimeLeft(timeLeft)
+        setTimeLeft(prev => Math.max(0, prev - 1))
+      }, 1000)
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [isRunning, timeLeft])
+
+  const hours = Math.floor(timeLeft / 3600)
+  const minutes = Math.floor((timeLeft % 3600) / 60)
+  const seconds = timeLeft % 60
+
+  const prevHours = Math.floor(prevTimeLeft / 3600)
+  const prevMinutes = Math.floor((prevTimeLeft % 3600) / 60)
+  const prevSeconds = prevTimeLeft % 60
+
+  const formatDigits = (num: number) => String(num).padStart(2, '0').split('')
+  const formatPrevDigits = (num: number) => String(num).padStart(2, '0').split('')
+
+  const hourDigits = formatDigits(hours)
+  const minuteDigits = formatDigits(minutes)
+  const secondDigits = formatDigits(seconds)
+
+  const prevHourDigits = formatPrevDigits(prevHours)
+  const prevMinuteDigits = formatPrevDigits(prevMinutes)
+  const prevSecondDigits = formatPrevDigits(prevSeconds)
+
+  const handlePlayPause = () => {
+    setIsRunning(prev => !prev)
+  }
+
+  const handleReset = () => {
+    setIsRunning(false)
+    setPrevTimeLeft(INITIAL_TIME)
+    setTimeLeft(INITIAL_TIME)
+  }
+
+  return (
+    <div className="h-full flex flex-col items-center justify-center px-6 lg:px-16 relative">
+      {/* Title */}
+      <h2 className={`font-mono text-[20px] sm:text-[24px] lg:text-[32px] text-[#737373] tracking-[8px] lg:tracking-[12px] mb-8 lg:mb-12 transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-[5px]'}`}>
+        TIME TO BUILD!
+      </h2>
+
+      {/* Timer Container */}
+      <div 
+        className={`relative transition-all duration-700 delay-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <div className="flex items-center gap-4">
+          {/* Timer Box */}
+          <div className="relative border border-[#333] rounded-lg px-6 sm:px-10 lg:px-16 py-6 sm:py-10 lg:py-14 overflow-hidden">
+            {/* Gradient overlays for fade effect */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 left-0 right-0 h-16 lg:h-24 bg-gradient-to-b from-black to-transparent z-10" />
+              <div className="absolute bottom-0 left-0 right-0 h-16 lg:h-24 bg-gradient-to-t from-black to-transparent z-10" />
+              <div className="absolute top-0 bottom-0 right-0 w-20 lg:w-32 bg-gradient-to-l from-black to-transparent z-10" />
+            </div>
+
+            {/* Timer Display */}
+            <div className="relative z-0 flex items-center text-[64px] sm:text-[96px] md:text-[120px] lg:text-[160px] font-light leading-none tracking-tight text-white">
+              {/* Hours */}
+              <div className="flex">
+                <AnimatedDigit value={hourDigits[0]} prevValue={prevHourDigits[0]} />
+                <AnimatedDigit value={hourDigits[1]} prevValue={prevHourDigits[1]} />
+              </div>
+              <span className="mx-1 sm:mx-2 lg:mx-4 text-[#555]">:</span>
+              {/* Minutes */}
+              <div className="flex">
+                <AnimatedDigit value={minuteDigits[0]} prevValue={prevMinuteDigits[0]} />
+                <AnimatedDigit value={minuteDigits[1]} prevValue={prevMinuteDigits[1]} />
+              </div>
+              <span className="mx-1 sm:mx-2 lg:mx-4 text-[#555]">:</span>
+              {/* Seconds */}
+              <div className="flex">
+                <AnimatedDigit value={secondDigits[0]} prevValue={prevSecondDigits[0]} />
+                <AnimatedDigit value={secondDigits[1]} prevValue={prevSecondDigits[1]} />
+              </div>
+            </div>
+          </div>
+
+          {/* Control Buttons */}
+          <div 
+            className={`flex flex-col gap-2 transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'}`}
+          >
+            <button
+              onClick={handlePlayPause}
+              className="p-3 lg:p-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200"
+              aria-label={isRunning ? "Pause timer" : "Start timer"}
+            >
+              {isRunning ? (
+                <Pause className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+              ) : (
+                <Play className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+              )}
+            </button>
+            {isRunning && (
+              <button
+                onClick={handleReset}
+                className="p-3 lg:p-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200"
+                aria-label="Reset timer"
+              >
+                <RotateCcw className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Made Possible By */}
+      <div className={`mt-12 lg:mt-16 flex flex-col items-center transition-all duration-700 delay-400 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}>
+        <span className="font-mono text-[11px] lg:text-[14px] text-[#737373] tracking-[4px] lg:tracking-[6px] mb-6 lg:mb-8">
+          MADE POSSIBLE BY
+        </span>
+        <div className="flex items-center gap-8 lg:gap-12">
+          {gailSponsor && (
+            <img
+              src={gailSponsor.logo || "/placeholder.svg"}
+              alt={gailSponsor.name}
+              className="h-8 lg:h-10 w-auto"
+            />
+          )}
+          {kurzoSponsor && (
+            <img
+              src={kurzoSponsor.logo || "/placeholder.svg"}
+              alt={kurzoSponsor.name}
+              className="h-8 lg:h-10 w-auto"
+            />
+          )}
+        </div>
+      </div>
+
+      {/* QR Code Placeholder */}
+      <div className={`absolute bottom-6 lg:bottom-10 left-6 lg:left-10 transition-all duration-700 delay-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}>
+        <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-lg" />
       </div>
     </div>
   )

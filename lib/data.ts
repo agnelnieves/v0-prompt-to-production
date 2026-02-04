@@ -108,6 +108,13 @@ export const sponsors: Sponsor[] = [
     assetType: "svg",
     height: 47,
   },
+  {
+    name: "Glue Studios",
+    logo: "/sponsors/glue-studios.svg",
+    url: "https://www.thecreativeglue.com",
+    assetType: "svg",
+    height: 47,
+  },
 ]
 
 // Logo assets

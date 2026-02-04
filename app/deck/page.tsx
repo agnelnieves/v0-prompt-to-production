@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { Dithering } from "@paper-design/shaders-react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { sponsors, logos } from "@/lib/data"
@@ -25,34 +24,34 @@ const sponsoredPrizes = sponsors.filter(s =>
   ["Vercel", "Kurzo", "Gail"].includes(s.name)
 )
 
+// Helper to get initial slide from URL (only runs once on mount)
+function getInitialSlide(): number {
+  if (typeof window === "undefined") return 1
+  const params = new URLSearchParams(window.location.search)
+  const slideParam = params.get("s")
+  return slideParam ? Math.max(1, Math.min(TOTAL_SLIDES, parseInt(slideParam) || 1)) : 1
+}
+
 export default function DeckPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
   const [headerMounted, setHeaderMounted] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(1)
   const [slideKey, setSlideKey] = useState(0)
-  
-  // Sync slide from URL on mount and when URL changes
-  useEffect(() => {
-    const slideParam = searchParams.get("s")
-    const urlSlide = slideParam ? Math.max(1, Math.min(TOTAL_SLIDES, parseInt(slideParam) || 1)) : 1
-    if (urlSlide !== currentSlide) {
-      setCurrentSlide(urlSlide)
-      setSlideKey(prev => prev + 1)
-    }
-  }, [searchParams])
+  const initializedRef = useRef(false)
 
-  // Header fade-in only once on initial mount
+  // Read slide from URL only once on mount
   useEffect(() => {
-    setHeaderMounted(true)
+    if (!initializedRef.current) {
+      initializedRef.current = true
+      const initialSlide = getInitialSlide()
+      setCurrentSlide(initialSlide)
+      setHeaderMounted(true)
+    }
   }, [])
 
   const navigateToSlide = useCallback((slide: number) => {
     const clampedSlide = Math.max(1, Math.min(TOTAL_SLIDES, slide))
     setCurrentSlide(clampedSlide)
     setSlideKey(prev => prev + 1)
-    // Update URL without causing navigation/re-render
-    window.history.replaceState(null, '', `/deck?s=${clampedSlide}`)
   }, [])
 
   const goNext = useCallback(() => {

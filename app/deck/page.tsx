@@ -267,26 +267,22 @@ function MadePossibleBySlide({ sponsors }: { sponsors: typeof madePossibleBy }) 
       {/* Right side - Sponsor Grid */}
       <div className="flex-1 grid grid-cols-2 border-l border-[#262626]">
         {sponsors.map((sponsor, index) => (
-          <div
+          <a
             key={sponsor.name}
-            className={`flex items-center justify-center border-b border-r border-[#262626] p-6 lg:p-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
+            href={sponsor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`relative group flex items-center justify-center border-b border-r border-[#262626] p-6 lg:p-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
             style={{ transitionDelay: `${150 + index * 100}ms` }}
           >
-            <a 
-              href={sponsor.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="relative group"
-            >
-              <ExternalLink className="absolute -top-2 -right-2 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
-              <img
-                src={sponsor.logo || "/placeholder.svg"}
-                alt={sponsor.name}
-                className="w-auto max-w-[120px] lg:max-w-[180px] transition-opacity duration-300 group-hover:opacity-80"
-                style={{ height: sponsor.height || "auto", maxHeight: "60px" }}
-              />
-            </a>
-          </div>
+            <ExternalLink className="absolute top-4 right-4 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
+            <img
+              src={sponsor.logo || "/placeholder.svg"}
+              alt={sponsor.name}
+              className="w-auto max-w-[120px] lg:max-w-[180px] transition-opacity duration-300 group-hover:opacity-80"
+              style={{ height: sponsor.height || "auto", maxHeight: "60px" }}
+            />
+          </a>
         ))}
       </div>
     </div>
@@ -314,26 +310,22 @@ function SponsoredPrizesSlide({ sponsors }: { sponsors: typeof sponsoredPrizes }
       {/* Right side - Sponsor List */}
       <div className="flex-1 flex flex-col border-l border-[#262626]">
         {sponsors.map((sponsor, index) => (
-          <div
+          <a
             key={sponsor.name}
-            className={`flex-1 flex items-center justify-center border-b border-[#262626] last:border-b-0 p-6 lg:p-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
+            href={sponsor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`relative group flex-1 flex items-center justify-center border-b border-[#262626] last:border-b-0 p-6 lg:p-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[5px]'}`}
             style={{ transitionDelay: `${150 + index * 100}ms` }}
           >
-            <a 
-              href={sponsor.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="relative group"
-            >
-              <ExternalLink className="absolute -top-2 -right-2 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
-              <img
-                src={sponsor.logo || "/placeholder.svg"}
-                alt={sponsor.name}
-                className="w-auto max-w-[140px] lg:max-w-[200px] transition-opacity duration-300 group-hover:opacity-80"
-                style={{ height: sponsor.height || "auto", maxHeight: "50px" }}
-              />
-            </a>
-          </div>
+            <ExternalLink className="absolute top-4 right-4 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
+            <img
+              src={sponsor.logo || "/placeholder.svg"}
+              alt={sponsor.name}
+              className="w-auto max-w-[140px] lg:max-w-[200px] transition-opacity duration-300 group-hover:opacity-80"
+              style={{ height: sponsor.height || "auto", maxHeight: "50px" }}
+            />
+          </a>
         ))}
       </div>
     </div>

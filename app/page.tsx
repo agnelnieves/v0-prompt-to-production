@@ -32,10 +32,66 @@ function useInView(threshold = 0.1) {
   return { ref, isInView }
 }
 
+// Typing animation component
+function TypingText({ 
+  text, 
+  startDelay = 0, 
+  typingSpeed = 80,
+  onComplete,
+  className = ""
+}: { 
+  text: string
+  startDelay?: number
+  typingSpeed?: number
+  onComplete?: () => void
+  className?: string
+}) {
+  const [displayedText, setDisplayedText] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+  const [showCursor, setShowCursor] = useState(true)
+
+  useEffect(() => {
+    const startTimer = setTimeout(() => {
+      setIsTyping(true)
+    }, startDelay)
+
+    return () => clearTimeout(startTimer)
+  }, [startDelay])
+
+  useEffect(() => {
+    if (!isTyping) return
+
+    if (displayedText.length < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(text.slice(0, displayedText.length + 1))
+      }, typingSpeed)
+      return () => clearTimeout(timer)
+    } else {
+      // Typing complete
+      onComplete?.()
+      // Hide cursor after a brief delay when complete
+      const cursorTimer = setTimeout(() => {
+        setShowCursor(false)
+      }, 500)
+      return () => clearTimeout(cursorTimer)
+    }
+  }, [isTyping, displayedText, text, typingSpeed, onComplete])
+
+  return (
+    <span className={className}>
+      {displayedText}
+      {showCursor && isTyping && (
+        <span className="inline-block w-[3px] h-[0.85em] bg-white ml-1 animate-cursor-blink" />
+      )}
+    </span>
+  )
+}
+
 export default function V0MiamiEvent() {
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isAtBottom, setIsAtBottom] = useState(false)
+  const [startSecondLine, setStartSecondLine] = useState(false)
   const descriptionSection = useInView(0.3)
   const agendaSection = useInView(0.2)
   const experienceSection = useInView(0.2)
@@ -131,11 +187,24 @@ export default function V0MiamiEvent() {
           </div>
           
           <h1 className="text-[60px] md:text-[100px] lg:text-[137px] font-normal leading-[1] lg:leading-[110px] tracking-[-0.04em] lg:tracking-[-5.48px] text-white overflow-hidden">
-            <span className={`block transition-all duration-1000 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              Prompt{' '}
+            <span className={`block transition-all duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+              {mounted && (
+                <TypingText 
+                  text="Prompt" 
+                  startDelay={500} 
+                  typingSpeed={100}
+                  onComplete={() => setStartSecondLine(true)}
+                />
+              )}
             </span>
-            <span className={`block transition-all duration-1000 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              to Production
+            <span className={`block transition-all duration-500 ${startSecondLine ? 'opacity-100' : 'opacity-0'}`}>
+              {startSecondLine && (
+                <TypingText 
+                  text="to Production" 
+                  startDelay={200} 
+                  typingSpeed={80}
+                />
+              )}
             </span>
           </h1>
           

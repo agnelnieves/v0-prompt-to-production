@@ -1074,13 +1074,6 @@ function TimeToBuildSlide() {
         <div className="flex items-center gap-4">
           {/* Timer Box */}
           <div className="relative rounded-lg overflow-hidden">
-            {/* Gradient overlays for fade effect */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-0 right-0 h-16 lg:h-24 bg-gradient-to-b from-black to-transparent z-10" />
-              <div className="absolute bottom-0 left-0 right-0 h-16 lg:h-24 bg-gradient-to-t from-black to-transparent z-10" />
-              <div className="absolute top-0 bottom-0 right-0 w-20 lg:w-32 bg-gradient-to-l from-black to-transparent z-10" />
-            </div>
-
             {/* Timer Display using NumberFlow */}
             <div
               className="relative z-0 flex items-center font-mono text-[64px] sm:text-[96px] md:text-[120px] lg:text-[160px] font-light leading-none tracking-tight text-white"

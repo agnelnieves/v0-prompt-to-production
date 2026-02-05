@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, ExternalLink } from 
 import NumberFlow from "@number-flow/react"
 import { sponsors, logos } from "@/lib/data"
 
-const TOTAL_SLIDES = 10
+const TOTAL_SLIDES = 11
 
 // Deck agenda items (different from homepage agenda)
 const deckAgendaItems = [
@@ -45,17 +45,25 @@ const kurzoChallenge = {
   ],
 }
 
+const basementChallenge = {
+  description: "Build an application powered by OpenClaw.\n\nYour project can be anything: a tool, an agent, a workflow, or a product. The only requirement is that OpenClaw is a core part of how it works, not just an add-on.\n\nYou're free to choose the domain and use case. It can analyze data, automate tasks, monitor systems, explore the web, assist users, or generate insights. What matters is that OpenClaw meaningfully drives behavior, decisions, or outcomes in your application.\n\nFocus on building something that feels like a real product, not just a demo or script.",
+  prizes: [
+    { place: "Single winner", amount: "$300" },
+  ],
+}
+
 // Categorize sponsors
 const madePossibleBy = sponsors.filter(s => 
   ["UKG", "The Lab Miami", "Glue Studios", "DeepStation"].includes(s.name)
 )
 const sponsoredPrizes = sponsors.filter(s => 
-  ["Vercel", "Kurzo", "Gail"].includes(s.name)
+  ["Vercel", "Kurzo", "Gail", "Basement"].includes(s.name)
 )
 
 // Get individual sponsor logos
 const gailSponsor = sponsors.find(s => s.name === "Gail")
 const kurzoSponsor = sponsors.find(s => s.name === "Kurzo")
+const basementSponsor = sponsors.find(s => s.name === "Basement")
 
 // Helper to get initial slide from URL (only runs once on mount)
 function getInitialSlide(): number {
@@ -166,7 +174,8 @@ export default function DeckPage() {
         {currentSlide === 7 && <GlobalTracksSlide key={`slide-7-${slideKey}`} tracks={globalTracks} />}
         {currentSlide === 8 && <SponsoredChallengeSlide key={`slide-8-${slideKey}`} sponsor={gailSponsor!} challenge={gailChallenge} slideNumber="08" />}
         {currentSlide === 9 && <SponsoredChallengeSlide key={`slide-9-${slideKey}`} sponsor={kurzoSponsor!} challenge={kurzoChallenge} slideNumber="09" />}
-        {currentSlide === 10 && <TimeToBuildSlide key={`slide-10-${slideKey}`} />}
+        {currentSlide === 10 && <SponsoredChallengeSlide key={`slide-10-${slideKey}`} sponsor={basementSponsor!} challenge={basementChallenge} slideNumber="10" />}
+        {currentSlide === 11 && <TimeToBuildSlide key={`slide-11-${slideKey}`} />}
       </main>
     </div>
   )

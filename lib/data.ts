@@ -88,6 +88,12 @@ export const sponsors: Sponsor[] = [
     assetType: "svg",
   },
   {
+    name: "Basement",
+    logo: "/sponsors/basement.svg",
+    url: "https://basement.dev",
+    assetType: "svg",
+  },
+  {
     name: "UKG",
     logo: "/sponsors/ukg.svg",
     url: "https://www.ukg.com",

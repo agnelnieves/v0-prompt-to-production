@@ -11,7 +11,14 @@ import {
   ExternalLink,
   Maximize2,
   Minimize2,
+  Loader2,
+  Layers,
 } from "lucide-react";
+import Backgrounds, {
+  BACKGROUND_TYPES,
+  type BackgroundType,
+} from "@/components/backgrounds";
+import { motion, AnimatePresence } from "framer-motion";
 import NumberFlow from "@number-flow/react";
 import { sponsors, logos } from "@/lib/data";
 
@@ -738,11 +745,14 @@ function SponsoredChallengeSlide({
 }
 
 // Slide 11: Credits (v0 Redeem)
+type RedeemState = 'idle' | 'getting' | 'copied';
+
 function CreditsSlide() {
   const [visible, setVisible] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [redeemState, setRedeemState] = useState<RedeemState>('idle');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -757,6 +767,32 @@ function CreditsSlide() {
     window.addEventListener("resize", checkDesktop);
     return () => window.removeEventListener("resize", checkDesktop);
   }, []);
+
+  // Handle redeem button click
+  const handleRedeem = async () => {
+    if (redeemState !== 'idle') return;
+    
+    // Phase 1: Getting code
+    setRedeemState('getting');
+    
+    // Simulate getting code (1.5s)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Copy code to clipboard (you can replace 'V0PROMPTTOPRODUCTION2026' with actual code)
+    try {
+      await navigator.clipboard.writeText('V0PROMPTTOPRODUCTION2026');
+    } catch (err) {
+      console.error('Failed to copy code:', err);
+    }
+    
+    // Phase 2: Code copied, redirecting
+    setRedeemState('copied');
+    
+    // Wait 2s then redirect
+    setTimeout(() => {
+      window.open('https://v0.app/chat/settings/billing', '_blank');
+    }, 2000);
+  };
 
   const handleVideoClick = () => {
     if (!videoRef.current) return;
@@ -817,15 +853,72 @@ function CreditsSlide() {
               08 CREDITS
             </h2>
 
-            <button
-              className={`bg-white text-black font-medium text-[14px] lg:text-[16px] px-6 lg:px-8 py-3 lg:py-4 rounded-full hover:bg-white/90 transition-all duration-700 delay-200 ${
+            {/* Animated Button */}
+            <motion.button
+              onClick={handleRedeem}
+              disabled={redeemState !== 'idle'}
+              layout
+              initial={false}
+              className={`font-medium text-[14px] lg:text-[16px] px-6 lg:px-8 py-3 lg:py-4 rounded-full flex items-center justify-center gap-2 overflow-hidden ${
+                redeemState === 'copied'
+                  ? 'bg-transparent text-white/80'
+                  : 'bg-white text-black hover:bg-white/90'
+              } ${
                 visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-[5px]"
               }`}
+              style={{
+                transition: 'opacity 700ms ease 200ms, transform 700ms ease 200ms, background-color 500ms ease',
+              }}
+              transition={{
+                layout: {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 35,
+                }
+              }}
             >
-              Redeem code
-            </button>
+              <AnimatePresence mode="wait" initial={false}>
+                {redeemState === 'idle' && (
+                  <motion.span
+                    key="idle"
+                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                    className="whitespace-nowrap"
+                  >
+                    Redeem code
+                  </motion.span>
+                )}
+                {redeemState === 'getting' && (
+                  <motion.span
+                    key="getting"
+                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                    className="flex items-center gap-2 whitespace-nowrap"
+                  >
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Getting code
+                  </motion.span>
+                )}
+                {redeemState === 'copied' && (
+                  <motion.span
+                    key="copied"
+                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                    className="whitespace-nowrap"
+                  >
+                    Code copied, redirecting...
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
 
           {/* QR Code Placeholder */}
@@ -910,6 +1003,8 @@ function TimeToBuildSlide() {
   const [isRunning, setIsRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
   const [isHovering, setIsHovering] = useState(false);
+  const [activeBackground, setActiveBackground] =
+    useState<BackgroundType>("dither");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -948,8 +1043,17 @@ function TimeToBuildSlide() {
     setTimeLeft(INITIAL_TIME);
   };
 
+  // Cycle through backgrounds (DEBUG)
+  const handleCycleBackground = () => {
+    const currentIndex = BACKGROUND_TYPES.indexOf(activeBackground);
+    const nextIndex = (currentIndex + 1) % BACKGROUND_TYPES.length;
+    setActiveBackground(BACKGROUND_TYPES[nextIndex]);
+  };
+
   return (
     <div className="h-full flex flex-col items-center justify-center px-6 lg:px-16 relative">
+      {/* Animated Background */}
+      <Backgrounds activeBackground={activeBackground} transitionDuration={1.2} />
       {/* Title */}
       <h2
         className={`font-mono text-[20px] sm:text-[24px] lg:text-[32px] text-[#737373] tracking-[8px] lg:tracking-[12px] mb-8 lg:mb-12 transition-all duration-700 delay-100 ${
@@ -969,7 +1073,7 @@ function TimeToBuildSlide() {
       >
         <div className="flex items-center gap-4">
           {/* Timer Box */}
-          <div className="relative border border-[#333] rounded-lg px-6 sm:px-10 lg:px-16 py-6 sm:py-10 lg:py-14 overflow-hidden">
+          <div className="relative rounded-lg overflow-hidden">
             {/* Gradient overlays for fade effect */}
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute top-0 left-0 right-0 h-16 lg:h-24 bg-gradient-to-b from-black to-transparent z-10" />
@@ -1102,6 +1206,18 @@ function TimeToBuildSlide() {
       >
         <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-lg" />
       </div>
+
+      {/* DEBUG: Background Cycle Button */}
+      <button
+        onClick={handleCycleBackground}
+        className={`absolute bottom-6 lg:bottom-10 right-6 lg:right-10 p-3 lg:p-4 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 z-20 ${
+          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[5px]"
+        }`}
+        aria-label="Cycle background"
+        title={`Current: ${activeBackground}`}
+      >
+        <Layers className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+      </button>
     </div>
   );
 }

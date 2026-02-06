@@ -72,8 +72,21 @@ const globalTracks = [
 
 // Sponsored challenges data
 const gailChallenge = {
-  description:
-    'Use the following dummy data from phone, SMS, and chat interactions, to build a system that turns each person\'s support history into a behavioral profile and dynamic "fit score" for products.\n\nAnalyze how people communicate (e.g., temperament, reliability in keeping payment promises, responsiveness, etc) and use that profile to recommend which customers are the best match for specific offers a retailer could make. The goal is to show how offline data can power smarter, more personalized decisions than web data alone.',
+  description: (
+    <>
+      Build an AI-agent system that turns messy conversation history into evolving behavioral profiles — then uses them live in conversation. Build these four pieces:
+      {"\n\n"}
+      <span className="text-white font-medium">Profile Engine</span> — Extract behavioral traits from interaction history: temperament, follow-through on promises, sentiment trends, communication style, life-stage signals.
+      {"\n\n"}
+      <span className="text-white font-medium">Dynamic Fit Scoring</span> — Score customers on dimensions that matter for outcomes — likelihood to pay, responsiveness, best contact method and timing, escalation/frustration risk. Scores should shift as new data arrives with clear reasoning for why.
+      {"\n\n"}
+      <span className="text-white font-medium">Live Agent</span> — A live agent that references the profile in real time. It should demonstrably behave differently depending on who it{"'"}s talking to — adjusting tone, negotiation strategy, and approach based on what{"'"}s historically worked for a specific user id from the data.
+      {"\n\n"}
+      <span className="text-white font-medium">Profile Evolution</span> — Handle conflicting signals. A hostile customer who{"'"}s recently turned cooperative should reflect growth, not just an average.
+      {"\n\n"}
+      <span className="text-[#525252] text-[14px] lg:text-[16px] tracking-wide">Judged on: Depth of insight &middot; Profile evolution &middot; Agent usefulness &middot; Explainability &middot; Creativity</span>
+    </>
+  ),
   prizes: [
     { place: "First Place", amount: "$700" },
     { place: "Second Place", amount: "$200" },
@@ -642,7 +655,7 @@ function SponsoredChallengeSlide({
   slideNumber,
 }: {
   sponsor: typeof gailSponsor;
-  challenge: typeof gailChallenge | typeof kurzoChallenge;
+  challenge: { description: React.ReactNode; prizes: { place: string; amount: string }[]; learnMoreUrl?: string };
   slideNumber: string;
 }) {
   const [visible, setVisible] = useState(false);
@@ -683,7 +696,7 @@ function SponsoredChallengeSlide({
         </div>
         {hasLearnMore && (
           <a
-            href={(challenge as typeof gailChallenge).learnMoreUrl}
+            href={challenge.learnMoreUrl}
             className={`font-mono text-[11px] lg:text-[12px] text-[#737373] tracking-[2px] hover:text-white transition-all duration-700 delay-300 hidden lg:block ${
               visible
                 ? "opacity-100 translate-y-0"
@@ -705,9 +718,9 @@ function SponsoredChallengeSlide({
               : "opacity-0 translate-y-[5px]"
           }`}
         >
-          <p className="text-[16px] sm:text-[18px] lg:text-[22px] text-[#a3a3a3] leading-[1.6] whitespace-pre-line">
+          <div className="text-[14px] sm:text-[16px] lg:text-[18px] text-[#a3a3a3] leading-[1.6] whitespace-pre-line">
             {challenge.description}
-          </p>
+          </div>
         </div>
 
         {/* Prizes */}

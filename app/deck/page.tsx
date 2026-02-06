@@ -75,8 +75,8 @@ const gailChallenge = {
   description:
     'Use the following dummy data from phone, SMS, and chat interactions, to build a system that turns each person\'s support history into a behavioral profile and dynamic "fit score" for products.\n\nAnalyze how people communicate (e.g., temperament, reliability in keeping payment promises, responsiveness, etc) and use that profile to recommend which customers are the best match for specific offers a retailer could make. The goal is to show how offline data can power smarter, more personalized decisions than web data alone.',
   prizes: [
-    { place: "First Place", amount: "$800" },
-    { place: "Second Place", amount: "$100" },
+    { place: "First Place", amount: "$700" },
+    { place: "Second Place", amount: "$200" },
     { place: "Third Place", amount: "$100" },
   ],
   learnMoreUrl: "#",
@@ -85,13 +85,13 @@ const gailChallenge = {
 const kurzoChallenge = {
   description:
     "A tool that takes multiple unstructured input (notes, voice, images, URLs, files) and transforms them into organized, actionable output. The system should surface themes, priorities, and next steps—but the user must be able to refine the structure themselves.\n\nBonus points for handling new input without starting from scratch.\n\nThe goal: prove that the distance between chaos and clarity is a design problem, not a discipline problem.",
-  prizes: [{ place: "Single winner", amount: "$300" }],
+  prizes: [{ place: "Single winner", amount: "$250" }],
 };
 
 const basementChallenge = {
   description:
     "Build an application powered by OpenClaw.\n\nYour project can be anything: a tool, an agent, a workflow, or a product. The only requirement is that OpenClaw is a core part of how it works, not just an add-on.\n\nYou're free to choose the domain and use case. It can analyze data, automate tasks, monitor systems, explore the web, assist users, or generate insights. What matters is that OpenClaw meaningfully drives behavior, decisions, or outcomes in your application.\n\nFocus on building something that feels like a real product, not just a demo or script.",
-  prizes: [{ place: "Single winner", amount: "$300" }],
+  prizes: [{ place: "Single winner", amount: "$250" }],
 };
 
 // Categorize sponsors

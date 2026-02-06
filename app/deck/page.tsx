@@ -668,7 +668,7 @@ function SponsoredChallengeSlide({
   const hasLearnMore = "learnMoreUrl" in challenge;
 
   return (
-    <div className="h-full flex flex-col lg:flex-row overflow-y-auto">
+    <div className="h-full flex flex-col lg:flex-row">
       {/* Left side - Title & Logo */}
       <div className="flex-shrink-0 lg:w-[35%] flex flex-col justify-between px-6 lg:px-16 py-8 lg:py-16">
         <div>
@@ -709,10 +709,10 @@ function SponsoredChallengeSlide({
       </div>
 
       {/* Right side - Description & Prizes */}
-      <div className="flex-1 flex flex-col border-l border-[#262626]">
+      <div className="flex-1 flex flex-col border-l border-[#262626] min-h-0">
         {/* Description */}
         <div
-          className={`flex-1 p-6 lg:p-12 transition-all duration-700 delay-200 ${
+          className={`flex-1 min-h-0 overflow-y-auto p-6 lg:p-12 transition-all duration-700 delay-200 ${
             visible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-[5px]"
@@ -725,7 +725,7 @@ function SponsoredChallengeSlide({
 
         {/* Prizes */}
         <div
-          className={`flex border-t border-[#262626] transition-all duration-700 delay-400 ${
+          className={`flex-shrink-0 flex border-t border-[#262626] transition-all duration-700 delay-400 ${
             visible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-[5px]"

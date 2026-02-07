@@ -20,10 +20,11 @@ import Backgrounds, {
 } from "@/components/backgrounds";
 import { motion, AnimatePresence } from "framer-motion";
 import NumberFlow from "@number-flow/react";
+import Link from "next/link";
 import { sponsors, logos, agendaItems } from "@/lib/data";
 import TypeformSubmit from "@/components/typeform-submit";
 
-const TOTAL_SLIDES = 14;
+const TOTAL_SLIDES = 15;
 
 // Global tracks data
 const globalTracks = [
@@ -356,10 +357,13 @@ export default function DeckPage() {
         )}
         {currentSlide === 12 && <CreditsSlide key={`slide-12-${slideKey}`} />}
         {currentSlide === 13 && (
-          <TimeToBuildSlide key={`slide-13-${slideKey}`} />
+          <ResourcesSlide key={`slide-13-${slideKey}`} />
         )}
         {currentSlide === 14 && (
-          <SubmitSlide key={`slide-14-${slideKey}`} />
+          <TimeToBuildSlide key={`slide-14-${slideKey}`} />
+        )}
+        {currentSlide === 15 && (
+          <SubmitSlide key={`slide-15-${slideKey}`} />
         )}
       </main>
     </div>
@@ -1158,7 +1162,46 @@ function CreditsSlide() {
   );
 }
 
-// Slide 13: Time to Build
+// Slide 13: Resources
+function ResourcesSlide() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="h-full flex flex-col items-center justify-center px-6 lg:px-16">
+      {/* Title */}
+      <h2
+        className={`font-mono text-[12px] lg:text-[14px] text-[#737373] tracking-[2.8px] mb-12 lg:mb-16 transition-all duration-700 delay-100 ${
+          visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-[5px]"
+        }`}
+      >
+        RESOURCES
+      </h2>
+
+      {/* Link to Get Started */}
+      <Link
+        href="/get-started"
+        className={`group flex flex-col items-center gap-6 transition-all duration-700 delay-200 ${
+          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[5px]"
+        }`}
+      >
+        <span className="text-[32px] sm:text-[48px] md:text-[56px] lg:text-[72px] font-normal leading-[1.1] tracking-[-0.03em] text-white group-hover:text-white/80 transition-colors duration-300">
+          Get Started Guide
+        </span>
+        <span className="font-mono text-[13px] lg:text-[15px] text-[#737373] tracking-[2px] group-hover:text-white transition-colors duration-300 flex items-center gap-2">
+          v0miami.com/get-started
+          <ExternalLink className="w-4 h-4" />
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+// Slide 14: Time to Build
 const INITIAL_TIME = 6 * 60 * 60 + 15 * 60; // 6 hours 15 minutes in seconds
 
 function TimeToBuildSlide() {

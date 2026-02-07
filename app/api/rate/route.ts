@@ -7,9 +7,9 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { submissionId, score, fingerprint } = body
 
-    if (!submissionId || typeof score !== "number" || score < 1 || score > 10) {
+    if (!submissionId || typeof score !== "number" || score < 1 || score > 5) {
       return NextResponse.json(
-        { error: "Invalid submission ID or score (1-10)." },
+        { error: "Invalid submission ID or score (1-5)." },
         { status: 400 }
       )
     }

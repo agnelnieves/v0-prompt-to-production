@@ -24,7 +24,6 @@ import { sponsors, logos, agendaItems } from "@/lib/data";
 
 const TOTAL_SLIDES = 12;
 
-
 // Global tracks data
 const globalTracks = [
   {
@@ -63,17 +62,34 @@ const globalTracks = [
 const gailChallenge = {
   description: (
     <>
-      Build an AI-agent system that turns messy conversation history into evolving behavioral profiles — then uses them live in conversation. Build these four pieces:
+      Build an AI-agent system that turns messy conversation history into
+      evolving behavioral profiles — then uses them live in conversation. Build
+      these four pieces:
       {"\n\n"}
-      <span className="text-white font-medium">Profile Engine</span> — Extract behavioral traits from interaction history: temperament, follow-through on promises, sentiment trends, communication style, life-stage signals.
+      <span className="text-white font-medium">Profile Engine</span> — Extract
+      behavioral traits from interaction history: temperament, follow-through on
+      promises, sentiment trends, communication style, life-stage signals.
       {"\n\n"}
-      <span className="text-white font-medium">Dynamic Fit Scoring</span> — Score customers on dimensions that matter for outcomes — likelihood to pay, responsiveness, best contact method and timing, escalation/frustration risk. Scores should shift as new data arrives with clear reasoning for why.
+      <span className="text-white font-medium">Dynamic Fit Scoring</span> —
+      Score customers on dimensions that matter for outcomes — likelihood to
+      pay, responsiveness, best contact method and timing,
+      escalation/frustration risk. Scores should shift as new data arrives with
+      clear reasoning for why.
       {"\n\n"}
-      <span className="text-white font-medium">Live Agent</span> — A live agent that references the profile in real time. It should demonstrably behave differently depending on who it{"'"}s talking to — adjusting tone, negotiation strategy, and approach based on what{"'"}s historically worked for a specific user id from the data.
+      <span className="text-white font-medium">Live Agent</span> — A live agent
+      that references the profile in real time. It should demonstrably behave
+      differently depending on who it{"'"}s talking to — adjusting tone,
+      negotiation strategy, and approach based on what{"'"}s historically worked
+      for a specific user id from the data.
       {"\n\n"}
-      <span className="text-white font-medium">Profile Evolution</span> — Handle conflicting signals. A hostile customer who{"'"}s recently turned cooperative should reflect growth, not just an average.
+      <span className="text-white font-medium">Profile Evolution</span> — Handle
+      conflicting signals. A hostile customer who{"'"}s recently turned
+      cooperative should reflect growth, not just an average.
       {"\n\n"}
-      <span className="text-[#525252] text-[14px] lg:text-[16px] tracking-wide">Judged on: Depth of insight &middot; Profile evolution &middot; Agent usefulness &middot; Explainability &middot; Creativity</span>
+      <span className="text-[#525252] text-[14px] lg:text-[16px] tracking-wide">
+        Judged on: Depth of insight &middot; Profile evolution &middot; Agent
+        usefulness &middot; Explainability &middot; Creativity
+      </span>
     </>
   ),
   prizes: [
@@ -96,18 +112,31 @@ const basementChallenge = {
     <>
       Build an application powered by OpenClaw.
       {"\n\n"}
-      Your project can be anything: a tool, an agent, a workflow, or a product. The only requirement is that OpenClaw is a core part of how it works, not just an add-on.
+      Your project can be anything: a tool, an agent, a workflow, or a product.
+      The only requirement is that OpenClaw is a core part of how it works, not
+      just an add-on.
       {"\n\n"}
-      You{"'"}re free to choose the domain and use case. It can analyze data, automate tasks, monitor systems, explore the web, assist users, or generate insights. What matters is that OpenClaw meaningfully drives behavior, decisions, or outcomes in your application.
+      You{"'"}re free to choose the domain and use case. It can analyze data,
+      automate tasks, monitor systems, explore the web, assist users, or
+      generate insights. What matters is that OpenClaw meaningfully drives
+      behavior, decisions, or outcomes in your application.
       {"\n\n"}
-      Focus on building something that feels like a real product, not just a demo or script.
+      Focus on building something that feels like a real product, not just a
+      demo or script.
       {"\n\n"}
       <span className="text-white font-medium">Submission Requirements</span>
       {"\n"}
       To submit, you must:
       {"\n"}
       {"1. "}Download the Basement Browser iOS app from{" "}
-      <a href="https://basementbrowser.com/app" target="_blank" rel="noopener noreferrer" className="text-white underline underline-offset-2 hover:opacity-80">basementbrowser.com/app</a>
+      <a
+        href="https://basementbrowser.com/app"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-white underline underline-offset-2 hover:opacity-80"
+      >
+        basementbrowser.com/app
+      </a>
       {"\n"}
       {"2. "}Sign up in the app
       {"\n"}
@@ -121,17 +150,26 @@ const basementChallenge = {
       {"\n"}
       {"   \u2022 "}A 1{"\u2013"}2 sentence blurb describing your project
       {"\n\n"}
-      The 1{"\u2013"}2 sentence blurb is part of judging. It should clearly explain what your app does and why it{"'"}s useful.
+      The 1{"\u2013"}2 sentence blurb is part of judging. It should clearly
+      explain what your app does and why it{"'"}s useful.
       {"\n\n"}
       <span className="text-white font-medium">Winning Criteria</span>
       {"\n\n"}
-      <span className="text-white font-medium">Clear Use Case (30%)</span> — Is it obvious what the application does and why it matters? Does the blurb communicate the value clearly?
+      <span className="text-white font-medium">Clear Use Case (30%)</span> — Is
+      it obvious what the application does and why it matters? Does the blurb
+      communicate the value clearly?
       {"\n\n"}
-      <span className="text-white font-medium">OpenClaw Usage (30%)</span> — Is OpenClaw central to the product, not just bolted on? Does it meaningfully drive logic, behavior, or outcomes?
+      <span className="text-white font-medium">OpenClaw Usage (30%)</span> — Is
+      OpenClaw central to the product, not just bolted on? Does it meaningfully
+      drive logic, behavior, or outcomes?
       {"\n\n"}
-      <span className="text-white font-medium">Product Quality (25%)</span> — Does this feel like a real, usable product or tool? Is the output understandable and well thought out?
+      <span className="text-white font-medium">Product Quality (25%)</span> —
+      Does this feel like a real, usable product or tool? Is the output
+      understandable and well thought out?
       {"\n\n"}
-      <span className="text-white font-medium">Overall Impact (15%)</span> — Is it clever, useful, or impressive? Does it stand out from typical hackathon projects?
+      <span className="text-white font-medium">Overall Impact (15%)</span> — Is
+      it clever, useful, or impressive? Does it stand out from typical hackathon
+      projects?
     </>
   ),
   prizes: [{ place: "Single winner", amount: "$250" }],
@@ -335,7 +373,7 @@ function TitleSlide() {
       {/* Dithering Shader Background */}
       <div
         className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ${
-          visible ? "opacity-100" : "opacity-0"
+          visible ? "opacity-80" : "opacity-0"
         }`}
       >
         <Dithering
@@ -343,8 +381,8 @@ function TitleSlide() {
           colorFront="#99999921"
           shape="warp"
           type="4x4"
-          size={2.5}
-          speed={0.45}
+          size={4}
+          speed={0.1}
           style={{ width: "100%", height: "100%" }}
         />
       </div>
@@ -690,7 +728,11 @@ function SponsoredChallengeSlide({
   qrCode,
 }: {
   sponsor: typeof gailSponsor;
-  challenge: { description: React.ReactNode; prizes: { place: string; amount: string }[]; learnMoreUrl?: string };
+  challenge: {
+    description: React.ReactNode;
+    prizes: { place: string; amount: string }[];
+    learnMoreUrl?: string;
+  };
   slideNumber: string;
   qrCode?: string;
 }) {
@@ -751,7 +793,11 @@ function SponsoredChallengeSlide({
             }`}
           >
             {qrCode ? (
-              <img src={qrCode} alt="QR Code" className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl" />
+              <img
+                src={qrCode}
+                alt="QR Code"
+                className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl"
+              />
             ) : (
               <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-2xl" />
             )}
@@ -809,14 +855,14 @@ function SponsoredChallengeSlide({
 }
 
 // Slide 11: Credits (v0 Redeem)
-type RedeemState = 'idle' | 'getting' | 'copied';
+type RedeemState = "idle" | "getting" | "copied";
 
 function CreditsSlide() {
   const [visible, setVisible] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [redeemState, setRedeemState] = useState<RedeemState>('idle');
+  const [redeemState, setRedeemState] = useState<RedeemState>("idle");
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -834,27 +880,27 @@ function CreditsSlide() {
 
   // Handle redeem button click
   const handleRedeem = async () => {
-    if (redeemState !== 'idle') return;
-    
+    if (redeemState !== "idle") return;
+
     // Phase 1: Getting code
-    setRedeemState('getting');
-    
+    setRedeemState("getting");
+
     // Simulate getting code (1.5s)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     // Copy code to clipboard (you can replace 'V0PROMPTTOPRODUCTION2026' with actual code)
     try {
-      await navigator.clipboard.writeText('V0PROMPTTOPRODUCTION2026');
+      await navigator.clipboard.writeText("V0PROMPTTOPRODUCTION2026");
     } catch (err) {
-      console.error('Failed to copy code:', err);
+      console.error("Failed to copy code:", err);
     }
-    
+
     // Phase 2: Code copied, redirecting
-    setRedeemState('copied');
-    
+    setRedeemState("copied");
+
     // Wait 2s then redirect
     setTimeout(() => {
-      window.open('https://v0.app/chat/settings/billing', '_blank');
+      window.open("https://v0.app/chat/settings/billing", "_blank");
     }, 2000);
   };
 
@@ -920,48 +966,49 @@ function CreditsSlide() {
             {/* Animated Button */}
             <motion.button
               onClick={handleRedeem}
-              disabled={redeemState !== 'idle'}
+              disabled={redeemState !== "idle"}
               layout
               initial={false}
               className={`font-medium text-[14px] lg:text-[16px] px-6 lg:px-8 py-3 lg:py-4 rounded-full flex items-center justify-center gap-2 overflow-hidden ${
-                redeemState === 'copied'
-                  ? 'bg-transparent text-white/80'
-                  : 'bg-white text-black hover:bg-white/90'
+                redeemState === "copied"
+                  ? "bg-transparent text-white/80"
+                  : "bg-white text-black hover:bg-white/90"
               } ${
                 visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-[5px]"
               }`}
               style={{
-                transition: 'opacity 700ms ease 200ms, transform 700ms ease 200ms, background-color 500ms ease',
+                transition:
+                  "opacity 700ms ease 200ms, transform 700ms ease 200ms, background-color 500ms ease",
               }}
               transition={{
                 layout: {
                   type: "spring",
                   stiffness: 500,
                   damping: 35,
-                }
+                },
               }}
             >
               <AnimatePresence mode="wait" initial={false}>
-                {redeemState === 'idle' && (
+                {redeemState === "idle" && (
                   <motion.span
                     key="idle"
-                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                    initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
                     transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
                     className="whitespace-nowrap"
                   >
                     Redeem code
                   </motion.span>
                 )}
-                {redeemState === 'getting' && (
+                {redeemState === "getting" && (
                   <motion.span
                     key="getting"
-                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                    initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
                     transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
                     className="flex items-center gap-2 whitespace-nowrap"
                   >
@@ -969,12 +1016,12 @@ function CreditsSlide() {
                     Getting code
                   </motion.span>
                 )}
-                {redeemState === 'copied' && (
+                {redeemState === "copied" && (
                   <motion.span
                     key="copied"
-                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                    initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
                     transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
                     className="whitespace-nowrap"
                   >
@@ -993,7 +1040,11 @@ function CreditsSlide() {
                 : "opacity-0 translate-y-[5px]"
             }`}
           >
-            <img src="/qr-redeem.jpg" alt="Redeem QR Code" className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl" />
+            <img
+              src="/qr-redeem.jpg"
+              alt="Redeem QR Code"
+              className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl"
+            />
           </div>
         </div>
       </div>
@@ -1117,7 +1168,20 @@ function TimeToBuildSlide() {
   return (
     <div className="h-full flex flex-col items-center justify-center px-6 lg:px-16 relative">
       {/* Animated Background */}
-      <Backgrounds activeBackground={activeBackground} transitionDuration={1.2} />
+      {/* <Backgrounds activeBackground={activeBackground} transitionDuration={1.2} /> */}
+      <div
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-1500 opacity-50`}
+      >
+        <Dithering
+          colorBack="#000000"
+          colorFront="#99999921"
+          shape="warp"
+          type="4x4"
+          size={4}
+          speed={0.2}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
       {/* Title */}
       <h2
         className={`font-mono text-[20px] sm:text-[24px] lg:text-[32px] text-[#737373] tracking-[8px] lg:tracking-[12px] mb-8 lg:mb-12 transition-all duration-700 delay-100 ${

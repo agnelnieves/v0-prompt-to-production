@@ -22,7 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import NumberFlow from "@number-flow/react";
 import Link from "next/link";
 import { sponsors, logos, agendaItems } from "@/lib/data";
-import TypeformSubmit from "@/components/typeform-submit";
+import SubmissionForm from "@/components/submission-form";
 
 const TOTAL_SLIDES = 15;
 
@@ -381,14 +381,44 @@ export default function DeckPage() {
   );
 }
 
+// Shared redeem state type
+type RedeemState = "idle" | "getting" | "copied";
+
 // Slide 1: Title Slide
 function TitleSlide() {
   const [visible, setVisible] = useState(false);
+  const [redeemState, setRedeemState] = useState<RedeemState>("idle");
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle redeem button click
+  const handleRedeem = async () => {
+    if (redeemState !== "idle") return;
+
+    // Phase 1: Getting code
+    setRedeemState("getting");
+
+    // Simulate getting code (1.5s)
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // Copy code to clipboard
+    try {
+      await navigator.clipboard.writeText("V0PROMPTTOPRODUCTION2026");
+    } catch (err) {
+      console.error("Failed to copy code:", err);
+    }
+
+    // Phase 2: Code copied, redirecting
+    setRedeemState("copied");
+
+    // Wait 2s then redirect
+    setTimeout(() => {
+      window.open("https://v0.app/chat/settings/billing", "_blank");
+    }, 2000);
+  };
 
   return (
     <div className="relative h-full flex flex-col items-center justify-center px-6 lg:px-10">
@@ -455,20 +485,85 @@ function TitleSlide() {
           production-ready applications
         </p>
 
-        {/* Get Started Link */}
-        <Link
-          href="/get-started"
-          className={`mt-8 lg:mt-10 group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[14px] lg:text-[16px] font-medium leading-[24px] flex items-center transition-all duration-700 delay-700 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] ${
+        {/* Buttons */}
+        <div
+          className={`mt-8 lg:mt-10 flex items-center gap-3 transition-all duration-700 delay-700 ${
             visible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-[5px]"
           }`}
         >
-          Get Started
-          <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
-            <ExternalLink className="w-4 h-4 ml-2" />
-          </span>
-        </Link>
+          {/* Get Started Link */}
+          <Link
+            href="/get-started"
+            className="group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[14px] lg:text-[16px] font-medium leading-[24px] flex items-center hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300"
+          >
+            Get Started
+            <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
+              <ExternalLink className="w-4 h-4 ml-2" />
+            </span>
+          </Link>
+
+          {/* Redeem Code Button */}
+          <motion.button
+            onClick={handleRedeem}
+            disabled={redeemState !== "idle"}
+            layout
+            initial={false}
+            className={`font-medium text-[14px] lg:text-[16px] px-6 py-3 rounded-full flex items-center justify-center gap-2 overflow-hidden transition-colors duration-300 ${
+              redeemState === "copied"
+                ? "bg-transparent text-white/80 border border-white/20"
+                : "bg-transparent text-white border border-white/30 hover:border-white/60 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+            }`}
+            transition={{
+              layout: {
+                type: "spring",
+                stiffness: 500,
+                damping: 35,
+              },
+            }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {redeemState === "idle" && (
+                <motion.span
+                  key="idle"
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                  transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  className="whitespace-nowrap"
+                >
+                  Redeem code
+                </motion.span>
+              )}
+              {redeemState === "getting" && (
+                <motion.span
+                  key="getting"
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                  transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  className="flex items-center gap-2 whitespace-nowrap"
+                >
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Getting code
+                </motion.span>
+              )}
+              {redeemState === "copied" && (
+                <motion.span
+                  key="copied"
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                  transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  className="whitespace-nowrap"
+                >
+                  Code copied, redirecting...
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
       </div>
     </div>
   );
@@ -933,8 +1028,6 @@ function SponsoredChallengeSlide({
 }
 
 // Slide 12: Credits (v0 Redeem)
-type RedeemState = "idle" | "getting" | "copied";
-
 function CreditsSlide() {
   const [visible, setVisible] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -1461,11 +1554,11 @@ function TimeToBuildSlide() {
   );
 }
 
-// Slide 14: Submit
+// Slide 15: Submit
 function SubmitSlide() {
   return (
     <div className="h-full overflow-y-auto">
-      <TypeformSubmit embedded />
+      <SubmissionForm embedded />
     </div>
   );
 }

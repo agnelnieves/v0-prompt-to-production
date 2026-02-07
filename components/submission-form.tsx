@@ -80,6 +80,7 @@ export interface SubmissionData {
   description: string
   socialProofLink: string
   videoUrl: string
+  notes: string
 }
 
 interface SubmissionFormProps {
@@ -180,6 +181,7 @@ export default function SubmissionForm({
   const [email, setEmail] = useState("")
   const [description, setDescription] = useState("")
   const [videoUrl, setVideoUrl] = useState("")
+  const [notes, setNotes] = useState("")
 
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [submitted, setSubmitted] = useState(false)
@@ -285,6 +287,7 @@ export default function SubmissionForm({
       description,
       socialProofLink,
       videoUrl,
+      notes,
     }
 
     setIsSubmitting(true)
@@ -749,6 +752,47 @@ export default function SubmissionForm({
               <p className="text-[12px] text-[#4a4a4a] mt-1.5">
                 YouTube, Google Drive, Loom, or any publicly accessible video link.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================ */}
+        {/* Section 7: Additional Notes */}
+        {/* ================================================================ */}
+        <section className="mb-12">
+          <h2 className="font-mono text-[12px] text-[#525252] tracking-[1.5px] mb-6">
+            07 ADDITIONAL NOTES
+          </h2>
+
+          <div className="space-y-4">
+            <div className="p-4 bg-[#0a0a0a] border border-[#262626] rounded-lg space-y-2">
+              <p className="text-[14px] text-[#a3a3a3] leading-relaxed">
+                Use this space to share anything else the judges should know about your project. This is optional but can help provide important context.
+              </p>
+              <div className="text-[13px] text-[#737373] space-y-1.5">
+                <p className="text-[#a3a3a3] font-medium">What to include:</p>
+                <ul className="list-disc list-inside space-y-1 pl-1">
+                  <li>Additional URLs -- API docs, design files, Figma links, etc.</li>
+                  <li>API keys or test credentials judges may need to try your app</li>
+                  <li>Team members -- include their names and profile URLs (GitHub, X, LinkedIn)</li>
+                  <li>Known limitations or things you would improve with more time</li>
+                  <li>Technical details -- special integrations, AI models used, data sources</li>
+                  <li>Any other context that helps judges understand your project</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[12px] text-[#737373] tracking-[1.5px] mb-2">
+                NOTES (OPTIONAL)
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={"Example:\n- Built with: Next.js, Supabase, AI SDK\n- Team: Jane (@janedoe), Alex (@alexdev)\n- Test account: demo@test.com / password123\n- API docs: https://..."}
+                rows={6}
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#262626] rounded-lg text-white placeholder:text-[#4a4a4a] focus:outline-none focus:border-[#404040] transition-colors resize-y"
+              />
             </div>
           </div>
         </section>

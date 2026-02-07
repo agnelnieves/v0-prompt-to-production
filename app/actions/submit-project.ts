@@ -15,6 +15,7 @@ interface SubmissionPayload {
   description: string
   socialProofLink: string
   videoUrl: string
+  notes: string
 }
 
 export async function submitProject(
@@ -34,6 +35,20 @@ export async function submitProject(
   try {
     const sql = neon(process.env.DATABASE_URL!)
 
+    const projectName = data.projectName?.trim() ?? ""
+    const liveUrl = data.liveUrl?.trim() ?? ""
+    const v0ProjectUrl = data.v0ProjectUrl?.trim() ?? ""
+    const githubRepoUrl = data.githubRepoUrl?.trim() ?? ""
+    const globalCategories = data.globalCategories ?? []
+    const localCategories = data.localCategories ?? []
+    const yourName = data.yourName?.trim() ?? ""
+    const v0Username = data.v0Username?.trim() ?? ""
+    const email = data.email?.trim() ?? ""
+    const description = data.description?.trim() ?? ""
+    const socialProofLink = data.socialProofLink?.trim() ?? ""
+    const videoUrl = data.videoUrl?.trim() || null
+    const notes = data.notes?.trim() || null
+
     await sql`
       INSERT INTO submissions (
         project_name,
@@ -47,26 +62,29 @@ export async function submitProject(
         email,
         description,
         social_proof_link,
-        video_url
+        video_url,
+        notes
       ) VALUES (
-        ${data.projectName.trim()},
-        ${data.liveUrl.trim()},
-        ${data.v0ProjectUrl.trim()},
-        ${data.githubRepoUrl.trim()},
-        ${data.globalCategories},
-        ${data.localCategories},
-        ${data.yourName.trim()},
-        ${data.v0Username.trim()},
-        ${data.email.trim()},
-        ${data.description.trim()},
-        ${data.socialProofLink.trim()},
-        ${data.videoUrl?.trim() || null}
+        ${projectName},
+        ${liveUrl},
+        ${v0ProjectUrl},
+        ${githubRepoUrl},
+        ${globalCategories},
+        ${localCategories},
+        ${yourName},
+        ${v0Username},
+        ${email},
+        ${description},
+        ${socialProofLink},
+        ${videoUrl},
+        ${notes}
       )
     `
 
     return { success: true }
   } catch (err) {
-    console.error("Failed to insert submission:", err)
-    return { success: false, error: "Something went wrong saving your submission. Please try again." }
+    const message = err instanceof Error ? err.message : String(err)
+    console.error("[v0] Failed to insert submission:", message, err)
+    return { success: false, error: `Something went wrong saving your submission: ${message}` }
   }
 }

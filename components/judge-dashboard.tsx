@@ -537,6 +537,18 @@ export default function JudgeDashboard() {
                         </div>
                       </div>
 
+                      {/* Notes */}
+                      {s.notes && (
+                        <div className="space-y-2 sm:col-span-2 lg:col-span-3">
+                          <p className="font-mono text-[11px] text-[#525252] tracking-[1.5px]">
+                            NOTES
+                          </p>
+                          <p className="text-[13px] text-[#a3a3a3] leading-relaxed whitespace-pre-wrap bg-[#111] border border-[#1a1a1a] rounded-lg p-3">
+                            {s.notes}
+                          </p>
+                        </div>
+                      )}
+
                       {/* Contact */}
                       <div className="space-y-2">
                         <p className="font-mono text-[11px] text-[#525252] tracking-[1.5px]">

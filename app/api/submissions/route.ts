@@ -24,6 +24,7 @@ export async function GET(request: Request) {
         s.description,
         s.social_proof_link,
         s.video_url,
+        s.notes,
         s.created_at,
         COALESCE(AVG(r.score), 0) AS avg_score,
         COUNT(r.id)::int AS total_ratings,

@@ -88,6 +88,17 @@ const gailChallenge = {
       conflicting signals. A hostile customer who{"'"}s recently turned
       cooperative should reflect growth, not just an average.
       {"\n\n"}
+      <span className="text-white font-medium">Data</span> — Use the provided
+      conversation dataset to build your system:{" "}
+      <a
+        href="https://drive.google.com/file/d/1OoOX0zsrQVtFd34-DfOpxh7QVP6jN2i7/view?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-white underline underline-offset-2 hover:opacity-80"
+      >
+        Download ConversationData.zip
+      </a>
+      {"\n\n"}
       <span className="text-[#525252] text-[14px] lg:text-[16px] tracking-wide">
         Judged on: Depth of insight &middot; Profile evolution &middot; Agent
         usefulness &middot; Explainability &middot; Creativity
@@ -1201,6 +1212,55 @@ function ResourcesSlide() {
   );
 }
 
+// Cycling sponsor logo for the TimeToBuildSlide
+const allSponsors = [...madePossibleBy, ...sponsoredPrizes];
+
+function SponsorCycler({ visible }: { visible: boolean }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % allSponsors.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const sponsor = allSponsors[currentIndex];
+
+  return (
+    <div
+      className={`mt-12 lg:mt-16 flex flex-col items-center transition-all duration-700 delay-400 ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[5px]"
+      }`}
+    >
+      <span className="font-mono text-[11px] lg:text-[14px] text-[#737373] tracking-[4px] lg:tracking-[6px] mb-6 lg:mb-8">
+        MADE POSSIBLE BY
+      </span>
+      <div className="relative h-10 lg:h-12 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          <motion.a
+            key={sponsor.name}
+            href={sponsor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative group"
+            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <img
+              src={sponsor.logo || "/placeholder.svg"}
+              alt={sponsor.name}
+              className="h-8 lg:h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
+            />
+          </motion.a>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
 // Slide 14: Time to Build
 const INITIAL_TIME = 6 * 60 * 60 + 15 * 60; // 6 hours 15 minutes in seconds
 
@@ -1367,57 +1427,9 @@ function TimeToBuildSlide() {
         </div>
       </div>
 
-      {/* Made Possible By */}
-      <div
-        className={`mt-12 lg:mt-16 flex flex-col items-center transition-all duration-700 delay-400 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[5px]"
-        }`}
-      >
-        <span className="font-mono text-[11px] lg:text-[14px] text-[#737373] tracking-[4px] lg:tracking-[6px] mb-6 lg:mb-8">
-          MADE POSSIBLE BY
-        </span>
-        <div className="flex items-center gap-8 lg:gap-12">
-          {gailSponsor && (
-            <a
-              href={gailSponsor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative group"
-            >
-              <ExternalLink className="absolute -top-2 -right-2 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
-              <img
-                src={gailSponsor.logo || "/placeholder.svg"}
-                alt={gailSponsor.name}
-                className="h-8 lg:h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
-              />
-            </a>
-          )}
-          {kurzoSponsor && (
-            <a
-              href={kurzoSponsor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative group"
-            >
-              <ExternalLink className="absolute -top-2 -right-2 w-4 h-4 text-white opacity-0 translate-x-1 -translate-y-1 transition-all duration-300 group-hover:opacity-60 group-hover:translate-x-0 group-hover:translate-y-0" />
-              <img
-                src={kurzoSponsor.logo || "/placeholder.svg"}
-                alt={kurzoSponsor.name}
-                className="h-8 lg:h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
-              />
-            </a>
-          )}
-        </div>
-      </div>
+      {/* Made Possible By - Cycling Sponsor Logo */}
+      <SponsorCycler visible={visible} />
 
-      {/* QR Code Placeholder */}
-      <div
-        className={`absolute bottom-6 lg:bottom-10 left-6 lg:left-10 transition-all duration-700 delay-500 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[5px]"
-        }`}
-      >
-        <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-lg" />
-      </div>
 
       {/* DEBUG: Background Cycle Button */}
       <button

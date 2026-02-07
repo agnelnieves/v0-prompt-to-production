@@ -104,6 +104,7 @@ const sponsoredChallenges = [
     companyUrl: "https://www.meetgail.com/",
     challengeTitle: "Gail Challenge",
     challengeDescription: "Build an AI-agent system that turns messy conversation history into evolving behavioral profiles, then uses them live in conversation. Build four pieces: Profile Engine, Dynamic Fit Scoring, Live Agent, and Profile Evolution.",
+    dataUrl: "https://drive.google.com/file/d/1OoOX0zsrQVtFd34-DfOpxh7QVP6jN2i7/view?usp=sharing",
     prizes: [
       { place: "1st Place", amount: "$700" },
       { place: "2nd Place", amount: "$200" },
@@ -705,6 +706,20 @@ export default function GetStartedPage() {
                           <p className="text-[15px] text-[#a1a1a1] leading-[1.7]">
                             {challenge.challengeDescription}
                           </p>
+                          {challenge.dataUrl && (
+                            <div className="mt-4 p-4 bg-[#111] border border-[#262626] rounded-lg">
+                              <p className="text-[13px] text-[#737373] mb-1">Required Dataset</p>
+                              <a 
+                                href={challenge.dataUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center gap-1.5 text-[14px] text-white hover:underline underline-offset-4"
+                              >
+                                Download ConversationData.zip
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            </div>
+                          )}
                         </div>
 
                         {/* Prizes */}

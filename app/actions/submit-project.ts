@@ -15,6 +15,7 @@ interface SubmissionPayload {
   description: string
   socialProofLink: string
   videoUrl: string
+  notes: string
 }
 
 export async function submitProject(
@@ -47,7 +48,8 @@ export async function submitProject(
         email,
         description,
         social_proof_link,
-        video_url
+        video_url,
+        notes
       ) VALUES (
         ${data.projectName.trim()},
         ${data.liveUrl.trim()},
@@ -60,7 +62,8 @@ export async function submitProject(
         ${data.email.trim()},
         ${data.description.trim()},
         ${data.socialProofLink.trim()},
-        ${data.videoUrl?.trim() || null}
+        ${data.videoUrl?.trim() || null},
+        ${data.notes?.trim() || null}
       )
     `
 

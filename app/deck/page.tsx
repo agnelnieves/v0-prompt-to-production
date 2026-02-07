@@ -458,13 +458,16 @@ function TitleSlide() {
         {/* Get Started Link */}
         <Link
           href="/get-started"
-          className={`mt-8 lg:mt-10 font-mono text-[11px] sm:text-[12px] lg:text-[14px] text-[#525252] tracking-[2px] lg:tracking-[3px] hover:text-white transition-all duration-700 delay-700 ${
+          className={`mt-8 lg:mt-10 group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[14px] lg:text-[16px] font-medium leading-[24px] flex items-center transition-all duration-700 delay-700 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] ${
             visible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-[5px]"
           }`}
         >
-          v0miami.com/get-started
+          Get Started
+          <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
+            <ExternalLink className="w-4 h-4 ml-2" />
+          </span>
         </Link>
       </div>
     </div>

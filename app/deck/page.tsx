@@ -23,7 +23,7 @@ import NumberFlow from "@number-flow/react";
 import { sponsors, logos, agendaItems } from "@/lib/data";
 import TypeformSubmit from "@/components/typeform-submit";
 
-const TOTAL_SLIDES = 13;
+const TOTAL_SLIDES = 14;
 
 // Global tracks data
 const globalTracks = [
@@ -319,44 +319,47 @@ export default function DeckPage() {
           <AgendaSlide key={`slide-6-${slideKey}`} items={agendaItems} />
         )}
         {currentSlide === 7 && (
-          <GlobalTracksSlide
-            key={`slide-7-${slideKey}`}
-            tracks={globalTracks}
-          />
+          <V0TeamVideoSlide key={`slide-7-${slideKey}`} />
         )}
         {currentSlide === 8 && (
-          <SponsoredChallengeSlide
+          <GlobalTracksSlide
             key={`slide-8-${slideKey}`}
-            sponsor={gailSponsor!}
-            challenge={gailChallenge}
-            slideNumber="08"
-            qrCode="/qr-gail.jpg"
+            tracks={globalTracks}
           />
         )}
         {currentSlide === 9 && (
           <SponsoredChallengeSlide
             key={`slide-9-${slideKey}`}
-            sponsor={kurzoSponsor!}
-            challenge={kurzoChallenge}
+            sponsor={gailSponsor!}
+            challenge={gailChallenge}
             slideNumber="09"
-            qrCode="/qr-kurzo.jpg"
+            qrCode="/qr-gail.jpg"
           />
         )}
         {currentSlide === 10 && (
           <SponsoredChallengeSlide
             key={`slide-10-${slideKey}`}
+            sponsor={kurzoSponsor!}
+            challenge={kurzoChallenge}
+            slideNumber="10"
+            qrCode="/qr-kurzo.jpg"
+          />
+        )}
+        {currentSlide === 11 && (
+          <SponsoredChallengeSlide
+            key={`slide-11-${slideKey}`}
             sponsor={basementSponsor!}
             challenge={basementChallenge}
-            slideNumber="10"
+            slideNumber="11"
             qrCode="/qr-basement.jpg"
           />
         )}
-        {currentSlide === 11 && <CreditsSlide key={`slide-11-${slideKey}`} />}
-        {currentSlide === 12 && (
-          <TimeToBuildSlide key={`slide-12-${slideKey}`} />
-        )}
+        {currentSlide === 12 && <CreditsSlide key={`slide-12-${slideKey}`} />}
         {currentSlide === 13 && (
-          <SubmitSlide key={`slide-13-${slideKey}`} />
+          <TimeToBuildSlide key={`slide-13-${slideKey}`} />
+        )}
+        {currentSlide === 14 && (
+          <SubmitSlide key={`slide-14-${slideKey}`} />
         )}
       </main>
     </div>
@@ -662,7 +665,48 @@ function AgendaSlide({ items }: { items: typeof agendaItems }) {
   );
 }
 
-// Slide 7: Global Tracks
+// Slide 7: A word from the v0 team (YouTube Video)
+function V0TeamVideoSlide() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="h-full flex flex-col px-6 lg:px-16 py-8 lg:py-16">
+      {/* Title */}
+      <h2
+        className={`font-mono text-[12px] lg:text-[14px] text-[#737373] tracking-[2.8px] mb-8 lg:mb-12 transition-all duration-700 delay-100 ${
+          visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-[5px]"
+        }`}
+      >
+        A WORD FROM THE V0 TEAM
+      </h2>
+
+      {/* YouTube Video */}
+      <div
+        className={`flex-1 flex items-center justify-center transition-all duration-700 delay-200 ${
+          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[5px]"
+        }`}
+      >
+        <div className="w-full max-w-[960px] aspect-video rounded-lg overflow-hidden">
+          <iframe
+            src="https://www.youtube.com/embed/aNsEgVIhcRY?si=eHLPeLvZicwVdpIA"
+            title="A word from the v0 team"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="w-full h-full"
+            style={{ border: "none" }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Slide 8: Global Tracks
 function GlobalTracksSlide({ tracks }: { tracks: typeof globalTracks }) {
   const [visible, setVisible] = useState(false);
 
@@ -724,7 +768,7 @@ function GlobalTracksSlide({ tracks }: { tracks: typeof globalTracks }) {
   );
 }
 
-// Slide 8 & 9: Sponsored Challenge
+// Slide 9, 10, 11: Sponsored Challenge
 function SponsoredChallengeSlide({
   sponsor,
   challenge,
@@ -858,7 +902,7 @@ function SponsoredChallengeSlide({
   );
 }
 
-// Slide 11: Credits (v0 Redeem)
+// Slide 12: Credits (v0 Redeem)
 type RedeemState = "idle" | "getting" | "copied";
 
 function CreditsSlide() {
@@ -1114,7 +1158,7 @@ function CreditsSlide() {
   );
 }
 
-// Slide 12: Time to Build
+// Slide 13: Time to Build
 const INITIAL_TIME = 6 * 60 * 60 + 15 * 60; // 6 hours 15 minutes in seconds
 
 function TimeToBuildSlide() {
@@ -1347,7 +1391,7 @@ function TimeToBuildSlide() {
   );
 }
 
-// Slide 13: Submit
+// Slide 14: Submit
 function SubmitSlide() {
   return (
     <div className="h-full overflow-y-auto">

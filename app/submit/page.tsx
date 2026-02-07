@@ -44,10 +44,9 @@ const globalCategories = [
 
 // Local Miami sponsored prize categories
 const localCategories = [
-  { id: "best-miami", label: "Best Miami-themed Project", description: "Projects that celebrate Miami culture, community, or solve local problems" },
-  { id: "most-creative", label: "Most Creative Use of v0", description: "Innovative and unexpected applications of v0's capabilities" },
-  { id: "best-first-timer", label: "Best First-Timer Project", description: "Outstanding projects from participants new to v0" },
-  { id: "community-choice", label: "Community Choice", description: "Voted by fellow participants at the event" },
+  { id: "kurzo", label: "Kurzo Challenge", description: "Build a tool that turns unstructured input into organized, actionable output \u2014 notes, voice, images, URLs, files. Surface themes, priorities, and next steps." },
+  { id: "basement", label: "Basement Challenge", description: "Build an application powered by OpenClaw. A tool, agent, workflow, or product where OpenClaw meaningfully drives behavior, decisions, or outcomes." },
+  { id: "gail", label: "Gail Challenge", description: "Build an AI-agent system that turns messy conversation history into evolving behavioral profiles, then uses them live in conversation." },
 ]
 
 export default function SubmitPage() {

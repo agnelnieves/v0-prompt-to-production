@@ -21,8 +21,9 @@ import Backgrounds, {
 import { motion, AnimatePresence } from "framer-motion";
 import NumberFlow from "@number-flow/react";
 import { sponsors, logos, agendaItems } from "@/lib/data";
+import TypeformSubmit from "@/components/typeform-submit";
 
-const TOTAL_SLIDES = 12;
+const TOTAL_SLIDES = 13;
 
 // Global tracks data
 const globalTracks = [
@@ -353,6 +354,9 @@ export default function DeckPage() {
         {currentSlide === 11 && <CreditsSlide key={`slide-11-${slideKey}`} />}
         {currentSlide === 12 && (
           <TimeToBuildSlide key={`slide-12-${slideKey}`} />
+        )}
+        {currentSlide === 13 && (
+          <SubmitSlide key={`slide-13-${slideKey}`} />
         )}
       </main>
     </div>
@@ -1339,6 +1343,15 @@ function TimeToBuildSlide() {
       >
         <Layers className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
       </button>
+    </div>
+  );
+}
+
+// Slide 13: Submit
+function SubmitSlide() {
+  return (
+    <div className="h-full overflow-y-auto">
+      <TypeformSubmit embedded />
     </div>
   );
 }

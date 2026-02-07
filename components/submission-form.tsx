@@ -14,7 +14,9 @@ import {
   MessageSquare,
   Share,
   Send,
+  Loader2,
 } from "lucide-react"
+import { submitProject } from "@/app/actions/submit-project"
 
 // ---------------------------------------------------------------------------
 // Data
@@ -179,6 +181,8 @@ export default function SubmissionForm({
 
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   // Clear a specific field error when user edits
   const clearFieldError = (field: keyof ValidationErrors) => {
@@ -237,7 +241,9 @@ export default function SubmissionForm({
   }
 
   // ---- submit ----
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSubmitError(null)
+
     const validationErrors = validateAll({
       projectName,
       liveUrl,
@@ -277,24 +283,29 @@ export default function SubmissionForm({
       description,
       socialProofLink,
     }
-    if (onSubmit) {
-      onSubmit(data)
-    } else {
-      const params = new URLSearchParams({
-        name: yourName,
-        username: v0Username,
-        email,
-        url: liveUrl,
-        category: globalCategories.join(","),
-        description,
-        social: socialProofLink,
-      })
-      window.open(
-        `https://v0-v0prompttoproduction2026.vercel.app/submit?${params.toString()}`,
-        "_blank"
-      )
+
+    setIsSubmitting(true)
+
+    try {
+      const result = await submitProject(data)
+
+      if (!result.success) {
+        setSubmitError(result.error ?? "Submission failed. Please try again.")
+        setIsSubmitting(false)
+        return
+      }
+
+      // Call optional callback (e.g. for parent tracking)
+      if (onSubmit) {
+        onSubmit(data)
+      }
+
+      setSubmitted(true)
+    } catch {
+      setSubmitError("Something went wrong. Please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
-    setSubmitted(true)
   }
 
   // ---- helpers ----
@@ -710,12 +721,30 @@ export default function SubmissionForm({
                   </span>
                 </div>
               )}
+              {submitError && (
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                  <span className="text-red-400 text-[14px]">
+                    {submitError}
+                  </span>
+                </div>
+              )}
               <button
                 onClick={handleSubmit}
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-lg font-medium text-[16px] hover:bg-white/90 transition-colors w-full sm:w-auto"
+                disabled={isSubmitting}
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-lg font-medium text-[16px] hover:bg-white/90 transition-colors w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Submit Project
-                <ExternalLink className="w-4 h-4" />
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Project
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </>
           ) : (

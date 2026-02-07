@@ -79,6 +79,7 @@ export interface SubmissionData {
   email: string
   description: string
   socialProofLink: string
+  videoUrl: string
 }
 
 interface SubmissionFormProps {
@@ -178,6 +179,7 @@ export default function SubmissionForm({
   const [v0Username, setV0Username] = useState("")
   const [email, setEmail] = useState("")
   const [description, setDescription] = useState("")
+  const [videoUrl, setVideoUrl] = useState("")
 
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [submitted, setSubmitted] = useState(false)
@@ -282,6 +284,7 @@ export default function SubmissionForm({
       email,
       description,
       socialProofLink,
+      videoUrl,
     }
 
     setIsSubmitting(true)
@@ -703,6 +706,49 @@ export default function SubmissionForm({
                 className={inputClass("description")}
               />
               {fieldError("description")}
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================ */}
+        {/* Section 6: Video Walkthrough */}
+        {/* ================================================================ */}
+        <section className="mb-12">
+          <h2 className="font-mono text-[12px] text-[#525252] tracking-[1.5px] mb-6">
+            06 VIDEO WALKTHROUGH
+          </h2>
+
+          <div className="space-y-4">
+            <div className="p-4 bg-[#0a0a0a] border border-[#262626] rounded-lg space-y-3">
+              <p className="text-[14px] text-[#a3a3a3] leading-relaxed">
+                Record a short screen recording (1-3 min) walking through your project. Show what it does, how it works, and any standout features. This helps judges evaluate your submission fairly.
+              </p>
+              <div className="text-[13px] text-[#737373] space-y-1.5">
+                <p className="text-[#a3a3a3] font-medium">Tips for a great video:</p>
+                <ul className="list-disc list-inside space-y-1 pl-1">
+                  <li>Use a screen recorder (Loom, QuickTime, OBS, or your OS built-in tool)</li>
+                  <li>Start by briefly explaining the idea, then demo the live app</li>
+                  <li>Keep it under 3 minutes -- judges review many submissions</li>
+                  <li>Show the actual deployed app, not just code</li>
+                  <li>Upload to YouTube (unlisted), Google Drive (share link), or Loom</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[12px] text-[#737373] tracking-[1.5px] mb-2">
+                VIDEO URL (OPTIONAL)
+              </label>
+              <input
+                type="url"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="https://youtube.com/watch?v=... or Google Drive / Loom link"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#262626] rounded-lg text-white placeholder:text-[#4a4a4a] focus:outline-none focus:border-[#404040] transition-colors"
+              />
+              <p className="text-[12px] text-[#4a4a4a] mt-1.5">
+                YouTube, Google Drive, Loom, or any publicly accessible video link.
+              </p>
             </div>
           </div>
         </section>

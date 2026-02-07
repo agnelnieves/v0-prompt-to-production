@@ -20,21 +20,10 @@ import Backgrounds, {
 } from "@/components/backgrounds";
 import { motion, AnimatePresence } from "framer-motion";
 import NumberFlow from "@number-flow/react";
-import { sponsors, logos } from "@/lib/data";
+import { sponsors, logos, agendaItems } from "@/lib/data";
 
 const TOTAL_SLIDES = 12;
 
-// Deck agenda items (different from homepage agenda)
-const deckAgendaItems = [
-  { title: "Opening", description: "For every builder at your event" },
-  { title: "Opening", description: "For every builder at your event" },
-  {
-    title: "Networking",
-    description: "Connecting with industry leaders and peers",
-  },
-  { title: "Workshops", description: "Hands-on sessions to enhance skills" },
-  { title: "Closing", description: "Summarizing insights and next steps" },
-];
 
 // Global tracks data
 const globalTracks = [
@@ -286,7 +275,7 @@ export default function DeckPage() {
           <TheChallengeSlide key={`slide-5-${slideKey}`} />
         )}
         {currentSlide === 6 && (
-          <AgendaSlide key={`slide-6-${slideKey}`} items={deckAgendaItems} />
+          <AgendaSlide key={`slide-6-${slideKey}`} items={agendaItems} />
         )}
         {currentSlide === 7 && (
           <GlobalTracksSlide
@@ -577,7 +566,7 @@ function TheChallengeSlide() {
 }
 
 // Slide 6: Agenda
-function AgendaSlide({ items }: { items: typeof deckAgendaItems }) {
+function AgendaSlide({ items }: { items: typeof agendaItems }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -616,8 +605,8 @@ function AgendaSlide({ items }: { items: typeof deckAgendaItems }) {
                 {item.title}
               </span>
             </div>
-            <span className="text-[13px] lg:text-[15px] text-[#737373] leading-[1.5] sm:text-right pl-8 sm:pl-0">
-              {item.description}
+            <span className="font-mono text-[13px] lg:text-[15px] text-[#737373] leading-[1.5] sm:text-right pl-8 sm:pl-0">
+              {item.time}
             </span>
           </div>
         ))}

@@ -32,10 +32,14 @@ function useInView(threshold = 0.1) {
   return { ref, isInView }
 }
 
+const HERO_FULL_TEXT = "Prompt\nto Production"
+
 export default function V0MiamiEvent() {
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isAtBottom, setIsAtBottom] = useState(false)
+  const [typedText, setTypedText] = useState("")
+  const [isTypingDone, setIsTypingDone] = useState(false)
   const descriptionSection = useInView(0.3)
   const agendaSection = useInView(0.2)
   const experienceSection = useInView(0.2)
@@ -46,10 +50,35 @@ export default function V0MiamiEvent() {
     setMounted(true)
   }, [])
 
+  // Typing animation effect
+  useEffect(() => {
+    if (!mounted) return
+
+    let charIndex = 0
+    let intervalId: ReturnType<typeof setInterval>
+
+    const startDelay = setTimeout(() => {
+      intervalId = setInterval(() => {
+        charIndex++
+        setTypedText(HERO_FULL_TEXT.slice(0, charIndex))
+
+        if (charIndex >= HERO_FULL_TEXT.length) {
+          clearInterval(intervalId)
+          setTimeout(() => setIsTypingDone(true), 600)
+        }
+      }, 70)
+    }, 800)
+
+    return () => {
+      clearTimeout(startDelay)
+      if (intervalId) clearInterval(intervalId)
+    }
+  }, [mounted])
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
-      
+
       // Check if at bottom of page
       const scrollTop = window.scrollY
       const windowHeight = window.innerHeight
@@ -57,19 +86,25 @@ export default function V0MiamiEvent() {
       const isBottom = scrollTop + windowHeight >= documentHeight - 10
       setIsAtBottom(isBottom)
     }
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true })
     handleScroll() // Check initial state
-    
+
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  // Split typed text into lines for rendering
+  const typedLines = typedText.split("\n")
+  const line1 = typedLines[0] || ""
+  const line2 = typedLines.length > 1 ? typedLines[1] : ""
+  const isOnLine2 = typedText.includes("\n")
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden scroll-smooth">
       {/* Fixed Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
         {/* Blur and gradient background - only visible when scrolled */}
-        <div 
+        <div
           className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${isScrolled ? 'opacity-100' : 'opacity-0'}`}
         >
           {/* Gradient overlay */}
@@ -78,17 +113,17 @@ export default function V0MiamiEvent() {
         <div className="relative mx-auto max-w-[1400px] px-6 lg:px-0 py-8 lg:py-[49px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[18px] group cursor-pointer">
-              <img 
-                src={logos.v0 || "/placeholder.svg"} 
-                alt="v0" 
-                className="h-[24px] w-[50px] transition-opacity duration-300 group-hover:opacity-80" 
+              <img
+                src={logos.v0 || "/placeholder.svg"}
+                alt="v0"
+                className="h-[24px] w-[50px] transition-opacity duration-300 group-hover:opacity-80"
               />
               <span className="font-mono text-[12px] text-[#737373] tracking-[2.4px] [text-shadow:0px_0px_4px_black] transition-colors duration-300 group-hover:text-white">
                 IRL - MIAMI
               </span>
             </div>
             <div className="flex items-center gap-[18px]">
-              <a 
+              <a
                 href="https://lu.ma/event/evt-i5D8CGEsmVAM7rI"
                 className="luma-checkout--button group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center"
                 data-luma-action="checkout"
@@ -118,10 +153,10 @@ export default function V0MiamiEvent() {
             style={{ width: "100%", height: "100%" }}
           />
         </div>
-        
+
         {/* Gradient overlay at bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-[204px] bg-gradient-to-b from-transparent to-black pointer-events-none" />
-        
+
         {/* Hero Content */}
         <div className="relative z-10 w-full max-w-[1383px] px-6 lg:px-0 flex flex-col gap-[30px]">
           <div className="px-0 lg:px-5 overflow-hidden">
@@ -129,16 +164,34 @@ export default function V0MiamiEvent() {
               {eventData.greeting}
             </p>
           </div>
-          
-          <h1 className="text-[60px] md:text-[100px] lg:text-[137px] font-normal leading-[1] lg:leading-[110px] tracking-[-0.04em] lg:tracking-[-5.48px] text-white overflow-hidden">
-            <span className={`block transition-all duration-1000 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              Prompt{' '}
-            </span>
-            <span className={`block transition-all duration-1000 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              to Production
+
+          <h1
+            className="relative text-[60px] md:text-[100px] lg:text-[137px] font-normal leading-[1] lg:leading-[110px] tracking-[-0.04em] lg:tracking-[-5.48px] text-white"
+            aria-label="Prompt to Production"
+          >
+            {/* Invisible placeholder to reserve layout space */}
+            <span className="invisible block" aria-hidden="true">{'Prompt '}</span>
+            <span className="invisible block" aria-hidden="true">{'to Production'}</span>
+
+            {/* Typed text overlay */}
+            <span className="absolute inset-0" aria-hidden="true">
+              <span className="block">
+                {line1}
+                {!isOnLine2 && !isTypingDone && mounted && (
+                  <span className="typing-cursor" />
+                )}
+              </span>
+              {isOnLine2 && (
+                <span className="block">
+                  {line2}
+                  {!isTypingDone && (
+                    <span className="typing-cursor" />
+                  )}
+                </span>
+              )}
             </span>
           </h1>
-          
+
           <div className={`flex gap-[44px] px-0 lg:px-5 transition-all duration-1000 delay-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="flex flex-col gap-4 group cursor-default">
               <p className="font-mono text-[14px] text-[#737373] tracking-[2.8px] transition-colors duration-300 group-hover:text-[#999]">
@@ -148,7 +201,7 @@ export default function V0MiamiEvent() {
                 {eventData.date}
               </p>
             </div>
-            <a 
+            <a
               href={eventData.venueAddress}
               target="_blank"
               rel="noopener noreferrer"
@@ -164,11 +217,11 @@ export default function V0MiamiEvent() {
             </a>
           </div>
         </div>
-        
+
         {/* Scroll indicator */}
         <div className={`absolute bottom-[40px] left-0 right-0 z-20 transition-all duration-1000 delay-1200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="w-full max-w-[1383px] mx-auto px-6 lg:px-5">
-            <button 
+            <button
               onClick={() => {
                 const mainContent = document.querySelector('main')
                 if (mainContent) {
@@ -178,7 +231,7 @@ export default function V0MiamiEvent() {
               className="font-mono text-[14px] text-[#737373] tracking-[2.8px] flex items-center gap-3 group cursor-pointer hover:text-[#999] transition-colors duration-300"
             >
               <span>SCROLL TO LEARN MORE</span>
-              <span className="inline-block animate-bounce">↓</span>
+              <span className="inline-block animate-bounce">{'↓'}</span>
             </button>
           </div>
         </div>
@@ -187,7 +240,7 @@ export default function V0MiamiEvent() {
       {/* Main Content */}
       <main className="mx-auto max-w-[1400px] bg-black">
         {/* Description Section */}
-        <section 
+        <section
           ref={descriptionSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] min-h-[300px] lg:h-[402px] flex items-center justify-center px-6 lg:px-12 py-12 lg:py-0"
         >
@@ -197,7 +250,7 @@ export default function V0MiamiEvent() {
         </section>
 
         {/* Agenda Section */}
-        <section 
+        <section
           ref={agendaSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
@@ -208,12 +261,12 @@ export default function V0MiamiEvent() {
           </div>
           <div className="flex flex-col w-full lg:w-auto">
             {agendaItems.map((item, index) => (
-              <AgendaItem 
+              <AgendaItem
                 key={index}
-                number={formatIndex(index)} 
-                title={item.title} 
-                description={item.time} 
-                delay={index * 100} 
+                number={formatIndex(index)}
+                title={item.title}
+                description={item.time}
+                delay={index * 100}
                 isVisible={agendaSection.isInView}
                 isLast={index === agendaItems.length - 1}
               />
@@ -222,7 +275,7 @@ export default function V0MiamiEvent() {
         </section>
 
         {/* The Experience Section */}
-        <section 
+        <section
           ref={experienceSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
@@ -233,10 +286,10 @@ export default function V0MiamiEvent() {
           </div>
           <div className="w-full lg:w-[685px] flex flex-wrap">
             {experienceItems.map((item, index) => (
-              <ExperienceCard 
+              <ExperienceCard
                 key={index}
-                number={formatIndex(index)} 
-                title={item.title} 
+                number={formatIndex(index)}
+                title={item.title}
                 description={item.description}
                 delay={index * 100}
                 isVisible={experienceSection.isInView}
@@ -246,7 +299,7 @@ export default function V0MiamiEvent() {
         </section>
 
         {/* Sponsors Section */}
-        <section 
+        <section
           ref={sponsorSection.ref}
           className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-16 lg:py-24 flex flex-col lg:flex-row gap-8 items-start justify-center"
         >
@@ -257,10 +310,10 @@ export default function V0MiamiEvent() {
           </div>
           <div className="w-full lg:w-[685px] flex flex-wrap">
             {sponsors.map((sponsor, index) => (
-              <SponsorCard 
-                key={index} 
+              <SponsorCard
+                key={index}
                 sponsor={sponsor}
-                delay={index * 100} 
+                delay={index * 100}
                 isVisible={sponsorSection.isInView}
               />
             ))}
@@ -268,7 +321,7 @@ export default function V0MiamiEvent() {
         </section>
 
         {/* CTA Footer with Dithering Background */}
-        <section 
+        <section
           ref={ctaSection.ref}
           className="relative border-t lg:border border-[#262626] min-h-[200px] lg:h-[245px] px-6 lg:px-[88px] py-12 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-[30px] overflow-hidden lg:mb-16"
         >
@@ -284,13 +337,13 @@ export default function V0MiamiEvent() {
               style={{ width: "100%", height: "100%" }}
             />
           </div>
-          
+
           {/* Content */}
           <h2 className={`relative z-10 flex-1 text-[36px] lg:text-[68px] font-semibold leading-[1.1] lg:leading-[72px] tracking-[-0.04em] lg:tracking-[-2.72px] text-white text-center lg:text-left transition-all duration-1000 ${ctaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
             {eventData.ctaText}
           </h2>
           <div className={`relative z-10 transition-all duration-1000 delay-200 ${ctaSection.isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
-            <a 
+            <a
               href="https://lu.ma/event/evt-i5D8CGEsmVAM7rI"
               className="luma-checkout--button group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center"
               data-luma-action="checkout"
@@ -304,9 +357,9 @@ export default function V0MiamiEvent() {
           </div>
         </section>
       </main>
-      
+
       {/* Fixed Bottom Gradient - hidden when at bottom */}
-      <div 
+      <div
         className={`fixed bottom-0 left-0 right-0 h-[120px] pointer-events-none z-40 transition-opacity duration-500 ${isAtBottom ? 'opacity-0' : 'opacity-100'}`}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
@@ -315,14 +368,14 @@ export default function V0MiamiEvent() {
   )
 }
 
-function AgendaItem({ 
-  number, 
-  title, 
+function AgendaItem({
+  number,
+  title,
   description,
   delay = 0,
   isVisible = true,
-  isLast = false 
-}: { 
+  isLast = false
+}: {
   number: string
   title: string
   description: string
@@ -331,9 +384,9 @@ function AgendaItem({
   isLast?: boolean
 }) {
   return (
-    <div 
+    <div
       className={`w-full lg:w-[685px] flex items-center gap-[10px] py-6 border-b border-[#262626] ${isLast ? 'border-b-0' : ''} group cursor-default transition-all duration-700 hover:bg-white/[0.02] hover:pl-2`}
-      style={{ 
+      style={{
         transitionDelay: `${delay}ms`,
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(20px)'
@@ -354,13 +407,13 @@ function AgendaItem({
   )
 }
 
-function ExperienceCard({ 
-  number, 
-  title, 
+function ExperienceCard({
+  number,
+  title,
   description,
   delay = 0,
   isVisible = true
-}: { 
+}: {
   number: string
   title: string
   description: string
@@ -368,9 +421,9 @@ function ExperienceCard({
   isVisible?: boolean
 }) {
   return (
-    <div 
+    <div
       className="w-full sm:w-[calc(50%-0.5px)] lg:w-[342px] border border-[#262626] p-6 lg:p-8 flex flex-col gap-[10px] justify-center -mr-px -mb-px group cursor-default transition-all duration-700 hover:bg-white/[0.03] hover:border-[#404040]"
-      style={{ 
+      style={{
         transitionDelay: `${delay}ms`,
         opacity: isVisible ? 1 : 0
       }}
@@ -388,35 +441,35 @@ function ExperienceCard({
   )
 }
 
-function SponsorCard({ 
+function SponsorCard({
   sponsor,
-  delay = 0, 
+  delay = 0,
   isVisible = true
-}: { 
+}: {
   sponsor: Sponsor
   delay?: number
   isVisible?: boolean
 }) {
   const renderAsset = () => {
     const { assetType, logo, name, height } = sponsor
-    
+
     // Handle SVG
     if (assetType === "svg") {
       return (
-        <img 
-          src={logo || "/placeholder.svg"} 
+        <img
+          src={logo || "/placeholder.svg"}
           alt={name}
           className="w-auto max-w-[184px] transition-opacity duration-300 group-hover:opacity-80"
           style={{ height: height || "auto" }}
         />
       )
     }
-    
+
     // Handle PNG/JPG with Next.js Image
     if (assetType === "png" || assetType === "jpg" || assetType === "jpeg") {
       return (
-        <Image 
-          src={logo || "/placeholder.svg"} 
+        <Image
+          src={logo || "/placeholder.svg"}
           alt={name}
           width={184}
           height={height || 50}
@@ -425,26 +478,26 @@ function SponsorCard({
         />
       )
     }
-    
+
     // Handle remote URLs
     if (assetType === "remote") {
       return (
-        <img 
-          src={logo || "/placeholder.svg"} 
+        <img
+          src={logo || "/placeholder.svg"}
           alt={name}
           className="w-auto max-w-[184px] transition-opacity duration-300 group-hover:opacity-80"
           style={{ height: height || "auto" }}
         />
       )
     }
-    
+
     return null
   }
 
   const content = (
-    <div 
+    <div
       className="relative w-full sm:w-[calc(50%-0.5px)] lg:w-[342px] h-[140px] lg:h-[173px] border border-[#262626] p-6 lg:p-8 flex flex-col items-center justify-center -mr-px -mb-px group cursor-pointer transition-all duration-700 hover:bg-white/[0.03] hover:border-[#404040]"
-      style={{ 
+      style={{
         transitionDelay: `${delay}ms`,
         opacity: isVisible ? 1 : 0
       }}

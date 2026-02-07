@@ -124,6 +124,23 @@
   }
 }
 
+/* Typing cursor animation */
+.typing-cursor::after {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  background-color: white;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.75s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* Override Luma checkout button styles */
 .luma-checkout--button {
   background-color: white !important;

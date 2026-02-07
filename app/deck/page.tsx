@@ -102,8 +102,48 @@ const kurzoChallenge = {
 };
 
 const basementChallenge = {
-  description:
-    "Build an application powered by OpenClaw.\n\nYour project can be anything: a tool, an agent, a workflow, or a product. The only requirement is that OpenClaw is a core part of how it works, not just an add-on.\n\nYou're free to choose the domain and use case. It can analyze data, automate tasks, monitor systems, explore the web, assist users, or generate insights. What matters is that OpenClaw meaningfully drives behavior, decisions, or outcomes in your application.\n\nFocus on building something that feels like a real product, not just a demo or script.",
+  description: (
+    <>
+      Build an application powered by OpenClaw.
+      {"\n\n"}
+      Your project can be anything: a tool, an agent, a workflow, or a product. The only requirement is that OpenClaw is a core part of how it works, not just an add-on.
+      {"\n\n"}
+      You{"'"}re free to choose the domain and use case. It can analyze data, automate tasks, monitor systems, explore the web, assist users, or generate insights. What matters is that OpenClaw meaningfully drives behavior, decisions, or outcomes in your application.
+      {"\n\n"}
+      Focus on building something that feels like a real product, not just a demo or script.
+      {"\n\n"}
+      <span className="text-white font-medium">Submission Requirements</span>
+      {"\n"}
+      To submit, you must:
+      {"\n"}
+      {"1. "}Download the Basement Browser iOS app from{" "}
+      <a href="https://basementbrowser.com/app" target="_blank" rel="noopener noreferrer" className="text-white underline underline-offset-2 hover:opacity-80">basementbrowser.com/app</a>
+      {"\n"}
+      {"2. "}Sign up in the app
+      {"\n"}
+      {"3. "}Open v0miami.com inside the Basement Browser
+      {"\n"}
+      {"4. "}Go to the chat section and submit:
+      {"\n"}
+      {"   \u2022 "}Your project link (repo or demo)
+      {"\n"}
+      {"   \u2022 "}A short explanation of what you built
+      {"\n"}
+      {"   \u2022 "}A 1{"\u2013"}2 sentence blurb describing your project
+      {"\n\n"}
+      The 1{"\u2013"}2 sentence blurb is part of judging. It should clearly explain what your app does and why it{"'"}s useful.
+      {"\n\n"}
+      <span className="text-white font-medium">Winning Criteria</span>
+      {"\n\n"}
+      <span className="text-white font-medium">Clear Use Case (30%)</span> — Is it obvious what the application does and why it matters? Does the blurb communicate the value clearly?
+      {"\n\n"}
+      <span className="text-white font-medium">OpenClaw Usage (30%)</span> — Is OpenClaw central to the product, not just bolted on? Does it meaningfully drive logic, behavior, or outcomes?
+      {"\n\n"}
+      <span className="text-white font-medium">Product Quality (25%)</span> — Does this feel like a real, usable product or tool? Is the output understandable and well thought out?
+      {"\n\n"}
+      <span className="text-white font-medium">Overall Impact (15%)</span> — Is it clever, useful, or impressive? Does it stand out from typical hackathon projects?
+    </>
+  ),
   prizes: [{ place: "Single winner", amount: "$250" }],
 };
 

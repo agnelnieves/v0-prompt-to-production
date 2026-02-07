@@ -10,7 +10,10 @@ import {
   ArrowUpDown,
   Loader2,
   Users,
+  Lock,
 } from "lucide-react"
+
+const DASHBOARD_PASSWORD = "v0-prompt-to-prod-miami-2026"
 
 // ---------------------------------------------------------------------------
 // Types
@@ -44,6 +47,29 @@ type SortDir = "asc" | "desc"
 // ---------------------------------------------------------------------------
 
 export default function JudgeDashboard() {
+  const [authenticated, setAuthenticated] = useState(false)
+  const [passwordInput, setPasswordInput] = useState("")
+  const [passwordError, setPasswordError] = useState(false)
+
+  // Check sessionStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("judge-dashboard-auth")
+      if (stored === "true") setAuthenticated(true)
+    }
+  }, [])
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (passwordInput === DASHBOARD_PASSWORD) {
+      setAuthenticated(true)
+      setPasswordError(false)
+      sessionStorage.setItem("judge-dashboard-auth", "true")
+    } else {
+      setPasswordError(true)
+    }
+  }
+
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [loading, setLoading] = useState(true)
   const [judgeId, setJudgeId] = useState("")
@@ -174,6 +200,56 @@ export default function JudgeDashboard() {
       setSortField(field)
       setSortDir("desc")
     }
+  }
+
+  // ---- Password gate ----
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+        <form
+          onSubmit={handlePasswordSubmit}
+          className="w-full max-w-sm space-y-6"
+        >
+          <div className="text-center space-y-2">
+            <div className="mx-auto w-12 h-12 rounded-full bg-[#1a1a1a] border border-[#262626] flex items-center justify-center">
+              <Lock className="w-5 h-5 text-[#737373]" />
+            </div>
+            <h1 className="text-[20px] font-bold tracking-tight">
+              Judge Dashboard
+            </h1>
+            <p className="text-[14px] text-[#737373]">
+              Enter the password to access the dashboard.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => {
+                setPasswordInput(e.target.value)
+                setPasswordError(false)
+              }}
+              placeholder="Password"
+              autoFocus
+              className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#262626] rounded-lg text-white placeholder:text-[#4a4a4a] focus:outline-none focus:border-[#404040] transition-colors"
+            />
+            {passwordError && (
+              <p className="text-red-400 text-[13px]">
+                Incorrect password. Please try again.
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full px-4 py-3 bg-white text-black rounded-lg font-medium text-[14px] hover:bg-white/90 transition-colors"
+          >
+            Continue
+          </button>
+        </form>
+      </div>
+    )
   }
 
   if (loading) {

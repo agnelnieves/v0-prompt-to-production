@@ -52,6 +52,10 @@ export default function JudgeDashboard() {
   const [sortField, setSortField] = useState<SortField>("avg_score")
   const [sortDir, setSortDir] = useState<SortDir>("desc")
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
+  const [hoveredStar, setHoveredStar] = useState<{
+    id: number
+    score: number
+  } | null>(null)
 
   // Get or create fingerprint
   const getFingerprint = useCallback(() => {
@@ -190,7 +194,7 @@ export default function JudgeDashboard() {
               Judge Dashboard
             </h1>
             <p className="text-[#737373] text-[15px] mt-2">
-              Rate submissions from 1-10. Click a row to expand details.
+              Rate submissions with 1-5 stars. Click a row to expand details.
             </p>
           </div>
 
@@ -305,13 +309,13 @@ export default function JudgeDashboard() {
                     <div className="flex items-center gap-1.5">
                       <Star
                         className={`w-4 h-4 ${
-                          s.avg_score >= 7
+                          s.avg_score >= 4
                             ? "text-amber-400"
-                            : s.avg_score >= 4
+                            : s.avg_score >= 2.5
                               ? "text-[#737373]"
                               : "text-[#404040]"
                         }`}
-                        fill={s.avg_score >= 7 ? "currentColor" : "none"}
+                        fill={s.avg_score >= 4 ? "currentColor" : "none"}
                       />
                       <span className="text-[15px] font-mono text-white">
                         {s.avg_score > 0 ? s.avg_score.toFixed(1) : "-"}
@@ -326,30 +330,43 @@ export default function JudgeDashboard() {
                     </span>
                   </div>
 
-                  {/* Rating buttons */}
+                  {/* Star rating */}
                   <div
-                    className="flex items-center gap-1 mt-3 lg:mt-0"
+                    className="flex items-center gap-0.5 mt-3 lg:mt-0"
                     onClick={(e) => e.stopPropagation()}
+                    onMouseLeave={() => setHoveredStar(null)}
                   >
                     {ratingInFlight === s.id ? (
                       <Loader2 className="w-4 h-4 animate-spin text-[#525252]" />
                     ) : (
-                      Array.from({ length: 10 }, (_, i) => i + 1).map(
-                        (score) => (
-                          <button
-                            key={score}
-                            onClick={() => rateSubmission(s.id, score)}
-                            className={`w-7 h-7 rounded text-[12px] font-mono transition-all ${
-                              s.my_score === score
-                                ? "bg-white text-black font-bold"
-                                : s.my_score && score <= s.my_score
-                                  ? "bg-white/20 text-white"
-                                  : "bg-[#1a1a1a] text-[#525252] hover:bg-[#262626] hover:text-white"
-                            }`}
-                          >
-                            {score}
-                          </button>
-                        )
+                      Array.from({ length: 5 }, (_, i) => i + 1).map(
+                        (score) => {
+                          const isActive =
+                            (hoveredStar?.id === s.id &&
+                              score <= hoveredStar.score) ||
+                            (!hoveredStar?.id || hoveredStar.id !== s.id
+                              ? s.my_score != null && score <= s.my_score
+                              : false)
+                          return (
+                            <button
+                              key={score}
+                              onClick={() => rateSubmission(s.id, score)}
+                              onMouseEnter={() =>
+                                setHoveredStar({ id: s.id, score })
+                              }
+                              className="p-0.5 transition-transform hover:scale-110"
+                            >
+                              <Star
+                                className={`w-5 h-5 transition-colors ${
+                                  isActive
+                                    ? "text-amber-400"
+                                    : "text-[#333] hover:text-[#555]"
+                                }`}
+                                fill={isActive ? "currentColor" : "none"}
+                              />
+                            </button>
+                          )
+                        }
                       )
                     )}
                   </div>

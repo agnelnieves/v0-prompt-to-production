@@ -14,7 +14,9 @@ import {
   MessageSquare,
   Share,
   Send,
+  Loader2,
 } from "lucide-react"
+import { submitProject } from "@/app/actions/submit-project"
 
 // ---------------------------------------------------------------------------
 // Data
@@ -77,6 +79,7 @@ export interface SubmissionData {
   email: string
   description: string
   socialProofLink: string
+  videoUrl: string
 }
 
 interface SubmissionFormProps {
@@ -176,9 +179,12 @@ export default function SubmissionForm({
   const [v0Username, setV0Username] = useState("")
   const [email, setEmail] = useState("")
   const [description, setDescription] = useState("")
+  const [videoUrl, setVideoUrl] = useState("")
 
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   // Clear a specific field error when user edits
   const clearFieldError = (field: keyof ValidationErrors) => {
@@ -237,7 +243,9 @@ export default function SubmissionForm({
   }
 
   // ---- submit ----
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSubmitError(null)
+
     const validationErrors = validateAll({
       projectName,
       liveUrl,
@@ -276,25 +284,31 @@ export default function SubmissionForm({
       email,
       description,
       socialProofLink,
+      videoUrl,
     }
-    if (onSubmit) {
-      onSubmit(data)
-    } else {
-      const params = new URLSearchParams({
-        name: yourName,
-        username: v0Username,
-        email,
-        url: liveUrl,
-        category: globalCategories.join(","),
-        description,
-        social: socialProofLink,
-      })
-      window.open(
-        `https://v0-v0prompttoproduction2026.vercel.app/submit?${params.toString()}`,
-        "_blank"
-      )
+
+    setIsSubmitting(true)
+
+    try {
+      const result = await submitProject(data)
+
+      if (!result.success) {
+        setSubmitError(result.error ?? "Submission failed. Please try again.")
+        setIsSubmitting(false)
+        return
+      }
+
+      // Call optional callback (e.g. for parent tracking)
+      if (onSubmit) {
+        onSubmit(data)
+      }
+
+      setSubmitted(true)
+    } catch {
+      setSubmitError("Something went wrong. Please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
-    setSubmitted(true)
   }
 
   // ---- helpers ----
@@ -697,6 +711,49 @@ export default function SubmissionForm({
         </section>
 
         {/* ================================================================ */}
+        {/* Section 6: Video Walkthrough */}
+        {/* ================================================================ */}
+        <section className="mb-12">
+          <h2 className="font-mono text-[12px] text-[#525252] tracking-[1.5px] mb-6">
+            06 VIDEO WALKTHROUGH
+          </h2>
+
+          <div className="space-y-4">
+            <div className="p-4 bg-[#0a0a0a] border border-[#262626] rounded-lg space-y-3">
+              <p className="text-[14px] text-[#a3a3a3] leading-relaxed">
+                Record a short screen recording (1-3 min) walking through your project. Show what it does, how it works, and any standout features. This helps judges evaluate your submission fairly.
+              </p>
+              <div className="text-[13px] text-[#737373] space-y-1.5">
+                <p className="text-[#a3a3a3] font-medium">Tips for a great video:</p>
+                <ul className="list-disc list-inside space-y-1 pl-1">
+                  <li>Use a screen recorder (Loom, QuickTime, OBS, or your OS built-in tool)</li>
+                  <li>Start by briefly explaining the idea, then demo the live app</li>
+                  <li>Keep it under 3 minutes -- judges review many submissions</li>
+                  <li>Show the actual deployed app, not just code</li>
+                  <li>Upload to YouTube (unlisted), Google Drive (share link), or Loom</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[12px] text-[#737373] tracking-[1.5px] mb-2">
+                VIDEO URL (OPTIONAL)
+              </label>
+              <input
+                type="url"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="https://youtube.com/watch?v=... or Google Drive / Loom link"
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#262626] rounded-lg text-white placeholder:text-[#4a4a4a] focus:outline-none focus:border-[#404040] transition-colors"
+              />
+              <p className="text-[12px] text-[#4a4a4a] mt-1.5">
+                YouTube, Google Drive, Loom, or any publicly accessible video link.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================ */}
         {/* Submit */}
         {/* ================================================================ */}
         <section>
@@ -710,12 +767,30 @@ export default function SubmissionForm({
                   </span>
                 </div>
               )}
+              {submitError && (
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                  <span className="text-red-400 text-[14px]">
+                    {submitError}
+                  </span>
+                </div>
+              )}
               <button
                 onClick={handleSubmit}
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-lg font-medium text-[16px] hover:bg-white/90 transition-colors w-full sm:w-auto"
+                disabled={isSubmitting}
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-lg font-medium text-[16px] hover:bg-white/90 transition-colors w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Submit Project
-                <ExternalLink className="w-4 h-4" />
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Project
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </>
           ) : (

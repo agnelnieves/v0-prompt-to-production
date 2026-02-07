@@ -81,13 +81,14 @@ const gailChallenge = {
     { place: "Second Place", amount: "$200" },
     { place: "Third Place", amount: "$100" },
   ],
-  learnMoreUrl: "#",
+  learnMoreUrl: "/challenge/gail",
 };
 
 const kurzoChallenge = {
   description:
     "A tool that takes multiple unstructured input (notes, voice, images, URLs, files) and transforms them into organized, actionable output. The system should surface themes, priorities, and next steps—but the user must be able to refine the structure themselves.\n\nBonus points for handling new input without starting from scratch.\n\nThe goal: prove that the distance between chaos and clarity is a design problem, not a discipline problem.",
   prizes: [{ place: "Single winner", amount: "$250" }],
+  learnMoreUrl: "/challenge/kurzo",
 };
 
 const basementChallenge = {
@@ -134,6 +135,7 @@ const basementChallenge = {
     </>
   ),
   prizes: [{ place: "Single winner", amount: "$250" }],
+  learnMoreUrl: "/challenge/basement",
 };
 
 // Categorize sponsors
@@ -289,6 +291,7 @@ export default function DeckPage() {
             sponsor={gailSponsor!}
             challenge={gailChallenge}
             slideNumber="08"
+            qrCode="/qr-gail.jpg"
           />
         )}
         {currentSlide === 9 && (
@@ -297,6 +300,7 @@ export default function DeckPage() {
             sponsor={kurzoSponsor!}
             challenge={kurzoChallenge}
             slideNumber="09"
+            qrCode="/qr-kurzo.jpg"
           />
         )}
         {currentSlide === 10 && (
@@ -305,6 +309,7 @@ export default function DeckPage() {
             sponsor={basementSponsor!}
             challenge={basementChallenge}
             slideNumber="10"
+            qrCode="/qr-basement.jpg"
           />
         )}
         {currentSlide === 11 && <CreditsSlide key={`slide-11-${slideKey}`} />}
@@ -682,10 +687,12 @@ function SponsoredChallengeSlide({
   sponsor,
   challenge,
   slideNumber,
+  qrCode,
 }: {
   sponsor: typeof gailSponsor;
   challenge: { description: React.ReactNode; prizes: { place: string; amount: string }[]; learnMoreUrl?: string };
   slideNumber: string;
+  qrCode?: string;
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -723,18 +730,33 @@ function SponsoredChallengeSlide({
             />
           )}
         </div>
-        {hasLearnMore && (
-          <a
-            href={challenge.learnMoreUrl}
-            className={`font-mono text-[11px] lg:text-[12px] text-[#737373] tracking-[2px] hover:text-white transition-all duration-700 delay-300 hidden lg:block ${
+        <div className="hidden lg:flex flex-col gap-6 items-start">
+          {hasLearnMore && (
+            <a
+              href={challenge.learnMoreUrl}
+              className={`font-mono text-[11px] lg:text-[12px] text-[#737373] tracking-[2px] hover:text-white transition-all duration-700 delay-300 ${
+                visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-[5px]"
+              }`}
+            >
+              LEARN MORE
+            </a>
+          )}
+          <div
+            className={`transition-all duration-700 delay-400 ${
               visible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-[5px]"
             }`}
           >
-            LEARN MORE
-          </a>
-        )}
+            {qrCode ? (
+              <img src={qrCode} alt="QR Code" className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl" />
+            ) : (
+              <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-2xl" />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Right side - Description & Prizes */}
@@ -963,15 +985,15 @@ function CreditsSlide() {
             </motion.button>
           </div>
 
-          {/* QR Code Placeholder */}
+          {/* QR Code */}
           <div
-            className={`transition-all duration-700 delay-400 ${
+            className={`hidden lg:block transition-all duration-700 delay-400 ${
               visible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-[5px]"
             }`}
           >
-            <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-lg" />
+            <img src="/qr-redeem.jpg" alt="Redeem QR Code" className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl" />
           </div>
         </div>
       </div>

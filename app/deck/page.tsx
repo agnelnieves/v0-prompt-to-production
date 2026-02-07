@@ -454,6 +454,18 @@ function TitleSlide() {
           <br />
           production-ready applications
         </p>
+
+        {/* Get Started Link */}
+        <Link
+          href="/get-started"
+          className={`mt-8 lg:mt-10 font-mono text-[11px] sm:text-[12px] lg:text-[14px] text-[#525252] tracking-[2px] lg:tracking-[3px] hover:text-white transition-all duration-700 delay-700 ${
+            visible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-[5px]"
+          }`}
+        >
+          v0miami.com/get-started
+        </Link>
       </div>
     </div>
   );

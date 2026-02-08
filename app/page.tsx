@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { eventData, agendaItems, experienceItems, sponsors, logos, formatIndex, type Sponsor } from "@/lib/data"
 import Image from "next/image"
 import { ExternalLink } from "lucide-react"
+import { Gallery } from "@/components/gallery"
 
 // Custom hook for scroll-triggered animations
 function useInView(threshold = 0.1) {
@@ -266,6 +267,9 @@ export default function V0MiamiEvent() {
             ))}
           </div>
         </section>
+
+        {/* Gallery Section */}
+        <Gallery />
 
         {/* CTA Footer with Dithering Background */}
         <section 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Dithering } from "@paper-design/shaders-react"
 import { ExternalLink, ArrowLeft, Trophy, Award, Sparkles } from "lucide-react"
+import { ImageLightbox } from "@/components/image-lightbox"
 import { logos } from "@/lib/data"
 import Link from "next/link"
 
@@ -113,6 +114,7 @@ export default function RecapPage() {
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isAtBottom, setIsAtBottom] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const introSection = useInView(0.2)
   const gallerySection = useInView(0.1)
   const winnersSection = useInView(0.1)
@@ -264,7 +266,7 @@ export default function RecapPage() {
             {galleryImages.map((image, index) => (
               <div
                 key={index}
-                className={`relative overflow-hidden rounded-lg group ${
+                className={`relative overflow-hidden rounded-lg group cursor-zoom-in ${
                   index === 0
                     ? "md:mt-0"
                     : index === 1
@@ -277,6 +279,16 @@ export default function RecapPage() {
                   transform: gallerySection.isInView
                     ? "translateY(0)"
                     : "translateY(40px)",
+                }}
+                onClick={() => setLightboxIndex(index)}
+                role="button"
+                tabIndex={0}
+                aria-label={`View ${image.alt}`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    setLightboxIndex(index)
+                  }
                 }}
               >
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
@@ -291,6 +303,18 @@ export default function RecapPage() {
                 </div>
               </div>
             ))}
+
+            {/* Lightbox */}
+            {lightboxIndex !== null && (
+              <ImageLightbox
+                src={galleryImages[lightboxIndex].src}
+                alt={galleryImages[lightboxIndex].alt}
+                width={galleryImages[lightboxIndex].width}
+                height={galleryImages[lightboxIndex].height}
+                isOpen={true}
+                onClose={() => setLightboxIndex(null)}
+              />
+            )}
           </div>
         </section>
 

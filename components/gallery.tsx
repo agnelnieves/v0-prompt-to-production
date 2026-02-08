@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { ImageLightbox } from "@/components/image-lightbox"
 
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null)
@@ -50,6 +51,7 @@ const galleryImages = [
 
 export function Gallery() {
   const section = useInView(0.15)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   return (
     <section
@@ -75,7 +77,7 @@ export function Gallery() {
         {galleryImages.map((image, index) => (
           <div
             key={index}
-            className={`relative overflow-hidden rounded-lg group ${
+            className={`relative overflow-hidden rounded-lg group cursor-zoom-in ${
               index === 0
                 ? "md:mt-0"
                 : index === 1
@@ -88,6 +90,16 @@ export function Gallery() {
               transform: section.isInView
                 ? "translateY(0)"
                 : "translateY(40px)",
+            }}
+            onClick={() => setLightboxIndex(index)}
+            role="button"
+            tabIndex={0}
+            aria-label={`View ${image.alt}`}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault()
+                setLightboxIndex(index)
+              }
             }}
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
@@ -103,6 +115,18 @@ export function Gallery() {
             </div>
           </div>
         ))}
+
+        {/* Lightbox */}
+        {lightboxIndex !== null && (
+          <ImageLightbox
+            src={galleryImages[lightboxIndex].src}
+            alt={galleryImages[lightboxIndex].alt}
+            width={galleryImages[lightboxIndex].width}
+            height={galleryImages[lightboxIndex].height}
+            isOpen={true}
+            onClose={() => setLightboxIndex(null)}
+          />
+        )}
       </div>
     </section>
   )

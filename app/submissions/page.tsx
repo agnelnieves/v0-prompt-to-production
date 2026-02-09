@@ -1,7 +1,12 @@
 import { neon } from "@neondatabase/serverless"
 import { ExternalLink, Github, Globe, Video, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import type { Metadata } from "next"
+
+function getScreenshotUrl(url: string) {
+  return `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=800&viewport.deviceScaleFactor=1`
+}
 
 export const metadata: Metadata = {
   title: "Submissions - v0 IRL Miami",
@@ -88,7 +93,7 @@ export default async function SubmissionsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#262626] border border-[#262626]">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-[#262626] border border-[#262626]">
             {submissions.map((submission) => (
               <SubmissionCard key={submission.id} submission={submission} />
             ))}
@@ -133,7 +138,28 @@ function SubmissionCard({ submission }: { submission: Submission }) {
   ]
 
   return (
-    <div className="bg-black p-6 lg:p-8 flex flex-col gap-5 group transition-colors duration-300 hover:bg-[#0a0a0a]">
+    <div className="bg-black flex flex-col group transition-colors duration-300 hover:bg-[#0a0a0a]">
+      {/* Screenshot preview */}
+      {submission.live_url && (
+        <a
+          href={submission.live_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block relative aspect-[16/10] overflow-hidden bg-[#0a0a0a]"
+        >
+          <Image
+            src={getScreenshotUrl(submission.live_url)}
+            alt={`Screenshot of ${submission.project_name}`}
+            fill
+            className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </a>
+      )}
+
+      <div className="p-6 lg:p-8 flex flex-col gap-5 flex-1">
       {/* Project name + builder */}
       <div className="flex flex-col gap-1.5">
         <h2 className="text-[18px] lg:text-[20px] font-medium leading-[1.3] text-white transition-all duration-300 group-hover:translate-x-0.5 text-balance">
@@ -229,6 +255,7 @@ function SubmissionCard({ submission }: { submission: Submission }) {
             <span>Post</span>
           </a>
         )}
+      </div>
       </div>
     </div>
   )

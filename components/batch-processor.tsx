@@ -253,7 +253,6 @@ export function BatchProcessor() {
       return new Promise((resolve, reject) => {
         const video = document.createElement("video")
         video.crossOrigin = "anonymous"
-        video.muted = true
         video.playsInline = true
 
         video.onloadeddata = async () => {
@@ -266,7 +265,85 @@ export function BatchProcessor() {
           const ctx = canvas.getContext("2d")
           if (!ctx) return reject("No ctx")
 
-          // Prefer MP4 if supported, fall back to WebM
+          // ── Capture audio from the source video ──
+          // Route audio through AudioContext so it's captured but not played aloud
+          let audioCtx: AudioContext | null = null
+          let audioDest: MediaStreamAudioDestinationNode | null = null
+          try {
+            audioCtx = new AudioContext()
+            const source = audioCtx.createMediaElementSource(video)
+            audioDest = audioCtx.createMediaStreamDestination()
+            source.connect(audioDest)
+            // Not connecting to audioCtx.destination keeps speakers silent
+          } catch {
+            // If AudioContext fails, proceed without audio
+            audioCtx = null
+            audioDest = null
+          }
+
+          // ── Pre-render static overlays once (reused every frame) ──
+
+          // Branded overlay (logos, gradient, text)
+          const overlayCanvas = document.createElement("canvas")
+          overlayCanvas.width = w
+          overlayCanvas.height = h
+          const overlayCtx = overlayCanvas.getContext("2d")!
+          drawOverlay(overlayCtx, w, h)
+
+          // Vignette overlay
+          let vignetteCanvas: HTMLCanvasElement | null = null
+          if (adjustments.vignette > 0) {
+            vignetteCanvas = document.createElement("canvas")
+            vignetteCanvas.width = w
+            vignetteCanvas.height = h
+            const vigCtx = vignetteCanvas.getContext("2d")!
+            const cx = w / 2
+            const cy = h / 2
+            const radius = Math.sqrt(cx * cx + cy * cy)
+            const gradient = vigCtx.createRadialGradient(cx, cy, radius * 0.3, cx, cy, radius)
+            gradient.addColorStop(0, "rgba(0,0,0,0)")
+            gradient.addColorStop(1, `rgba(0,0,0,${adjustments.vignette / 100})`)
+            vigCtx.fillStyle = gradient
+            vigCtx.fillRect(0, 0, w, h)
+          }
+
+          // Grain textures (pre-generate a few for animated grain effect)
+          const grainTextures: HTMLCanvasElement[] = []
+          if (adjustments.grain > 0) {
+            const GRAIN_TEXTURE_COUNT = 3
+            for (let t = 0; t < GRAIN_TEXTURE_COUNT; t++) {
+              const gc = document.createElement("canvas")
+              gc.width = w
+              gc.height = h
+              const gctx = gc.getContext("2d")!
+              const grainData = gctx.createImageData(w, h)
+              const gd = grainData.data
+              for (let i = 0; i < gd.length; i += 4) {
+                const noise = Math.random() * 255
+                gd[i] = noise
+                gd[i + 1] = noise
+                gd[i + 2] = noise
+                gd[i + 3] = 255
+              }
+              gctx.putImageData(grainData, 0, 0)
+              grainTextures.push(gc)
+            }
+          }
+
+          // Build CSS filter string — GPU-accelerated color adjustments
+          // instead of per-pixel getImageData/putImageData manipulation
+          const filters: string[] = []
+          // saturation: 0 = grayscale, 100 = normal (matches original behavior)
+          filters.push(`saturate(${adjustments.saturation / 100})`)
+          if (adjustments.contrast !== 0) {
+            filters.push(`contrast(${1 + adjustments.contrast / 50})`)
+          }
+          if (adjustments.brightness !== 0) {
+            filters.push(`brightness(${1 + adjustments.brightness / 50})`)
+          }
+          const filterString = filters.join(" ")
+
+          // ── Recording setup ──
           const mimeType = MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")
             ? "video/mp4;codecs=avc1"
             : MediaRecorder.isTypeSupported("video/mp4")
@@ -275,9 +352,16 @@ export function BatchProcessor() {
                 ? "video/webm;codecs=vp9"
                 : "video/webm"
 
-          const TARGET_FPS = 60
-          const stream = canvas.captureStream(TARGET_FPS)
-          const recorder = new MediaRecorder(stream, {
+          // 30fps matches most source video and halves frame budget vs 60fps
+          const canvasStream = canvas.captureStream(30)
+
+          // Combine canvas video track with captured audio track
+          const combinedStream = new MediaStream([
+            ...canvasStream.getVideoTracks(),
+            ...(audioDest ? audioDest.stream.getAudioTracks() : []),
+          ])
+
+          const recorder = new MediaRecorder(combinedStream, {
             mimeType,
             videoBitsPerSecond: 12_000_000,
           })
@@ -288,46 +372,65 @@ export function BatchProcessor() {
           }
 
           recorder.onstop = () => {
+            // Clean up audio context
+            if (audioCtx) audioCtx.close()
             const blob = new Blob(chunks, { type: mimeType })
             resolve(URL.createObjectURL(blob))
           }
 
-          recorder.start(100) // collect data every 100ms for smoother output
+          recorder.start(100)
           video.play()
 
-          // Use a consistent frame interval for smooth output
-          const frameInterval = 1000 / TARGET_FPS
-          let lastFrameTime = 0
           let stopped = false
+          let frameCount = 0
 
-          const drawFrame = (timestamp: number) => {
+          // Composites one frame using only fast drawImage calls (no pixel loops)
+          const renderFrame = () => {
+            // 1. Draw video frame with CSS filter applied (GPU-accelerated)
+            ctx.filter = filterString
+            ctx.drawImage(video, 0, 0, w, h)
+            ctx.filter = "none"
+
+            // 2. Grain (animated by cycling pre-rendered textures)
+            if (grainTextures.length > 0) {
+              ctx.globalCompositeOperation = "overlay"
+              ctx.globalAlpha = (adjustments.grain / 100) * 0.5
+              ctx.drawImage(grainTextures[frameCount % grainTextures.length], 0, 0)
+              ctx.globalCompositeOperation = "source-over"
+              ctx.globalAlpha = 1
+            }
+
+            // 3. Vignette
+            if (vignetteCanvas) {
+              ctx.drawImage(vignetteCanvas, 0, 0)
+            }
+
+            // 4. Branded overlay
+            ctx.drawImage(overlayCanvas, 0, 0)
+
+            frameCount++
+          }
+
+          const loop = () => {
             if (stopped || video.ended || video.paused) {
               if (!stopped) {
                 stopped = true
-                recorder.stop()
+                renderFrame()
+                setTimeout(() => recorder.stop(), 200)
               }
               return
             }
 
-            if (timestamp - lastFrameTime >= frameInterval) {
-              ctx.drawImage(video, 0, 0, w, h)
-              applyAdjustments(ctx, w, h, adjustments)
-              drawOverlay(ctx, w, h)
-              lastFrameTime = timestamp
-            }
-
-            requestAnimationFrame(drawFrame)
+            renderFrame()
+            requestAnimationFrame(loop)
           }
 
-          requestAnimationFrame(drawFrame)
+          requestAnimationFrame(loop)
 
           video.onended = () => {
             if (!stopped) {
               stopped = true
-              // Draw one last frame to avoid cutting short
-              ctx.drawImage(video, 0, 0, w, h)
-              applyAdjustments(ctx, w, h, adjustments)
-              drawOverlay(ctx, w, h)
+              renderFrame()
               setTimeout(() => recorder.stop(), 200)
             }
           }

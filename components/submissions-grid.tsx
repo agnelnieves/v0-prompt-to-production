@@ -2,13 +2,22 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { ExternalLink, Github, Globe, Video, X, Calendar, User, Tag } from "lucide-react"
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTitle,
-} from "@/components/ui/drawer"
+  ExternalLink,
+  Github,
+  Globe,
+  Video,
+  X,
+  Calendar,
+  User,
+  Tag,
+} from "lucide-react"
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet"
 
 export interface Submission {
   id: number
@@ -41,7 +50,11 @@ function formatDate(dateString: string) {
   })
 }
 
-export function SubmissionsGrid({ submissions }: { submissions: Submission[] }) {
+export function SubmissionsGrid({
+  submissions,
+}: {
+  submissions: Submission[]
+}) {
   const [selected, setSelected] = useState<Submission | null>(null)
 
   return (
@@ -60,16 +73,19 @@ export function SubmissionsGrid({ submissions }: { submissions: Submission[] }) 
           ))}
       </div>
 
-      <Drawer
+      <Sheet
         open={!!selected}
         onOpenChange={(open) => {
           if (!open) setSelected(null)
         }}
       >
-        <DrawerContent className="max-h-[92vh] bg-[#0a0a0a] border-[#262626]">
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-xl lg:max-w-2xl bg-[#0a0a0a] border-[#262626] p-0 overflow-hidden"
+        >
           {selected && <SubmissionDetail submission={selected} />}
-        </DrawerContent>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
     </>
   )
 }
@@ -118,7 +134,8 @@ function SubmissionCard({
             {submission.project_name}
           </h2>
           <p className="text-[13px] text-[#737373]">
-            by <span className="text-[#a3a3a3]">{submission.your_name}</span>
+            by{" "}
+            <span className="text-[#a3a3a3]">{submission.your_name}</span>
             {submission.v0_username && (
               <span className="text-[#525252]">
                 {" "}
@@ -161,7 +178,7 @@ function SubmissionCard({
 }
 
 /* ------------------------------------------------------------------ */
-/* Detail Drawer Content                                               */
+/* Detail Sheet Content                                                */
 /* ------------------------------------------------------------------ */
 
 function SubmissionDetail({ submission }: { submission: Submission }) {
@@ -171,59 +188,74 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
   ]
 
   return (
-    <div className="overflow-y-auto overscroll-contain flex flex-col">
-      <DrawerTitle className="sr-only">{submission.project_name}</DrawerTitle>
+    <div className="h-full overflow-y-auto overscroll-contain flex flex-col">
+      <SheetTitle className="sr-only">{submission.project_name}</SheetTitle>
+
+      {/* Close button */}
+      <div className="absolute top-4 right-4 z-10">
+        <SheetClose className="p-2 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 transition-colors cursor-pointer">
+          <X className="w-5 h-5 text-[#a3a3a3]" />
+          <span className="sr-only">Close</span>
+        </SheetClose>
+      </div>
 
       {/* Screenshot */}
       {submission.live_url && (
-        <div className="relative aspect-[16/9] overflow-hidden bg-black shrink-0">
+        <a
+          href={submission.live_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block relative aspect-[16/9] overflow-hidden bg-black shrink-0 group/img"
+        >
           <Image
             src={getScreenshotUrl(submission.live_url)}
             alt={`Screenshot of ${submission.project_name}`}
             fill
-            className="object-cover object-top"
-            sizes="100vw"
+            className="object-cover object-top transition-transform duration-500 group-hover/img:scale-[1.02]"
+            sizes="(max-width: 640px) 100vw, 672px"
             unoptimized
           />
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+          <div className="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-[11px] font-mono text-white/80 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+            <Globe className="w-3 h-3" />
+            VISIT SITE
+          </div>
+        </a>
       )}
 
       {/* Content */}
-      <div className="px-6 md:px-10 py-8 flex flex-col gap-8">
+      <div className="px-6 lg:px-8 py-8 flex flex-col gap-7 flex-1">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h2 className="text-[24px] md:text-[32px] font-medium leading-[1.15] text-white text-balance">
-              {submission.project_name}
-            </h2>
-            <div className="flex items-center gap-2 text-[14px] text-[#737373]">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-[22px] lg:text-[28px] font-medium leading-[1.15] text-white text-balance">
+            {submission.project_name}
+          </h2>
+          <div className="flex items-center gap-3 text-[14px] text-[#737373]">
+            <span className="flex items-center gap-1.5">
               <User className="w-3.5 h-3.5" />
-              <span>
-                {submission.your_name}
-                {submission.v0_username && (
-                  <span className="text-[#525252]">
-                    {" "}
-                    &middot; @{submission.v0_username}
-                  </span>
-                )}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-[13px] text-[#525252]">
+              {submission.your_name}
+              {submission.v0_username && (
+                <span className="text-[#525252]">
+                  @{submission.v0_username}
+                </span>
+              )}
+            </span>
+            <span className="text-[#333]">|</span>
+            <span className="flex items-center gap-1.5 text-[13px] text-[#525252]">
               <Calendar className="w-3.5 h-3.5" />
-              <span>{formatDate(submission.created_at)}</span>
-            </div>
+              {formatDate(submission.created_at)}
+            </span>
           </div>
-          <DrawerClose className="p-2 rounded-full hover:bg-[#1a1a1a] transition-colors shrink-0 cursor-pointer">
-            <X className="w-5 h-5 text-[#737373]" />
-            <span className="sr-only">Close</span>
-          </DrawerClose>
         </div>
+
+        {/* Divider */}
+        <div className="h-px bg-[#262626]" />
 
         {/* Description */}
         {submission.description && (
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[12px] font-mono text-[#525252] tracking-[2px]">
-              DESCRIPTION
+          <div className="flex flex-col gap-2.5">
+            <h3 className="text-[11px] font-mono text-[#525252] tracking-[2px] uppercase">
+              Description
             </h3>
             <p className="text-[15px] text-[#a3a3a3] leading-relaxed">
               {submission.description}
@@ -233,22 +265,24 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
 
         {/* Notes */}
         {submission.notes && (
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[12px] font-mono text-[#525252] tracking-[2px]">
-              NOTES
+          <div className="flex flex-col gap-2.5">
+            <h3 className="text-[11px] font-mono text-[#525252] tracking-[2px] uppercase">
+              Notes
             </h3>
-            <p className="text-[15px] text-[#a3a3a3] leading-relaxed whitespace-pre-wrap">
-              {submission.notes}
-            </p>
+            <div className="px-4 py-3 bg-[#111] border-l-2 border-[#333] rounded-r-md">
+              <p className="text-[14px] text-[#a3a3a3] leading-relaxed whitespace-pre-wrap">
+                {submission.notes}
+              </p>
+            </div>
           </div>
         )}
 
         {/* Categories */}
         {allCategories.length > 0 && (
-          <div className="flex flex-col gap-3">
-            <h3 className="text-[12px] font-mono text-[#525252] tracking-[2px] flex items-center gap-2">
-              <Tag className="w-3.5 h-3.5" />
-              CATEGORIES
+          <div className="flex flex-col gap-2.5">
+            <h3 className="text-[11px] font-mono text-[#525252] tracking-[2px] uppercase flex items-center gap-1.5">
+              <Tag className="w-3 h-3" />
+              Categories
             </h3>
             <div className="flex flex-wrap gap-2">
               {allCategories.map((cat) => (
@@ -263,21 +297,25 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
           </div>
         )}
 
+        {/* Divider */}
+        <div className="h-px bg-[#262626]" />
+
         {/* Links */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-[12px] font-mono text-[#525252] tracking-[2px]">
-            LINKS
+          <h3 className="text-[11px] font-mono text-[#525252] tracking-[2px] uppercase">
+            Links
           </h3>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-2">
             {submission.live_url && (
               <a
                 href={submission.live_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-[#0a0a0a] rounded-full text-[13px] font-medium transition-all duration-200 hover:bg-[#e5e5e5]"
+                className="flex items-center gap-3 px-4 py-3 bg-white text-[#0a0a0a] rounded-lg text-[13px] font-medium transition-all duration-200 hover:bg-[#e5e5e5]"
               >
                 <Globe className="w-4 h-4" />
                 Visit Live Site
+                <ExternalLink className="w-3.5 h-3.5 ml-auto opacity-50" />
               </a>
             )}
             {submission.v0_project_url && (
@@ -285,10 +323,11 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
                 href={submission.v0_project_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-full text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-lg text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
               >
                 <ExternalLink className="w-4 h-4" />
                 v0 Project
+                <ExternalLink className="w-3.5 h-3.5 ml-auto opacity-30" />
               </a>
             )}
             {submission.github_repo_url && (
@@ -296,10 +335,11 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
                 href={submission.github_repo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-full text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-lg text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
               >
                 <Github className="w-4 h-4" />
-                GitHub
+                GitHub Repository
+                <ExternalLink className="w-3.5 h-3.5 ml-auto opacity-30" />
               </a>
             )}
             {submission.video_url && (
@@ -307,10 +347,11 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
                 href={submission.video_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-full text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-lg text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
               >
                 <Video className="w-4 h-4" />
                 Video Walkthrough
+                <ExternalLink className="w-3.5 h-3.5 ml-auto opacity-30" />
               </a>
             )}
             {submission.social_proof_link && (
@@ -318,10 +359,11 @@ function SubmissionDetail({ submission }: { submission: Submission }) {
                 href={submission.social_proof_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-full text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 bg-[#141414] border border-[#262626] text-[#a3a3a3] rounded-lg text-[13px] font-medium transition-all duration-200 hover:bg-[#1a1a1a] hover:text-white"
               >
                 <ExternalLink className="w-4 h-4" />
                 Social Post
+                <ExternalLink className="w-3.5 h-3.5 ml-auto opacity-30" />
               </a>
             )}
           </div>

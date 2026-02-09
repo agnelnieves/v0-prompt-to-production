@@ -266,15 +266,21 @@ export function BatchProcessor() {
           const ctx = canvas.getContext("2d")
           if (!ctx) return reject("No ctx")
 
-          // Check for MediaRecorder support
-          const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
-            ? "video/webm;codecs=vp9"
-            : MediaRecorder.isTypeSupported("video/webm")
-              ? "video/webm"
-              : "video/mp4"
+          // Prefer MP4 if supported, fall back to WebM
+          const mimeType = MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")
+            ? "video/mp4;codecs=avc1"
+            : MediaRecorder.isTypeSupported("video/mp4")
+              ? "video/mp4"
+              : MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
+                ? "video/webm;codecs=vp9"
+                : "video/webm"
 
-          const stream = canvas.captureStream(30)
-          const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8_000_000 })
+          const TARGET_FPS = 60
+          const stream = canvas.captureStream(TARGET_FPS)
+          const recorder = new MediaRecorder(stream, {
+            mimeType,
+            videoBitsPerSecond: 12_000_000,
+          })
           const chunks: Blob[] = []
 
           recorder.ondataavailable = (e) => {
@@ -286,22 +292,45 @@ export function BatchProcessor() {
             resolve(URL.createObjectURL(blob))
           }
 
-          recorder.start()
+          recorder.start(100) // collect data every 100ms for smoother output
           video.play()
 
-          const drawFrame = () => {
-            if (video.ended || video.paused) {
-              recorder.stop()
+          // Use a consistent frame interval for smooth output
+          const frameInterval = 1000 / TARGET_FPS
+          let lastFrameTime = 0
+          let stopped = false
+
+          const drawFrame = (timestamp: number) => {
+            if (stopped || video.ended || video.paused) {
+              if (!stopped) {
+                stopped = true
+                recorder.stop()
+              }
               return
             }
-            ctx.drawImage(video, 0, 0, w, h)
-            applyAdjustments(ctx, w, h, adjustments)
-            drawOverlay(ctx, w, h)
+
+            if (timestamp - lastFrameTime >= frameInterval) {
+              ctx.drawImage(video, 0, 0, w, h)
+              applyAdjustments(ctx, w, h, adjustments)
+              drawOverlay(ctx, w, h)
+              lastFrameTime = timestamp
+            }
+
             requestAnimationFrame(drawFrame)
           }
 
-          drawFrame()
-          video.onended = () => recorder.stop()
+          requestAnimationFrame(drawFrame)
+
+          video.onended = () => {
+            if (!stopped) {
+              stopped = true
+              // Draw one last frame to avoid cutting short
+              ctx.drawImage(video, 0, 0, w, h)
+              applyAdjustments(ctx, w, h, adjustments)
+              drawOverlay(ctx, w, h)
+              setTimeout(() => recorder.stop(), 200)
+            }
+          }
         }
 
         video.onerror = () => reject("Failed to load video")
@@ -392,11 +421,23 @@ export function BatchProcessor() {
     const logoSize = 32 * scale
     const bottomY = h - padding
 
+    // "Prompt to" / "Prod Miami" text (draw first to establish text position)
+    ctx.fillStyle = "white"
+    ctx.font = `bold ${38 * scale}px 'Geist', 'Arial', sans-serif`
+    ctx.textBaseline = "bottom"
+    const textLine2Y = bottomY
+    const textLine1Y = bottomY - 42 * scale
+    ctx.fillText("Prompt to", padding, textLine1Y)
+    ctx.fillText("Prod Miami", padding, textLine2Y)
+
+    // Logos sit above the text with clear spacing
+    const logoRowY = textLine1Y - 16 * scale - logoSize
+
     // Vercel triangle
-    drawVercelTriangle(ctx, padding, bottomY - logoSize * 2.8 - 10 * scale, logoSize)
+    drawVercelTriangle(ctx, padding, logoRowY, logoSize)
 
     // Slash
-    drawSlash(ctx, padding + logoSize + 10 * scale, bottomY - logoSize * 2.8 - 6 * scale, logoSize * 0.8)
+    drawSlash(ctx, padding + logoSize + 10 * scale, logoRowY + 4 * scale, logoSize * 0.8)
 
     // v0 logo
     if (v0LogoRef.current) {
@@ -405,18 +446,11 @@ export function BatchProcessor() {
       ctx.drawImage(
         v0LogoRef.current,
         padding + logoSize + 10 * scale + logoSize * 0.35 + 8 * scale,
-        bottomY - logoSize * 2.8 - 4 * scale,
+        logoRowY + 2 * scale,
         v0W,
         v0H
       )
     }
-
-    // "Prompt to" / "Prod Miami" text
-    ctx.fillStyle = "white"
-    ctx.font = `bold ${38 * scale}px 'Geist', 'Arial', sans-serif`
-    ctx.textBaseline = "bottom"
-    ctx.fillText("Prompt to", padding, bottomY - 42 * scale)
-    ctx.fillText("Prod Miami", padding, bottomY)
 
     // ── Bottom-right: The Lab Miami logo ──
     if (labLogoRef.current) {
@@ -460,7 +494,7 @@ export function BatchProcessor() {
       setTimeout(() => {
         const a = document.createElement("a")
         a.href = f.processedUrl!
-        const ext = f.type === "image" ? "png" : "webm"
+        const ext = f.type === "image" ? "png" : "mp4"
         const baseName = f.file.name.replace(/\.[^.]+$/, "")
         a.download = `${baseName}-branded.${ext}`
         document.body.appendChild(a)

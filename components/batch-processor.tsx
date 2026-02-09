@@ -431,8 +431,8 @@ export function BatchProcessor() {
     ctx.fillText("Prompt to", padding, textLine1Y)
     ctx.fillText("Prod Miami", padding, textLine2Y)
 
-    // Logo block positioned above text with clear spacing
-    const logoTextGap = 24 * scale
+    // Logo block positioned well above text with much larger spacing
+    const logoTextGap = 50 * scale
     const logoRowY = textLine1Y - logoTextGap - logoSize
 
     // Vercel triangle

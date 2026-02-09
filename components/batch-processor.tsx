@@ -67,8 +67,8 @@ function drawVercelTriangle(ctx: CanvasRenderingContext2D, x: number, y: number,
   ctx.fillStyle = "white"
   ctx.beginPath()
   ctx.moveTo(x + size / 2, y)
-  ctx.lineTo(x + size, y + size * 0.7)
-  ctx.lineTo(x, y + size * 0.7)
+  ctx.lineTo(x + size, y + size * 0.873)
+  ctx.lineTo(x, y + size * 0.873)
   ctx.closePath()
   ctx.fill()
   ctx.restore()
@@ -506,7 +506,7 @@ export function BatchProcessor() {
     })
   }, [files, selectedFiles])
 
-  // ─── Selection ──────────────────────────────────────────────────────────
+  // ─── Selection ────────────────────��─────────────────────────────────────
 
   const toggleSelect = (id: string) => {
     setSelectedFiles((prev) => {

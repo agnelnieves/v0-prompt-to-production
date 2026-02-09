@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback, useEffect } from "react"
+import JSZip from "jszip"
 import {
   Upload,
   Download,
@@ -47,7 +48,7 @@ const DEFAULT_ADJUSTMENTS: AdjustmentPreset = {
   saturation: 0,
   contrast: 10,
   brightness: 0,
-  grain: 15,
+  grain: 0,
   vignette: 30,
 }
 
@@ -592,21 +593,56 @@ export function BatchProcessor() {
 
   // ─── Download ───────────────────────────────────────────────────────────
 
-  const downloadAll = useCallback(() => {
-    const toDownload = files.filter((f) => f.processedUrl && (selectedFiles.size === 0 || selectedFiles.has(f.id)))
+  const [downloading, setDownloading] = useState(false)
 
-    toDownload.forEach((f, index) => {
-      setTimeout(() => {
-        const a = document.createElement("a")
-        a.href = f.processedUrl!
-        const ext = f.type === "image" ? "png" : "mp4"
-        const baseName = f.file.name.replace(/\.[^.]+$/, "")
-        a.download = `${baseName}-branded.${ext}`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-      }, index * 300)
-    })
+  const downloadAll = useCallback(async () => {
+    const toDownload = files.filter((f) => f.processedUrl && (selectedFiles.size === 0 || selectedFiles.has(f.id)))
+    if (toDownload.length === 0) return
+
+    // Single file — direct download, no zip needed
+    if (toDownload.length === 1) {
+      const f = toDownload[0]
+      const a = document.createElement("a")
+      a.href = f.processedUrl!
+      const ext = f.type === "image" ? "png" : "mp4"
+      const baseName = f.file.name.replace(/\.[^.]+$/, "")
+      a.download = `${baseName}-branded.${ext}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      return
+    }
+
+    // Multiple files — bundle into a zip
+    setDownloading(true)
+    try {
+      const zip = new JSZip()
+
+      await Promise.all(
+        toDownload.map(async (f) => {
+          const ext = f.type === "image" ? "png" : (f.processedUrl!.includes("webm") ? "webm" : "mp4")
+          const baseName = f.file.name.replace(/\.[^.]+$/, "")
+          const fileName = `${baseName}-branded.${ext}`
+          const response = await fetch(f.processedUrl!)
+          const blob = await response.blob()
+          zip.file(fileName, blob)
+        })
+      )
+
+      const zipBlob = await zip.generateAsync({ type: "blob" })
+      const url = URL.createObjectURL(zipBlob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "branded-assets.zip"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error("Zip creation failed:", err)
+    } finally {
+      setDownloading(false)
+    }
   }, [files, selectedFiles])
 
   // ─── Selection ────────────────────��─────────────────────────────────────
@@ -906,11 +942,15 @@ export function BatchProcessor() {
               </button>
               <button
                 onClick={downloadAll}
-                disabled={processedCount === 0}
+                disabled={processedCount === 0 || downloading}
                 className="w-full flex items-center justify-center gap-2.5 py-3 border border-[#262626] text-white font-mono text-xs tracking-wider hover:bg-[#0a0a0a] hover:border-[#404040] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <Download className="w-4 h-4" />
-                DOWNLOAD {processedCount > 0 ? `(${processedCount})` : "ALL"}
+                {downloading ? (
+                  <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                {downloading ? "ZIPPING..." : `DOWNLOAD ${processedCount > 0 ? `(${processedCount})` : "ALL"}`}
               </button>
             </div>
 

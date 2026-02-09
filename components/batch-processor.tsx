@@ -13,6 +13,10 @@ import {
   X,
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  MousePointerClick,
+  Maximize2,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -93,6 +97,8 @@ export function BatchProcessor() {
   const [newPresetName, setNewPresetName] = useState("")
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set())
   const [processing, setProcessing] = useState(false)
+  const [selectMode, setSelectMode] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -483,6 +489,33 @@ export function BatchProcessor() {
     }
   }
 
+  const toggleSelectMode = () => {
+    setSelectMode((prev) => {
+      if (prev) setSelectedFiles(new Set())
+      return !prev
+    })
+  }
+
+  // Lightbox navigation
+  const openLightbox = (index: number) => setLightboxIndex(index)
+  const closeLightbox = () => setLightboxIndex(null)
+  const lightboxPrev = () =>
+    setLightboxIndex((i) => (i !== null ? (i - 1 + files.length) % files.length : null))
+  const lightboxNext = () =>
+    setLightboxIndex((i) => (i !== null ? (i + 1) % files.length : null))
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox()
+      else if (e.key === "ArrowLeft") lightboxPrev()
+      else if (e.key === "ArrowRight") lightboxNext()
+    }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [lightboxIndex, files.length])
+
   const removeFiles = () => {
     const toRemove = selectedFiles.size > 0 ? selectedFiles : new Set(files.map((f) => f.id))
     setFiles((prev) => {
@@ -539,17 +572,33 @@ export function BatchProcessor() {
             {files.length > 0 && (
               <>
                 <button
-                  onClick={selectAll}
-                  className="font-mono text-[11px] text-[#737373] tracking-wider hover:text-white transition-colors px-3 py-1.5 border border-[#262626] hover:border-[#404040]"
+                  onClick={toggleSelectMode}
+                  className={`font-mono text-[11px] tracking-wider transition-colors px-3 py-1.5 border flex items-center gap-2 ${
+                    selectMode
+                      ? "text-white border-white bg-white/10"
+                      : "text-[#737373] border-[#262626] hover:border-[#404040] hover:text-white"
+                  }`}
                 >
-                  {selectedFiles.size === files.length ? "DESELECT ALL" : "SELECT ALL"}
+                  <MousePointerClick className="w-3.5 h-3.5" />
+                  {selectMode ? "EXIT SELECT" : "SELECT"}
                 </button>
-                <button
-                  onClick={removeFiles}
-                  className="font-mono text-[11px] text-[#737373] tracking-wider hover:text-red-400 transition-colors px-3 py-1.5 border border-[#262626] hover:border-red-400/30"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                {selectMode && (
+                  <>
+                    <button
+                      onClick={selectAll}
+                      className="font-mono text-[11px] text-[#737373] tracking-wider hover:text-white transition-colors px-3 py-1.5 border border-[#262626] hover:border-[#404040]"
+                    >
+                      {selectedFiles.size === files.length ? "DESELECT ALL" : "SELECT ALL"}
+                    </button>
+                    <button
+                      onClick={removeFiles}
+                      disabled={selectedFiles.size === 0}
+                      className="font-mono text-[11px] text-[#737373] tracking-wider hover:text-red-400 transition-colors px-3 py-1.5 border border-[#262626] hover:border-red-400/30 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -768,12 +817,14 @@ export function BatchProcessor() {
               onDrop={handleDrop}
               className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-[#262626]"
             >
-              {files.map((file) => (
+              {files.map((file, index) => (
                 <FileCard
                   key={file.id}
                   file={file}
                   selected={selectedFiles.has(file.id)}
+                  selectMode={selectMode}
                   onToggle={() => toggleSelect(file.id)}
+                  onOpen={() => openLightbox(index)}
                 />
               ))}
               {/* Add more button */}
@@ -790,6 +841,106 @@ export function BatchProcessor() {
           )}
         </main>
       </div>
+
+      {/* ─── Lightbox modal ─── */}
+      {lightboxIndex !== null && files[lightboxIndex] && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          {/* Top bar */}
+          <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-4 z-10">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[11px] text-[#737373] tracking-wider">
+                {lightboxIndex + 1} / {files.length}
+              </span>
+              <span className="font-mono text-[11px] text-[#a0a0a0] tracking-wide truncate max-w-[240px]">
+                {files[lightboxIndex].file.name}
+              </span>
+              {files[lightboxIndex].processedUrl && (
+                <span className="font-mono text-[9px] text-black bg-white px-1.5 py-0.5 tracking-wider">
+                  PROCESSED
+                </span>
+              )}
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                closeLightbox()
+              }}
+              className="w-10 h-10 flex items-center justify-center border border-[#262626] hover:border-[#404040] hover:bg-[#0a0a0a] transition-colors"
+            >
+              <X className="w-5 h-5 text-[#737373]" />
+            </button>
+          </div>
+
+          {/* Navigation: Left */}
+          {files.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                lightboxPrev()
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center border border-[#262626] hover:border-[#404040] hover:bg-[#0a0a0a] transition-colors"
+            >
+              <ChevronLeft className="w-6 h-6 text-[#a0a0a0]" />
+            </button>
+          )}
+
+          {/* Navigation: Right */}
+          {files.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                lightboxNext()
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center border border-[#262626] hover:border-[#404040] hover:bg-[#0a0a0a] transition-colors"
+            >
+              <ChevronRight className="w-6 h-6 text-[#a0a0a0]" />
+            </button>
+          )}
+
+          {/* Content */}
+          <div
+            className="max-w-[90vw] max-h-[80vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {files[lightboxIndex].type === "image" ? (
+              <img
+                src={files[lightboxIndex].processedUrl || files[lightboxIndex].originalUrl}
+                alt={files[lightboxIndex].file.name}
+                className="max-w-full max-h-[80vh] object-contain"
+              />
+            ) : (
+              <video
+                src={files[lightboxIndex].processedUrl || files[lightboxIndex].originalUrl}
+                className="max-w-full max-h-[80vh] object-contain"
+                controls
+                autoPlay
+                playsInline
+              />
+            )}
+          </div>
+
+          {/* Bottom info bar */}
+          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-[11px] text-[#404040] tracking-wider flex items-center gap-1.5">
+                {files[lightboxIndex].type === "image" ? (
+                  <ImageIcon className="w-3 h-3" />
+                ) : (
+                  <Video className="w-3 h-3" />
+                )}
+                {files[lightboxIndex].width > 0 &&
+                  `${files[lightboxIndex].width} x ${files[lightboxIndex].height}`}
+              </span>
+            </div>
+            <span className="font-mono text-[11px] text-[#404040] tracking-wider">
+              ESC to close / Arrow keys to navigate
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -830,17 +981,29 @@ function SliderControl({
 function FileCard({
   file,
   selected,
+  selectMode,
   onToggle,
+  onOpen,
 }: {
   file: MediaFile
   selected: boolean
+  selectMode: boolean
   onToggle: () => void
+  onOpen: () => void
 }) {
   const displayUrl = file.processedUrl || file.originalUrl
 
+  const handleClick = () => {
+    if (selectMode) {
+      onToggle()
+    } else {
+      onOpen()
+    }
+  }
+
   return (
     <div
-      onClick={onToggle}
+      onClick={handleClick}
       className={`relative bg-black aspect-[4/3] overflow-hidden cursor-pointer group transition-all ${
         selected ? "ring-2 ring-white ring-inset" : ""
       }`}
@@ -873,14 +1036,25 @@ function FileCard({
       {/* Hover overlay */}
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
 
-      {/* Select indicator */}
-      <div
-        className={`absolute top-3 left-3 w-5 h-5 border flex items-center justify-center transition-all ${
-          selected ? "bg-white border-white" : "border-[#737373] opacity-0 group-hover:opacity-100"
-        }`}
-      >
-        {selected && <Check className="w-3 h-3 text-black" />}
-      </div>
+      {/* Select checkbox - only visible in select mode */}
+      {selectMode && (
+        <div
+          className={`absolute top-3 left-3 w-5 h-5 border flex items-center justify-center transition-all ${
+            selected ? "bg-white border-white" : "border-[#737373]"
+          }`}
+        >
+          {selected && <Check className="w-3 h-3 text-black" />}
+        </div>
+      )}
+
+      {/* Expand icon - visible on hover in view mode */}
+      {!selectMode && (
+        <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="w-7 h-7 flex items-center justify-center bg-black/60 backdrop-blur-sm border border-[#404040]">
+            <Maximize2 className="w-3.5 h-3.5 text-[#a0a0a0]" />
+          </div>
+        </div>
+      )}
 
       {/* File type badge */}
       <div className="absolute top-3 right-3 flex items-center gap-1.5">

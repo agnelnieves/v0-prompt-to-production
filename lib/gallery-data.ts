@@ -37,7 +37,7 @@ type SortableItem = GalleryItem & { sortKey: string }
 
 const allItems: SortableItem[] = [
   ...imageNames.map((name) => ({
-    src: `/img/${name}-branded.png`,
+    src: `/img/${name}-branded.webp`,
     type: "image" as const,
     sortKey: name,
   })),

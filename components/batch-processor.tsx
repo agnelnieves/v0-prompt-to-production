@@ -416,12 +416,13 @@ export function BatchProcessor() {
     ctx.fillStyle = gradient
     ctx.fillRect(0, h - gradientHeight, w, gradientHeight)
 
-    // ── Bottom-left: Vercel triangle / v0 logo + text ──
+    // ── Bottom-left: Vercel triangle / v0 logo + text (stacked vertically) ──
     const padding = 40 * scale
     const logoSize = 32 * scale
     const bottomY = h - padding
 
-    // "Prompt to" / "Prod Miami" text (draw first to establish text position)
+    // Position stack at the bottom and work upward
+    // Text block: 2 lines
     ctx.fillStyle = "white"
     ctx.font = `bold ${38 * scale}px 'Geist', 'Arial', sans-serif`
     ctx.textBaseline = "bottom"
@@ -430,8 +431,9 @@ export function BatchProcessor() {
     ctx.fillText("Prompt to", padding, textLine1Y)
     ctx.fillText("Prod Miami", padding, textLine2Y)
 
-    // Logos sit above the text with clear spacing
-    const logoRowY = textLine1Y - 16 * scale - logoSize
+    // Logo block positioned above text with clear spacing
+    const logoTextGap = 24 * scale
+    const logoRowY = textLine1Y - logoTextGap - logoSize
 
     // Vercel triangle
     drawVercelTriangle(ctx, padding, logoRowY, logoSize)

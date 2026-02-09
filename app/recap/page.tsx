@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
 import { Dithering } from "@paper-design/shaders-react"
-import { ExternalLink, ArrowLeft, Trophy, Award, Sparkles } from "lucide-react"
-import { ImageLightbox } from "@/components/image-lightbox"
+import { ExternalLink, ArrowLeft, Trophy, Award, Sparkles, Play } from "lucide-react"
+import { MediaLightbox } from "@/components/media-lightbox"
+import { galleryItems } from "@/lib/gallery-data"
 import { logos } from "@/lib/data"
 import Link from "next/link"
 
@@ -89,26 +89,8 @@ const winners = {
   ],
 }
 
-const galleryImages = [
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/v0-prod-miami-full-QPTgdUpId1TFlZpUEejxH7NBjQBWEF.png",
-    alt: "Developers building at The Lab Miami during the Prompt to Production event",
-    width: 1280,
-    height: 960,
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/v0-prod-miami-group-kzJ8lOWAJ4gdm1zxKgfQCmnKzknhMb.png",
-    alt: "Group photo of Prompt to Production Miami attendees",
-    width: 1280,
-    height: 960,
-  },
-  {
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/v0-prod-miami-prezi-BarKiBdk5j3MUw5synBuAYRfCmmbLU.png",
-    alt: "Prompt to Production presentation at The Lab Miami",
-    width: 1280,
-    height: 960,
-  },
-]
+// Show a curated subset of 6 items from the gallery for the recap preview
+const recapPreviewItems = galleryItems.slice(0, 6)
 
 export default function RecapPage() {
   const [mounted, setMounted] = useState(false)
@@ -262,17 +244,11 @@ export default function RecapPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
-            {galleryImages.map((image, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-5">
+            {recapPreviewItems.map((item, index) => (
               <div
-                key={index}
-                className={`relative overflow-hidden rounded-lg group cursor-zoom-in ${
-                  index === 0
-                    ? "md:mt-0"
-                    : index === 1
-                      ? "md:mt-12 lg:mt-16"
-                      : "md:-mt-4 lg:-mt-8"
-                } transition-all duration-1000`}
+                key={item.src}
+                className="relative overflow-hidden rounded-lg group cursor-zoom-in bg-[#111] transition-all duration-1000"
                 style={{
                   transitionDelay: `${200 + index * 150}ms`,
                   opacity: gallerySection.isInView ? 1 : 0,
@@ -283,7 +259,7 @@ export default function RecapPage() {
                 onClick={() => setLightboxIndex(index)}
                 role="button"
                 tabIndex={0}
-                aria-label={`View ${image.alt}`}
+                aria-label={`View ${item.type === "video" ? "video" : "photo"} ${index + 1}`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault()
@@ -292,30 +268,62 @@ export default function RecapPage() {
                 }}
               >
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    className="object-cover w-full h-full grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
-                  />
+                  {item.type === "video" ? (
+                    <>
+                      <video
+                        src={item.src}
+                        preload="metadata"
+                        muted
+                        playsInline
+                        className="object-cover w-full h-full grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                        <div className="rounded-full bg-black/60 backdrop-blur-sm p-2.5">
+                          <Play className="w-5 h-5 text-white fill-white" />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={item.src}
+                      alt={`Event photo ${index + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                      className="object-cover w-full h-full grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-black/10 transition-opacity duration-500 group-hover:opacity-0" />
                 </div>
               </div>
             ))}
-
-            {/* Lightbox */}
-            {lightboxIndex !== null && (
-              <ImageLightbox
-                src={galleryImages[lightboxIndex].src}
-                alt={galleryImages[lightboxIndex].alt}
-                width={galleryImages[lightboxIndex].width}
-                height={galleryImages[lightboxIndex].height}
-                isOpen={true}
-                onClose={() => setLightboxIndex(null)}
-              />
-            )}
           </div>
+
+          {/* See full gallery button */}
+          <div
+            className={`flex justify-center transition-all duration-1000 delay-[1000ms] ${gallerySection.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          >
+            <Link
+              href="/gallery"
+              className="group inline-flex items-center gap-3 font-mono text-[14px] text-[#737373] tracking-[2.8px] transition-colors duration-300 hover:text-white"
+            >
+              SEE THE FULL GALLERY
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                &rarr;
+              </span>
+            </Link>
+          </div>
+
+          {/* Lightbox */}
+          {lightboxIndex !== null && (
+            <MediaLightbox
+              items={recapPreviewItems}
+              currentIndex={lightboxIndex}
+              isOpen={true}
+              onClose={() => setLightboxIndex(null)}
+              onIndexChange={(index) => setLightboxIndex(index)}
+            />
+          )}
         </section>
 
         {/* Winners Section - Gail Challenge & Kurzo */}
@@ -421,19 +429,17 @@ export default function RecapPage() {
           </div>
         </section>
 
-        {/* Global Tracks Link */}
+        {/* Submissions Link */}
         <section className="border-t lg:border lg:border-b-0 border-[#262626] px-6 lg:px-16 py-12 lg:py-16 flex items-center justify-center">
-          <a
-            href="https://v0-v0prompttoproduction2026.vercel.app/browse"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/submissions"
             className="group flex items-center gap-3 text-[#737373] hover:text-white transition-colors duration-300"
           >
             <span className="font-mono text-[14px] tracking-[2.8px]">
-              VIEW ALL GLOBAL SUBMISSIONS
+              VIEW ALL THE SUBMISSIONS
             </span>
             <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
+          </Link>
         </section>
 
         {/* Closing CTA */}

@@ -143,14 +143,14 @@ export default function ZeroToAgentPage() {
             </p>
           </div>
 
-          <h1 className="text-[60px] md:text-[100px] lg:text-[137px] font-normal leading-[1] lg:leading-[110px] tracking-[-0.04em] lg:tracking-[-5.48px] text-white overflow-hidden">
+          <h1 className="text-[60px] md:text-[100px] lg:text-[137px] font-normal leading-[1] lg:leading-[110px] tracking-[-0.04em] lg:tracking-[-5.48px] text-white">
             <span
-              className={`block transition-all duration-1000 delay-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}`}
+              className={`block overflow-hidden transition-all duration-1000 delay-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}`}
             >
               Zero{" "}
             </span>
             <span
-              className={`block transition-all duration-1000 delay-700 font-pixel ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}`}
+              className={`block pb-4 transition-all duration-1000 delay-700 font-pixel ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}`}
             >
               to Agent
             </span>

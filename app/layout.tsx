@@ -1,11 +1,13 @@
 import React from "react"
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { GeistPixelSquare } from 'geist/font/pixel'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const geistPixelSquare = GeistPixelSquare();
 
 export const metadata: Metadata = {
   title: 'v0 IRL Miami - Prompt to Production',
@@ -37,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased dark`}>
+      <body className={`font-sans antialiased dark ${geistPixelSquare.variable}`}>
         {children}
         <Analytics />
         <script id="luma-checkout" src="https://embed.lu.ma/checkout-button.js" async />

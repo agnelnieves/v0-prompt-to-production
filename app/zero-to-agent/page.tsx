@@ -150,7 +150,7 @@ export default function ZeroToAgentPage() {
               Zero{" "}
             </span>
             <span
-              className={`block transition-all duration-1000 delay-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}`}
+              className={`block transition-all duration-1000 delay-700 font-pixel ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}`}
             >
               to Agent
             </span>

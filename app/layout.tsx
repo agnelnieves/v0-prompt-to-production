@@ -7,7 +7,6 @@ import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
-const geistPixelSquare = GeistPixelSquare();
 
 export const metadata: Metadata = {
   title: 'v0 IRL Miami - Prompt to Production',
@@ -39,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased dark ${geistPixelSquare.variable}`}>
+      <body className={`font-sans antialiased dark ${GeistPixelSquare.variable}`}>
         {children}
         <Analytics />
         <script id="luma-checkout" src="https://embed.lu.ma/checkout-button.js" async />

@@ -6,11 +6,11 @@ export const zeroToAgentData = {
   tagline: "Global Build Week",
   greeting: "YOU'RE INVITED TO BUILD",
 
-  // Date & Location (placeholders as requested)
-  date: "APRIL 24 – MAY 3, 2026",
+  // Date & Location
+  date: "APRIL 18, 2026",
   locationLabel: "LOCATION",
-  venue: "Worldwide (IRL + Virtual)",
-  venueAddress: "",
+  venue: "THE LAB Miami",
+  venueAddress: "https://maps.app.goo.gl/thelabmiami",
 
   // Event URL
   eventUrl: "https://community.vercel.com/host/zero-to-agent-2026",
@@ -93,5 +93,49 @@ export const judgingCriteria = [
   {
     title: "Creativity",
     description: "Originality and innovative approach",
+  },
+]
+
+export const zeroToAgentSponsors = [
+  {
+    name: "Vercel",
+    logo: "/sponsors/vercel.svg",
+    url: "https://vercel.com",
+    assetType: "svg" as const,
+    height: 37,
+  },
+  {
+    name: "Basement",
+    logo: "/sponsors/basement.svg",
+    url: "https://basement.dev",
+    assetType: "svg" as const,
+  },
+  {
+    name: "UKG",
+    logo: "/sponsors/ukg.svg",
+    url: "https://www.ukg.com",
+    assetType: "svg" as const,
+    height: 47,
+  },
+  {
+    name: "The Lab Miami",
+    logo: "/sponsors/the-lab.svg",
+    url: "https://thelabmiami.com",
+    assetType: "svg" as const,
+    height: 93,
+  },
+  {
+    name: "DeepStation",
+    logo: "/sponsors/deepstation.svg",
+    url: "https://deepstation.ai",
+    assetType: "svg" as const,
+    height: 47,
+  },
+  {
+    name: "Glue Studios",
+    logo: "/sponsors/glue-studios.svg",
+    url: "https://www.thecreativeglue.com",
+    assetType: "svg" as const,
+    height: 47,
   },
 ]

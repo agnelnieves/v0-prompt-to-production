@@ -135,7 +135,7 @@ export default function RecapPage() {
         <div className="relative mx-auto max-w-[1400px] px-6 lg:px-0 py-8 lg:py-[49px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[18px] group cursor-pointer">
-              <Link href="/" className="flex items-center gap-[18px]">
+              <Link href="/events/2026/prompt-to-prod" className="flex items-center gap-[18px]">
                 <img
                   src={logos.v0 || "/placeholder.svg"}
                   alt="v0"
@@ -147,7 +147,7 @@ export default function RecapPage() {
               </Link>
             </div>
             <Link
-              href="/"
+              href="/events/2026/prompt-to-prod"
               className="group flex items-center gap-2 font-mono text-[12px] text-[#737373] tracking-[2.4px] transition-colors duration-300 hover:text-white"
             >
               <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />

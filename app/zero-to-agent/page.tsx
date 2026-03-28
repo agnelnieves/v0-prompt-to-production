@@ -98,12 +98,12 @@ export default function ZeroToAgentPage() {
             </a>
             <div className="flex items-center gap-[18px]">
               <a
-                href={zeroToAgentData.eventUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center"
+                href="https://lu.ma/event/evt-97nmj0gu"
+                className="luma-checkout--button group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center"
+                data-luma-action="checkout"
+                data-luma-event-id="evt-97nmj0gu"
               >
-                Join the Build
+                Register
                 <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </span>
@@ -357,12 +357,12 @@ export default function ZeroToAgentPage() {
             className={`relative z-10 transition-all duration-1000 delay-200 ${ctaSection.isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
           >
             <a
-              href={zeroToAgentData.eventUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center"
+              href="https://lu.ma/event/evt-97nmj0gu"
+              className="luma-checkout--button group bg-white text-[#0f172a] px-6 py-3 rounded-full text-[16px] font-medium leading-[24px] transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center"
+              data-luma-action="checkout"
+              data-luma-event-id="evt-97nmj0gu"
             >
-              Join the Build
+              Register
               <span className="w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100">
                 <ExternalLink className="w-4 h-4 ml-2" />
               </span>

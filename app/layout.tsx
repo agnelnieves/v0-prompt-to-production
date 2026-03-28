@@ -9,9 +9,28 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 IRL Miami - Prompt to Production',
-  description: 'v0 is getting ready to launch its biggest product update yet. Join us at The Dock, Wynwood on February 7, 2026.',
+  title: 'v0 IRL Miami - Zero to Agent',
+  description: 'Zero to Agent is a global build week where we ship real AI agents with v0 and Vercel. Join us on April 18, 2026 at THE LAB Miami.',
   generator: 'v0.app',
+  openGraph: {
+    title: 'v0 IRL Miami - Zero to Agent',
+    description: 'Zero to Agent is a global build week where we ship real AI agents with v0 and Vercel. Join us on April 18, 2026 at THE LAB Miami.',
+    type: 'website',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 2400,
+        height: 1256,
+        alt: 'Zero to Agent - Global Build Week - Miami/FL',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'v0 IRL Miami - Zero to Agent',
+    description: 'Zero to Agent is a global build week where we ship real AI agents with v0 and Vercel. Join us on April 18, 2026 at THE LAB Miami.',
+    images: ['/opengraph-image.png'],
+  },
   icons: {
     icon: [
       {

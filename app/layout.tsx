@@ -9,28 +9,28 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Zero to Agent | Global Build Week by v0 & Vercel',
-  description: 'Ship real AI agents in one week. $6,000+ in prizes. Build with v0, deploy on Vercel. April 24 - May 3, 2026.',
+  title: 'Zero to Agent Miami | v0 IRL at THE LAB Miami',
+  description: 'Join us in Miami for Zero to Agent - build and ship real AI agents with v0 and Vercel. Live at THE LAB Miami, April 24 - May 3, 2026.',
   generator: 'v0.app',
-  keywords: ['AI agents', 'v0', 'Vercel', 'hackathon', 'build week', 'competition', 'AI development'],
+  keywords: ['AI agents', 'v0', 'Vercel', 'Miami', 'THE LAB Miami', 'hackathon', 'build week', 'AI development'],
   openGraph: {
-    title: 'Zero to Agent | Global Build Week',
-    description: 'Ship real AI agents in one week. $6,000+ in prizes. Build with v0, deploy on Vercel. April 24 - May 3, 2026.',
+    title: 'Zero to Agent Miami | v0 IRL',
+    description: 'Join us in Miami for Zero to Agent - build and ship real AI agents with v0 and Vercel. Live at THE LAB Miami, April 24 - May 3, 2026.',
     type: 'website',
-    siteName: 'Zero to Agent',
+    siteName: 'Zero to Agent Miami',
     images: [
       {
         url: '/opengraph-image.png',
         width: 2400,
         height: 1256,
-        alt: 'Zero to Agent - Global Build Week - Ship AI Agents with v0 & Vercel',
+        alt: 'Zero to Agent Miami - v0 IRL at THE LAB Miami',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zero to Agent | Global Build Week',
-    description: 'Ship real AI agents in one week. $6,000+ in prizes. Build with v0, deploy on Vercel. April 24 - May 3, 2026.',
+    title: 'Zero to Agent Miami | v0 IRL',
+    description: 'Join us in Miami for Zero to Agent - build and ship real AI agents with v0 and Vercel. Live at THE LAB Miami, April 24 - May 3, 2026.',
     images: ['/opengraph-image.png'],
     creator: '@v0',
   },

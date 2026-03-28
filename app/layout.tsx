@@ -9,27 +9,30 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 IRL Miami - Zero to Agent',
-  description: 'Zero to Agent is a global build week where we ship real AI agents with v0 and Vercel. Join us on April 18, 2026 at THE LAB Miami.',
+  title: 'Zero to Agent Miami | v0 IRL at THE LAB Miami',
+  description: 'Join us in Miami for Zero to Agent - build and ship real AI agents with v0 and Vercel. Live at THE LAB Miami, April 24 - May 3, 2026.',
   generator: 'v0.app',
+  keywords: ['AI agents', 'v0', 'Vercel', 'Miami', 'THE LAB Miami', 'hackathon', 'build week', 'AI development'],
   openGraph: {
-    title: 'v0 IRL Miami - Zero to Agent',
-    description: 'Zero to Agent is a global build week where we ship real AI agents with v0 and Vercel. Join us on April 18, 2026 at THE LAB Miami.',
+    title: 'Zero to Agent Miami | v0 IRL',
+    description: 'Join us in Miami for Zero to Agent - build and ship real AI agents with v0 and Vercel. Live at THE LAB Miami, April 24 - May 3, 2026.',
     type: 'website',
+    siteName: 'Zero to Agent Miami',
     images: [
       {
         url: '/opengraph-image.png',
         width: 2400,
         height: 1256,
-        alt: 'Zero to Agent - Global Build Week - Miami/FL',
+        alt: 'Zero to Agent Miami - v0 IRL at THE LAB Miami',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'v0 IRL Miami - Zero to Agent',
-    description: 'Zero to Agent is a global build week where we ship real AI agents with v0 and Vercel. Join us on April 18, 2026 at THE LAB Miami.',
+    title: 'Zero to Agent Miami | v0 IRL',
+    description: 'Join us in Miami for Zero to Agent - build and ship real AI agents with v0 and Vercel. Live at THE LAB Miami, April 24 - May 3, 2026.',
     images: ['/opengraph-image.png'],
+    creator: '@v0',
   },
   icons: {
     icon: [
